@@ -3,9 +3,9 @@ let dbConfig = {
 	client: 'mysql',
 
 	connection: {
-		user: '',
-		password: '',
-		database: '',
+		user: 'conaz_docker',
+		password: 'root',
+		database: 'dte',
 		host: 'localhost',
 		filename: '', // Only used for SQLite
 		dateStrings: true
