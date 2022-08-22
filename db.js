@@ -1,34 +1,32 @@
-let knex = require("knex");
+let knex = require('knex');
 let dbConfig = {
-  client: "mysql",
+	client: 'mysql',
 
-  connection: {
-    user: "root",
-    password: "1234",
-    database: "test",
-    host: "localhost",
-    filename: "", // Only used for SQLite
-    dateStrings: true,
-  },
+	connection: {
+		user: 'conaz_docker',
+		password: 'root',
+		database: 'dte',
+		host: 'localhost',
+		filename: '', // Only used for SQLite
+		dateStrings: true
+	}
 };
 
 // Need a bit of customisation for Oracle to use ISO date stamps
-if (dbConfig.client === "oracledb") {
-  dbConfig.fetchAsString = ["date", "number", "clob"];
-  dbConfig.pool = {
-    afterCreate: function (conn, done) {
-      conn.execute(
-        "ALTER SESSION SET NLS_DATE_FORMAT='YYYY-MM-DD HH24:MI:SS'",
-        function (err) {
-          if (err) {
-            done(err, conn);
-          } else {
-            done(err, conn);
-          }
-        }
-      );
-    },
-  };
+if ( dbConfig.client === 'oracledb') {
+	dbConfig.fetchAsString = [ 'date', 'number', 'clob' ];
+	dbConfig.pool = {
+		afterCreate: function (conn, done) {
+			conn.execute("ALTER SESSION SET NLS_DATE_FORMAT='YYYY-MM-DD HH24:MI:SS'", function (err) {
+				if (err) {
+					done(err, conn);
+				}
+				else {
+					done(err, conn);
+				}
+			});
+		}
+	};
 }
 
 module.exports = knex(dbConfig);
