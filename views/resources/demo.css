@@ -211,7 +211,10 @@
   }
   
   table {
+
 	border-collapse: collapse;
+	justify-content: center;
+	align-content: center;
   }
   
   caption {
@@ -220,10 +223,12 @@
 	color: #6c757d;
 	text-align: left;
 	caption-side: bottom;
+
   }
   
   th {
 	text-align: inherit;
+	
   }
   
   label {
@@ -584,15 +589,18 @@
   }
   
   .container-fluid {
+
 	width: 100%;
 	padding-right: 15px;
 	padding-left: 15px;
 	padding-top: 50px;
 	margin-right: auto;
 	margin-left: auto;
+	text-align: center;
   }
   
   .row {
+	
 	display: -webkit-box;
 	display: -ms-flexbox;
 	display: flex;

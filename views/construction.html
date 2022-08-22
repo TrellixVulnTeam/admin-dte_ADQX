@@ -19,6 +19,7 @@
 	   <style>
 		thead input {
 		  width: 100%;
+		  text-align: center;
 		}
 	  </style>
 	<script
@@ -49,49 +50,55 @@
 		var editor; // use a global for the submit and return data rendering in the examples
 
 		$(document).ready(function () {
+			//CRUD
 			editor = new $.fn.dataTable.Editor({
-				ajax: "/api/list",
-				table: "#example",
+				ajax: "/api/construction",
+				table: "#construction",
 				fields: [
 					{
-						label: "Signname:",
-						name: "signname",
+						label: "이름",
+						name: "users.name",
 					},
 					{
-						label: "Name:",
-						name: "name",
+						label: "이메일",
+						name: "users.signname",
+					},
+					
+					{
+						label: "휴대전화",
+						name: "users.phone",
 					},
 					{
-						label: "Phone:",
-						name: "phone",
+						label: "회사명",
+						name: "users.company_id",
 					},
 					{
-						label: "Position:",
-						name: "position",
+						label: "직위/직급",
+						name: "users.position",
 					},
 					{
-						label: "Tel:",
-						name: "tel",
+						label: "사내 전화번호",
+						name: "users.tel",
 					},
 					{
-						label: "Created_at:",
-						name: "created_at",
+						label: "가입일",
+						name: "users.created_at",
 						type: "datetime",
 					},
-					// {
-					//   label: "Updated_at:",
-					//   name: "updated_at",
-					//   type: "datetime",
-					// },
+					{
+						label: "수정일",
+						name: "users.updated_at",
+						type: "datetime",
+					},
 				],
 			});
 			// 항목별 검색기능
-			$("#example thead tr")
+			$("#construction thead tr")
 				.clone(true)
 				.addClass("filters")
-				.appendTo("#example thead");
+				.appendTo("#construction thead");
 
-			$("#example").DataTable(
+			$("#construction").DataTable(
 				{
 					orderCellsTop: true,
 					fixedHeader: true,
@@ -150,20 +157,17 @@
 							});
 					},
 					// 항목별 검색기능 끝.
-
+				//DATA 바인딩
 					dom: "Bfrtip",
-					ajax: "/api/list",
+					ajax: "/api/construction",
 					columns: [
-						// { data: null, render: function ( data, type, row ) {
-						// 	// Combine the first and last names into a single table field
-						// 	return data.first_name+' '+data.last_name;
-						// } },
-						{ data: "name" },
-						{ data: "signname" },
-						{ data: "phone" },
-						{ data: "position" },
-						{ data: "tel" },
-						{ data: "created_at" },
+						{ data: "users.name"},
+						{ data: "users.signname" },
+						{ data: "users.phone"},
+						{ data: "companies", render: "[,].name" },
+						{ data: "users.position" },
+						{ data: "users.tel" },
+						{ data: "users.created_at" },
 						// { data: "updated_at" },
 					],
 					select: true,
@@ -174,7 +178,7 @@
 					],
 				},
 				function () {
-					console.log("확인ㅇ");
+					console.log("확인");
 				}
 			);
 		});
@@ -270,21 +274,20 @@
 		  </li>
 		</ul>
 		<div id="content-wrapper">
+			<h1 style="margin: 10px;" >건설사 회원</h1>
 		  <div class="container-fluid">
+		
 					<div class="demo-html">
-						<table id="example" class="display" style="width:100%">
+						<table id="construction" class="display" style="width:100%">
 							<thead>
 								<tr>
 									<th>이름</th>
 									<th>이메일</th>
 									<th>휴대전화</th>
-									<!-- <th>회사명</th> -->
+									<th>회사명</th>
 									<th>직위/직급</th>
-									<!-- <th>부서</th> -->
 									<th>사내 전화번호</th>
 									<th>가입일</th>
-									<!-- <th>수정일</th> -->
-									<!-- <th>Salary</th> -->
 								</tr>
 							</thead>
 						

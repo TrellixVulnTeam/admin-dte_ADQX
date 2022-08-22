@@ -13,10 +13,12 @@ $table-row-highlight: #FFFBCC;
 
 table.dataTable {
 	tbody {
+		margin: 100px;
 		tr.highlight {
 			background-color: $table-row-highlight !important;
+			margin: 100px;
 		}
-
+        
 		tr.highlight,
 		tr.noHighlight,
 		tr.highlight td,
@@ -27,6 +29,7 @@ table.dataTable {
 
 	&.stripe tbody,
 	&.display tbody {
+		margin: 100px;
 		tr.odd {
 			&.highlight {
 				background-color: shade($table-row-highlight, 2.35%);
