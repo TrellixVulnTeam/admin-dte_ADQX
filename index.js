@@ -5,7 +5,7 @@ let express = require( 'express' );
 let bb = require( 'express-busboy' );
 require('source-map-support').install();
 let db = require('./db');
-
+require('dotenv').config({ path: `${__dirname}/../.env` });
 let app = express();
 app.set( 'trust proxy', true );
 
@@ -41,8 +41,10 @@ app.use( function( req, res ) {
 } );
 
 // Listening
-app.listen( 8081, '0.0.0.0', function () {
-    console.log( 'DataTables Editor demo - navigate to http://localhost:8081/' );
+let PORT = 8081
+app.listen( PORT, '0.0.0.0', function () {
+    console.log( `DataTables Editor demo - navigate to http://localhost:${PORT}/` );
+	console.log(process.env.NODE_ENV)
 } );
 
 // Test the database connection on startup by getting a list of table names in the db

@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1.0, user-scalable=no">
+	<link rel="shortcut icon" type="image/ico" href="http://www.datatables.net/favicon.ico">
+	<title>Conaz_admin</title>
+	<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.22/css/jquery.dataTables.min.css">
+	<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/buttons/1.6.5/css/buttons.dataTables.min.css">
+	<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/select/1.3.1/css/select.dataTables.min.css">
+	<link rel="stylesheet" type="text/css" href="../css/editor.dataTables.min.css">
+	<link rel="stylesheet" type="text/css" href="./resources/syntax/shCore.css">
+	<link rel="stylesheet" type="text/css" href="./resources/demo.css">
+	
+	<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.4/css/all.css" integrity="sha384-DyZ88mC6Up2uqS4h/KRgHuoeGwBcD4Ng9SiP4dIRy0EXTlnuz47vAwmeGwVChigm" crossorigin="anonymous"/>
+	<style type="text/css" class="init">
+	
+	</style>
+	   <style>
+		thead input {
+		  width: 100%;
+		  text-align: center;
+		}
+	  </style>
+	<script
+	type="text/javascript"
+	language="javascript"
+	src="https://code.jquery.com/jquery-3.5.1.js"
+  ></script>
+  <script
+	type="text/javascript"
+	language="javascript"
+	src="https://cdn.datatables.net/1.10.22/js/jquery.dataTables.min.js"
+  ></script>
+  <script
+	type="text/javascript"
+	language="javascript"
+	src="https://cdn.datatables.net/buttons/1.6.5/js/dataTables.buttons.min.js"
+  ></script>
+  <script
+	type="text/javascript"
+	language="javascript"
+	src="https://cdn.datatables.net/select/1.3.1/js/dataTables.select.min.js"
+  ></script>
+	<script type="text/javascript" language="javascript" src="../js/dataTables.editor.min.js"></script>
+	<script type="text/javascript" language="javascript" src="./resources/syntax/shCore.js"></script>
+	<script type="text/javascript" language="javascript" src="./resources/demo.js"></script>
+	<script type="text/javascript" language="javascript" src="./resources/editor-demo.js"></script>
+	<script type="text/javascript" language="javascript" class="init">
+		var editor; // use a global for the submit and return data rendering in the examples
+
+		$(document).ready(function () {
+			//CRUD
+			editor = new $.fn.dataTable.Editor({
+				ajax: "/api/construction",
+				table: "#construction",
+				fields: [
+					{
+						label: "건설사 타입",
+						name: "company_type",
+					},
+					{
+						label: "건설사",
+						name: "name",
+					},
+					
+					{
+						label: "주소",
+						name: "name",
+					},
+					{
+						label: "CEO이름",
+						name: "ceo_name",
+					},
+					{
+						label: "가입일",
+						name: "created_at",
+						type: "datetime",
+					},
+					{
+						label: "수정일",
+						name: "updated_at",
+						type: "datetime",
+					},
+				],
+			});
+			// 항목별 검색기능
+			$("#construction thead tr")
+				.clone(true)
+				.addClass("filters")
+				.appendTo("#construction thead");
+
+			$("#construction").DataTable(
+				{
+					orderCellsTop: true,
+					fixedHeader: true,
+					initComplete: function () {
+						var api = this.api();
+
+						// For each column
+						api
+							.columns()
+							.eq(0)
+							.each(function (colIdx) {
+								// Set the header cell to contain the input element
+								var cell = $(".filters th").eq(
+									$(api.column(colIdx).header()).index()
+								);
+								var title = $(cell).text();
+								$(cell).html(
+									'<input type="text" placeholder="' + title + '" />'
+								);
+
+								// On every keypress in this input
+								$(
+									"input",
+									$(".filters th").eq($(api.column(colIdx).header()).index())
+								)
+									.off("keyup change")
+									.on("change", function (e) {
+										// Get the search value
+										$(this).attr("title", $(this).val());
+										var regexr = "({search})"; //$(this).parents('th').find('select').val();
+
+										var cursorPosition = this.selectionStart;
+										// Search the column for that value
+										api
+											.column(colIdx)
+											.search(
+												this.value != ""
+													? regexr.replace(
+															"{search}",
+															"(((" + this.value + ")))"
+														)
+													: "",
+												this.value != "",
+												this.value == ""
+											)
+											.draw();
+									})
+									.on("keyup", function (e) {
+										e.stopPropagation();
+
+										$(this).trigger("change");
+										$(this)
+											.focus()[0]
+											.setSelectionRange(cursorPosition, cursorPosition);
+									});
+							});
+					},
+					// 항목별 검색기능 끝.
+				//DATA 바인딩
+					dom: "Bfrtip",
+					ajax: "/api/construction",
+					columns: [
+						{ data: "company_type"},
+						{ data: "name" },
+						{ data: "address"},
+						{ data: "ceo_name"},
+						{ data: "users.position" },
+						{ data: "created_at" },
+						{ data: "updated_at" },
+
+					],
+					select: true,
+					buttons: [
+						{ extend: "create", editor: editor, text: "등록" },
+						{ extend: "edit", editor: editor, text: "수정" },
+						{ extend: "remove", editor: editor, text: "삭제" },
+					],
+				},
+				function () {
+					console.log("확인");
+				}
+			);
+		});
+	</script>
+</head>
+<body class="dt-example node">
+
+	<nav class="navbar navbar-expand navbar-dark bg-dark static-top">
+
+		<a class="navbar-brand mr-1" href="/">Conaz</a>
+	
+		<button class="btn btn-link btn-sm text-white order-1 order-sm-0" id="sidebarToggle" href="#">
+		  <i class="fas fa-bars"></i>
+		</button>
+	
+		<!-- Navbar Search -->
+		<form class="d-none d-md-inline-block form-inline ml-auto mr-0 mr-md-3 my-2 my-md-0">
+		  <div class="input-group">
+		  </div>
+		</form>
+	
+		<!-- Navbar -->
+		<ul class="navbar-nav ml-auto ml-md-0">
+		 
+		  <li class="nav-item dropdown no-arrow mx-1">
+		   <span class="badge badge-danger">9+</span>
+			<div class="dropdown-menu dropdown-menu-right" aria-labelledby="messagesDropdown">
+			  <a class="dropdown-item" href="#">Action</a>
+			  <a class="dropdown-item" href="#">Another action</a>
+			  <div class="dropdown-divider"></div>
+			  <a class="dropdown-item" href="#">Something else here</a>
+			</div>
+		  </li>
+		  <li class="nav-item dropdown no-arrow">
+			<a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+			  <img src="../public/images/user.png"class="avatar"/>
+			</a>
+			<div class="dropdown-menu dropdown-menu-right" aria-labelledby="userDropdown">
+			  <a class="dropdown-item" href="#">Settings</a>
+			  <a class="dropdown-item" href="#">Activity Log</a>
+			  <div class="dropdown-divider"></div>
+			  <a class="dropdown-item" href="#" data-toggle="modal" data-target="#logoutModal">Logout</a>
+			</div>
+		  </li>
+		</ul>
+	
+	  </nav>
+	  <div id="wrapper">
+
+		<!-- Sidebar -->
+		<ul class="sidebar navbar-nav">
+		  <li class="nav-item dropdown" >
+			<a class="nav-link dropdown-toggle" href="/" id="pagesDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+			  <i class="fas fa-fw fa-table"></i>
+			  <span>업체/회원관리</span></a>
+			  <div class="dropdown-menu" aria-labelledby="pagesDropdown">
+				<a class="dropdown-item" href="/views/simple.html">레미콘 공장</a>
+				<a class="dropdown-item" href="/views/simple.html">레미콘사 회원</a>
+				<a class="dropdown-item" href="/views/simple.html">건설회사</a>
+				<a class="dropdown-item" href="/views/simple.html">건설사 회원</a>
+			 
+		  </li>
+		  <li class="nav-item dropdown" >
+			<a class="nav-link dropdown-toggle" href="/" id="pagesDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+			  <i class="fas fa-fw fa-table"></i>
+			  <span>거래관리</span></a>
+			  <div class="dropdown-menu" aria-labelledby="pagesDropdown">
+				<a class="dropdown-item" href="/">견적</a>
+				<a class="dropdown-item" href="/">주문</a>
+				<a class="dropdown-item" href="/">거래네역</a>
+		  </li>
+		  <li class="nav-item dropdown" >
+			<a class="nav-link dropdown-toggle" href="/" id="pagesDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+			  <i class="fas fa-fw fa-table"></i>
+			  <span>자료실</span></a>
+			  <div class="dropdown-menu" aria-labelledby="pagesDropdown">
+				<a class="dropdown-item" href="/">단가표</a>
+				<a class="dropdown-item" href="/">단가표 금액 수정</a>
+		  </li>
+		  <li class="nav-item dropdown" >
+			<a class="nav-link dropdown-toggle" href="/" id="pagesDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+			  <i class="fas fa-fw fa-table"></i>
+			  <span>기타</span></a>
+			  <div class="dropdown-menu" aria-labelledby="pagesDropdown">
+				<a class="dropdown-item" href="/">팝업설정</a>
+				<a class="dropdown-item" href="/">메인화면 이미지 변경</a>
+				<a class="dropdown-item" href="/">인허가지도</a>
+				<a class="dropdown-item" href="/">공지사항</a>
+				<a class="dropdown-item" href="/">FAQ</a>
+				<a class="dropdown-item" href="/">1:1문의</a>
+				<a class="dropdown-item" href="/">메일보내기</a>
+				<a class="dropdown-item" href="/">관리자메일함</a>
+		  </li>
+		</ul>
+		<div id="content-wrapper">
+			<h1 style="margin: 10px;" >건설사 회원</h1>
+		  <div class="container-fluid">
+		
+					<div class="demo-html">
+						<table id="construction" class="display" style="width:100%">
+							<thead>
+								<tr>
+									<th>회사 유형</th>
+									<th>건설사</th>
+									<th>주소</th>
+									<th>CEO이름</th>
+								</tr>
+							</thead>
+						
+						</table>
+					</div>
+		  </div>
+		</div>
+	  </div>
+</body>
+</html>
