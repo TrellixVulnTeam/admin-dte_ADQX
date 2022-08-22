@@ -52,8 +52,8 @@
 		$(document).ready(function () {
 			//CRUD
 			editor = new $.fn.dataTable.Editor({
-				ajax: "/api/construction",
-				table: "#construction",
+				ajax: "/api/construction_member",
+				table: "#construction_member",
 				fields: [
 					{
 						label: "이름",
@@ -93,12 +93,12 @@
 				],
 			});
 			// 항목별 검색기능
-			$("#construction thead tr")
+			$("#construction_member thead tr")
 				.clone(true)
 				.addClass("filters")
-				.appendTo("#construction thead");
+				.appendTo("#construction_member thead");
 
-			$("#construction").DataTable(
+			$("#construction_member").DataTable(
 				{
 					orderCellsTop: true,
 					fixedHeader: true,
@@ -159,7 +159,7 @@
 					// 항목별 검색기능 끝.
 				//DATA 바인딩
 					dom: "Bfrtip",
-					ajax: "/api/construction",
+					ajax: "/api/construction_member",
 					columns: [
 						{ data: "users.name"},
 						{ data: "users.signname" },
@@ -278,7 +278,7 @@
 		  <div class="container-fluid">
 		
 					<div class="demo-html">
-						<table id="construction" class="display" style="width:100%">
+						<table id="construction_member" class="display" style="width:100%">
 							<thead>
 								<tr>
 									<th>이름</th>
