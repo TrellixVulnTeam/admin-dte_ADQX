@@ -3,10 +3,16 @@ let dbConfig = {
   client: "mysql",
 
   connection: {
-    user: "root",
-    password: "1234",
+    // user: "root",
+    // password: "1234",
+    // database: "conaz",
+    // host: "localhost",
+    // filename: "", // Only used for SQLite
+    // dateStrings: true,
+    user: "zerotwo@zerotwo-mysql",
+    password: "wpfhxn1234!",
     database: "conaz",
-    host: "localhost",
+    host: "zerotwo-mysql.mysql.database.azure.com",
     filename: "", // Only used for SQLite
     dateStrings: true,
   },
