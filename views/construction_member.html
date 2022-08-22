@@ -57,37 +57,37 @@
 				fields: [
 					{
 						label: "이름",
-						name: "users.name",
+						name: "users2.name",
 					},
 					{
 						label: "이메일",
-						name: "users.signname",
+						name: "users2.signname",
 					},
 					
 					{
 						label: "휴대전화",
-						name: "users.phone",
+						name: "users2.phone",
 					},
 					{
 						label: "회사명",
-						name: "users.company_id",
+						name: "users2.company_id",
 					},
 					{
 						label: "직위/직급",
-						name: "users.position",
+						name: "users2.position",
 					},
 					{
 						label: "사내 전화번호",
-						name: "users.tel",
+						name: "users2.tel",
 					},
 					{
 						label: "가입일",
-						name: "users.created_at",
+						name: "users2.created_at",
 						type: "datetime",
 					},
 					{
 						label: "수정일",
-						name: "users.updated_at",
+						name: "users2.updated_at",
 						type: "datetime",
 					},
 				],
@@ -161,13 +161,13 @@
 					dom: "Bfrtip",
 					ajax: "/api/construction_member",
 					columns: [
-						{ data: "users.name"},
-						{ data: "users.signname" },
-						{ data: "users.phone"},
-						{ data: "companies", render: "[,].name" },
-						{ data: "users.position" },
-						{ data: "users.tel" },
-						{ data: "users.created_at" },
+						{ data: "users2.name"},
+						{ data: "users2.signname" },
+						{ data: "users2.phone"},
+						{ data: "companies2.name"},
+						{ data: "users2.position" },
+						{ data: "users2.tel" },
+						{ data: "users2.created_at" },
 						// { data: "updated_at" },
 					],
 					select: true,
