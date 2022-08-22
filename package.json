@@ -2,8 +2,6 @@
   "name": "datatables.net-editor-demo",
   "version": "1.9.6",
   "description": "DataTables Editor demo package, including examples and test data",
- 
-
   "dependencies": {
     "body-parser": "^1.17.2",
     "datatables.net-editor-server": "^1.9.6",
@@ -14,7 +12,8 @@
     "mysql": "^2.13.0",
     "pg": "^7.4.0",
     "nodemon": "^2.0.15",
-    "sqlite3": "^4.2.0"
+    "sqlite3": "^4.2.0",
+    "mysql2": "^2.3.3"
   },
   "devDependencies": {
     "source-map-support": "^0.4.15"

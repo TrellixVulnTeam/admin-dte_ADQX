@@ -19,6 +19,7 @@
 	   <style>
 		thead input {
 		  width: 100%;
+			text-align: center;
 		}
 	  </style>
 	<script
@@ -67,8 +68,8 @@
 						name: "users.phone",
 					},
 					{
-						label: "Ceo_name:",
-						name: "name",
+						label: "회사명:",
+						name: "companies[].name",
 					},
 					{
 						label: "Position:",
@@ -83,11 +84,11 @@
 						name: "users.created_at",
 						type: "datetime",
 					},
-					// {
-					//   label: "Updated_at:",
-					//   name: "updated_at",
-					//   type: "datetime",
-					// },
+					{
+					  label: "Updated_at:",
+					  name: "users.updated_at",
+					  type: "datetime",
+					},
 				],
 			});
 			
@@ -170,9 +171,8 @@
 						{ data: "companies", render:"[,].name"},
 						{ data: "users.position" },
 						{ data: "users.tel" },
-						{ data: "users.created_at" },
-				
-						// { data: "updated_at" },
+						{ data: "users.created_at" },				
+						{ data: "users.updated_at" },
 					],
 					select: true,
 					buttons: [
@@ -288,7 +288,7 @@
 									<!-- <th>부서</th> -->
 									<th>사내 전화번호</th>
 									<th>가입일</th>
-									<!-- <th>수정일</th> -->
+									<th>수정일</th>
 									<!-- <th>Salary</th> -->
 								</tr>
 							</thead>
