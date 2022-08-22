@@ -9,31 +9,33 @@ let {
 } = require("datatables.net-editor-server");
 
 router.all("/api/list", async function (req, res) {
-  // console.log(req.params);
-  // console.log(req.body.created_at);
-  // console.log(req.body.value);
-  // console.log("req.query " + req.query);
-  // console.log("req.query.created_at " + req.query.created_at);
-  // console.log(req.body);
   var body = req.body;
-  console.log(body);
-  console.log(body.Field);
+
+  console.log(req.params);
+  console.log(req.query.created_at);
+  console.log(req.query);
+  console.log(req.body.name);
+  console.log("body 1", body);
+  console.log("body 2", body.data.created_at);
   let editor = new Editor(db, "users").fields(
     new Field("signname"),
     new Field("name"),
     new Field("phone"),
     new Field("position"),
     new Field("tel"),
-    new Field("created_at").validator(
-      Validate.dateFormat(
-        "YYYY-MM-DD",
-        null,
-        new Validate.Options({
-          message: "Please enter a date in the format yyyy-mm-dd",
-        })
+    new Field("created_at") //.SetValue( new Date().toISOString()
+      .validator(
+        Validate.dateFormat(
+          "YYYY-MM-DD",
+          null,
+          new Validate.Options({
+            message: "Please enter a date in the format yyyy-mm-dd",
+          })
+        )
       )
-    ),
-    new Field("updated_at")
+      .getFormatter(Format.sqlDateToFormat("YYYY-MM-DD"))
+      .setFormatter(Format.formatToSqlDate("YYYY-MM-DD")),
+    new Field("updated_at") //.SetValue( new Date().toISOString()
       .validator(
         Validate.dateFormat(
           "YYYY-MM-DD",

@@ -117,11 +117,11 @@
               name: "created_at",
               type: "datetime",
             },
-            {
-              label: "Updated_at:",
-              name: "updated_at",
-              type: "datetime",
-            },
+            // {
+            //   label: "Updated_at:",
+            //   name: "updated_at",
+            //   type: "datetime",
+            // },
           ],
         });
         // 항목별 검색기능
@@ -130,87 +130,92 @@
           .addClass("filters")
           .appendTo("#example thead");
 
-        $("#example").DataTable({
-          orderCellsTop: true,
-          fixedHeader: true,
-          initComplete: function () {
-            var api = this.api();
+        $("#example").DataTable(
+          {
+            orderCellsTop: true,
+            fixedHeader: true,
+            initComplete: function () {
+              var api = this.api();
 
-            // For each column
-            api
-              .columns()
-              .eq(0)
-              .each(function (colIdx) {
-                // Set the header cell to contain the input element
-                var cell = $(".filters th").eq(
-                  $(api.column(colIdx).header()).index()
-                );
-                var title = $(cell).text();
-                $(cell).html(
-                  '<input type="text" placeholder="' + title + '" />'
-                );
+              // For each column
+              api
+                .columns()
+                .eq(0)
+                .each(function (colIdx) {
+                  // Set the header cell to contain the input element
+                  var cell = $(".filters th").eq(
+                    $(api.column(colIdx).header()).index()
+                  );
+                  var title = $(cell).text();
+                  $(cell).html(
+                    '<input type="text" placeholder="' + title + '" />'
+                  );
 
-                // On every keypress in this input
-                $(
-                  "input",
-                  $(".filters th").eq($(api.column(colIdx).header()).index())
-                )
-                  .off("keyup change")
-                  .on("change", function (e) {
-                    // Get the search value
-                    $(this).attr("title", $(this).val());
-                    var regexr = "({search})"; //$(this).parents('th').find('select').val();
+                  // On every keypress in this input
+                  $(
+                    "input",
+                    $(".filters th").eq($(api.column(colIdx).header()).index())
+                  )
+                    .off("keyup change")
+                    .on("change", function (e) {
+                      // Get the search value
+                      $(this).attr("title", $(this).val());
+                      var regexr = "({search})"; //$(this).parents('th').find('select').val();
 
-                    var cursorPosition = this.selectionStart;
-                    // Search the column for that value
-                    api
-                      .column(colIdx)
-                      .search(
-                        this.value != ""
-                          ? regexr.replace(
-                              "{search}",
-                              "(((" + this.value + ")))"
-                            )
-                          : "",
-                        this.value != "",
-                        this.value == ""
-                      )
-                      .draw();
-                  })
-                  .on("keyup", function (e) {
-                    e.stopPropagation();
+                      var cursorPosition = this.selectionStart;
+                      // Search the column for that value
+                      api
+                        .column(colIdx)
+                        .search(
+                          this.value != ""
+                            ? regexr.replace(
+                                "{search}",
+                                "(((" + this.value + ")))"
+                              )
+                            : "",
+                          this.value != "",
+                          this.value == ""
+                        )
+                        .draw();
+                    })
+                    .on("keyup", function (e) {
+                      e.stopPropagation();
 
-                    $(this).trigger("change");
-                    $(this)
-                      .focus()[0]
-                      .setSelectionRange(cursorPosition, cursorPosition);
-                  });
-              });
+                      $(this).trigger("change");
+                      $(this)
+                        .focus()[0]
+                        .setSelectionRange(cursorPosition, cursorPosition);
+                    });
+                });
+            },
+            // 항목별 검색기능 끝.
+
+            dom: "Bfrtip",
+            ajax: "/api/list",
+            columns: [
+              // { data: null, render: function ( data, type, row ) {
+              // 	// Combine the first and last names into a single table field
+              // 	return data.first_name+' '+data.last_name;
+              // } },
+              { data: "name" },
+              { data: "signname" },
+              { data: "phone" },
+              { data: "position" },
+              { data: "tel" },
+              { data: "created_at" },
+              //   { data: "updated_at" },
+            ],
+            select: true,
+            buttons: [
+              { extend: "create", editor: editor, text: "등록" },
+              { extend: "edit", editor: editor, text: "수정" },
+              { extend: "remove", editor: editor, text: "삭제" },
+            ],
           },
-          // 항목별 검색기능 끝.
-
-          dom: "Bfrtip",
-          ajax: "/api/list",
-          columns: [
-            // { data: null, render: function ( data, type, row ) {
-            // 	// Combine the first and last names into a single table field
-            // 	return data.first_name+' '+data.last_name;
-            // } },
-            { data: "name" },
-            { data: "signname" },
-            { data: "phone" },
-            { data: "position" },
-            { data: "tel" },
-            { data: "created_at" },
-            { data: "updated_at" },
-          ],
-          select: true,
-          buttons: [
-            { extend: "create", editor: editor },
-            { extend: "edit", editor: editor },
-            { extend: "remove", editor: editor },
-          ],
-        });
+          function () {
+            console.log("확인ㅇ");
+          }
+        );
       });
     </script>
   </head>
@@ -231,7 +236,7 @@
                 <!-- <th>부서</th> -->
                 <th>사내 전화번호</th>
                 <th>가입일</th>
-                <th>수정일</th>
+                <!-- <th>수정일</th> -->
                 <!-- <th>Salary</th> -->
               </tr>
             </thead>

@@ -20,7 +20,7 @@ app.use( bodyParser.urlencoded({ extended: true }) );
 bb.extend( app, {
 	upload: true
 } );
-app.use( controllers );
+app.use(controllers );
 
 // Static files for the demo. Use nginx or similar for real deploys
 app.use( express.static('public') );

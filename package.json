@@ -2,10 +2,8 @@
   "name": "datatables.net-editor-demo",
   "version": "1.9.6",
   "description": "DataTables Editor demo package, including examples and test data",
-  "main": "index.js",
-  "directories": {
-    "example": "examples"
-  },
+ 
+
   "dependencies": {
     "body-parser": "^1.17.2",
     "datatables.net-editor-server": "^1.9.6",

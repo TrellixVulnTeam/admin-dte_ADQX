@@ -11,7 +11,7 @@
       name="viewport"
       content="width=device-width, initial-scale=1, minimum-scale=1.0, user-scalable=no"
     />
-    <title>Editor example - Basic initialisation</title>
+    <title>Conaz_admin</title>
     <link
       rel="stylesheet"
       type="text/css"
@@ -38,7 +38,14 @@
       href="./resources/syntax/shCore.css"
     />
     <link rel="stylesheet" type="text/css" href="./resources/demo.css" />
+    <link
+      rel="stylesheet"
+      href="https://use.fontawesome.com/releases/v5.15.4/css/all.css"
+      integrity="sha384-DyZ88mC6Up2uqS4h/KRgHuoeGwBcD4Ng9SiP4dIRy0EXTlnuz47vAwmeGwVChigm"
+      crossorigin="anonymous"
+    />
     <style type="text/css" class="init"></style>
+
     <script
       type="text/javascript"
       language="javascript"
@@ -80,8 +87,6 @@
       src="./resources/editor-demo.js"
     ></script>
     <script type="text/javascript" language="javascript" class="init">
-      var editor; // use a global for the submit and return data rendering in the examples
-
       $(document).ready(function () {
         editor = new $.fn.dataTable.Editor({
           ajax: "/api/staff",
@@ -118,7 +123,6 @@
             },
           ],
         });
-
         $("#example").DataTable({
           dom: "Bfrtip",
           ajax: "/api/staff",
@@ -141,9 +145,9 @@
           ],
           select: true,
           buttons: [
-            { extend: "create", editor: editor },
-            { extend: "edit", editor: editor },
-            { extend: "remove", editor: editor },
+            { extend: "create", editor: editor, text: "등록" },
+            { extend: "edit", editor: editor, text: "수정" },
+            { extend: "remove", editor: editor, text: "삭제" },
           ],
         });
       });
