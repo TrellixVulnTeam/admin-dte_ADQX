@@ -5,7 +5,7 @@ let dbConfig = {
   connection: {
     user: "root",
     password: "1234",
-    database: "test",
+    database: "conaz",
     host: "localhost",
     filename: "", // Only used for SQLite
     dateStrings: true,
