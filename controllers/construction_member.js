@@ -7,31 +7,34 @@ let {
   Format,
   Options,
   Mjoin,
+  SearchPaneOptions
 } = require("datatables.net-editor-server");
 
 router.all("/api/construction_member", async function (req, res) {
-  let editor = new Editor(db, "users2").fields(
-    new Field("users2.id").set(false),
-    new Field("users2.name"),
-    new Field("users2.signname"),
-    new Field("users2.phone"),
-    new Field("users2.company_id").options(
-      new Options().table('companies2').value('id').label('name')
+  let editor = new Editor(db, "users").fields(
+    new Field("users.id").set(false),
+    new Field("users.name"),
+    new Field("users.signname"),
+    new Field("users.phone"),
+    new Field("users.company_type"),
+    new Field("users.company_id").options(
+      new Options().table('companies').value('id').label('name').where((q)=>{
+        q.where('company_type', '=', 'CONSTRUCTION')
+      })
     ),
-    new Field("users2.position"),
-    new Field("users2.tel"),
-    new Field("users2.created_at")
+    new Field("users.position"),
+    new Field("users.tel"),
+    new Field('companies.name'),
+    new Field("users.created_at")
       .getFormatter(Format.sqlDateToFormat("YYYY-MM-DD"))
       .setFormatter(Format.formatToSqlDate("YYYY-MM-DD")),
-    new Field("users2.updated_at")
+    new Field("users.updated_at")
       .getFormatter(Format.sqlDateToFormat("YYYY-MM-DD"))
       .setFormatter(Format.formatToSqlDate("YYYY-MM-DD"))
-  ).leftJoin("companies2", 'users2.company_id',"=","companies2.id")
-   .field(
-    new Field('companies2.name')
-   )
-  ;
-
+  ).leftJoin("companies", 'users.company_id',"=","companies.id").where((q)=>{
+    //company_type , 건설사 or 레미콘
+    q.where('users.company_type',"=","CONSTRUCTION")
+  })
   await editor.process(req.body);
   console.log("req.body")
   res.json(editor.data());

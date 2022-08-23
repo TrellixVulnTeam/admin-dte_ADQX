@@ -19,6 +19,7 @@
 	   <style>
 		thead input {
 		  width: 100%;
+			text-align: center;
 		}
 	  </style>
 	<script
@@ -49,42 +50,50 @@
 		var editor; // use a global for the submit and return data rendering in the examples
 
 		$(document).ready(function () {
+			//CRUD
 			editor = new $.fn.dataTable.Editor({
 				ajax: "/api/list",
 				table: "#example",
 				fields: [
 					{
 						label: "Signname:",
-						name: "signname",
+						name: "users.signname",
 					},
 					{
 						label: "Name:",
-						name: "name",
+						name: "users.name",
 					},
 					{
 						label: "Phone:",
-						name: "phone",
+						name: "users.phone",
+					},
+					{
+						label: "회사명:",
+						name: "users.company_id",
+						type: "select",
+						placeholder: "Select a location"
 					},
 					{
 						label: "Position:",
-						name: "position",
+						name: "users.position",
 					},
 					{
 						label: "Tel:",
-						name: "tel",
+						name: "users.tel",
 					},
 					{
 						label: "Created_at:",
-						name: "created_at",
+						name: "users.created_at",
 						type: "datetime",
 					},
-					// {
-					//   label: "Updated_at:",
-					//   name: "updated_at",
-					//   type: "datetime",
-					// },
+					{
+					  label: "Updated_at:",
+					  name: "users.updated_at",
+					  type: "datetime",
+					},
 				],
 			});
+			
 			// 항목별 검색기능
 			$("#example thead tr")
 				.clone(true)
@@ -150,7 +159,7 @@
 							});
 					},
 					// 항목별 검색기능 끝.
-
+///Binding
 					dom: "Bfrtip",
 					ajax: "/api/list",
 					columns: [
@@ -158,13 +167,14 @@
 						// 	// Combine the first and last names into a single table field
 						// 	return data.first_name+' '+data.last_name;
 						// } },
-						{ data: "name" },
-						{ data: "signname" },
-						{ data: "phone" },
-						{ data: "position" },
-						{ data: "tel" },
-						{ data: "created_at" },
-						// { data: "updated_at" },
+						{ data: "users.name" },
+						{ data: "users.signname" },
+						{ data: "users.phone" },
+						{ data: "companies.name"},
+						{ data: "users.position" },
+						{ data: "users.tel" },
+						{ data: "users.created_at" },				
+						{ data: "users.updated_at" },
 					],
 					select: true,
 					buttons: [
@@ -173,9 +183,6 @@
 						{ extend: "remove", editor: editor, text: "삭제" },
 					],
 				},
-				function () {
-					console.log("확인ㅇ");
-				}
 			);
 		});
 	</script>
@@ -278,12 +285,12 @@
 									<th>이름</th>
 									<th>이메일</th>
 									<th>휴대전화</th>
-									<!-- <th>회사명</th> -->
+									<th>회사명</th>
 									<th>직위/직급</th>
 									<!-- <th>부서</th> -->
 									<th>사내 전화번호</th>
 									<th>가입일</th>
-									<!-- <th>수정일</th> -->
+									<th>수정일</th>
 									<!-- <th>Salary</th> -->
 								</tr>
 							</thead>
