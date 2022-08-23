@@ -11,11 +11,7 @@
 	<link rel="stylesheet" type="text/css" href="../css/editor.dataTables.min.css">
 	<link rel="stylesheet" type="text/css" href="./resources/syntax/shCore.css">
 	<link rel="stylesheet" type="text/css" href="./resources/demo.css">
-	<link rel="stylesheet" type="text/css" href="https://code.jquery.com/jquery-3.5.1.js">
-	<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.12.1/js/jquery.dataTables.min.js">
-	<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/buttons/2.2.3/js/dataTables.buttons.min.js">
-	<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/select/1.4.0/js/dataTables.select.min.js">
-	<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/datetime/1.1.2/js/dataTables.dateTime.min.js">
+	
 	<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.4/css/all.css" integrity="sha384-DyZ88mC6Up2uqS4h/KRgHuoeGwBcD4Ng9SiP4dIRy0EXTlnuz47vAwmeGwVChigm" crossorigin="anonymous"/>
 	<style type="text/css" class="init">
 	
@@ -56,45 +52,55 @@
 		$(document).ready(function () {
 			//CRUD
 			editor = new $.fn.dataTable.Editor({
-				ajax: "/api/construction",
-				table: "#construction",
+				ajax: "/api/construction_member",
+				table: "#construction_member",
 				fields: [
 					{
-						label: "건설사 타입",
-						name: "company_type",
+						label: "이름",
+						name: "users.name",
 					},
 					{
-						label: "건설사",
-						name: "name",
+						label: "이메일",
+						name: "users.signname",
 					},
 					
 					{
-						label: "주소",
-						name: "name",
+						label: "휴대전화",
+						name: "users.phone",
 					},
 					{
-						label: "CEO이름",
-						name: "ceo_name",
+						label: "회사명",
+						name: "users.company_id",
+						type: "select",
+						placeholder: "Select a location"
+					},
+					{
+						label: "직위/직급",
+						name: "users.position",
+					},
+					{
+						label: "사내 전화번호",
+						name: "users.tel",
 					},
 					{
 						label: "가입일",
-						name: "created_at",
+						name: "users.created_at",
 						type: "datetime",
 					},
 					{
 						label: "수정일",
-						name: "updated_at",
+						name: "users.updated_at",
 						type: "datetime",
 					},
 				],
 			});
 			// 항목별 검색기능
-			$("#construction thead tr")
+			$("#construction_member thead tr")
 				.clone(true)
 				.addClass("filters")
-				.appendTo("#construction thead");
+				.appendTo("#construction_member thead");
 
-			$("#construction").DataTable(
+			$("#construction_member").DataTable(
 				{
 					orderCellsTop: true,
 					fixedHeader: true,
@@ -155,16 +161,16 @@
 					// 항목별 검색기능 끝.
 				//DATA 바인딩
 					dom: "Bfrtip",
-					ajax: "/api/construction",
+					ajax: "/api/construction_member",
 					columns: [
-						{ data: "company_type"},
-						{ data: "name" },
-						{ data: "address"},
-						{ data: "ceo_name"},
+						{ data: "users.name"},
+						{ data: "users.signname" },
+						{ data: "users.phone"},
+						{ data: "companies.name"},
 						{ data: "users.position" },
-						{ data: "created_at" },
-						{ data: "updated_at" },
-
+						{ data: "users.tel" },
+						{ data: "users.created_at" },
+						// { data: "updated_at" },
 					],
 					select: true,
 					buttons: [
@@ -274,13 +280,16 @@
 		  <div class="container-fluid">
 		
 					<div class="demo-html">
-						<table id="construction" class="display" style="width:100%">
+						<table id="construction_member" class="display" style="width:100%" cellspacing="0">
 							<thead>
 								<tr>
-									<th>회사 유형</th>
-									<th>건설사</th>
-									<th>주소</th>
-									<th>CEO이름</th>
+									<th>이름</th>
+									<th>이메일</th>
+									<th>휴대전화</th>
+									<th>회사명</th>
+									<th>직위/직급</th>
+									<th>사내 전화번호</th>
+									<th>가입일</th>
 								</tr>
 							</thead>
 						
