@@ -10,9 +10,9 @@ let {
   SearchPaneOptions,
 } = require("datatables.net-editor-server");
 
-// 레미콘사 get요청
+// 레미콘사 요청
 router.all("/api/list", async function (req, res) {
-  console.log("get요청");
+  console.log("요청확인");
 
   console.log(req.body);
   console.log(req.query);
@@ -22,6 +22,7 @@ router.all("/api/list", async function (req, res) {
       new Field("users.signname"),
       new Field("users.name"),
       new Field("users.phone"),
+      new Field("users.company_type").setValue("REMICON"),
       new Field("users.position"),
       new Field("users.tel"),
       new Field("users.created_at")
@@ -49,6 +50,23 @@ router.all("/api/list", async function (req, res) {
       q.where("users.company_type", "=", "REMICON");
     });
 
+  await editor.process(req.body);
+  res.json(editor.data());
+});
+
+// 회사정보 얻어오기
+router.get("/api/companies", async function (req, res) {
+  console.log("요청확인");
+  let editor = new Editor(db, "companies")
+    .fields(
+      new Field("id").set(false),
+      new Field("company_type"),
+      new Field("name")
+    )
+    .where({ company_type: "REMICON" });
+
+  console.log(req.query);
+  console.log(editor.data());
   await editor.process(req.body);
   res.json(editor.data());
 });

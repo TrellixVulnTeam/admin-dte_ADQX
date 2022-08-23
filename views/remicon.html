@@ -13,7 +13,9 @@
 	<link rel="stylesheet" type="text/css" href="./resources/syntax/shCore.css">
 	<link rel="stylesheet" type="text/css" href="./resources/demo.css">
 	<!-- 추가-->
+	<link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
 	<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/searchpanes/1.2.1/css/searchPanes.dataTables.min.css">
+		<!-- 추가-->
 	<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.4/css/all.css" integrity="sha384-DyZ88mC6Up2uqS4h/KRgHuoeGwBcD4Ng9SiP4dIRy0EXTlnuz47vAwmeGwVChigm" crossorigin="anonymous"/>
 	<style type="text/css" class="init">
 	
@@ -50,6 +52,9 @@
 	language="javascript"
 	src="https://cdn.datatables.net/datetime/1.1.2/js/dataTables.dateTime.min.js"
   ></script>
+	<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+	<!-- <script src="https://code.jquery.com/ui/1.12.0/themes/smoothness/jquery-ui.css"></script> -->
+		<!-- 추가 -->
 	<script type="text/javascript" language="javascript" src="https://cdn.datatables.net/searchpanes/1.2.1/js/dataTables.searchPanes.min.js"></script>
 	<script type="text/javascript" language="javascript" src="../js/dataTables.editor.min.js"></script>
 	<script type="text/javascript" language="javascript" src="./resources/syntax/shCore.js"></script>
@@ -63,34 +68,33 @@
 			editor = new $.fn.dataTable.Editor({
 				ajax: "/api/list",
 				table: "#example",
-				fields: [
+				dom: 'PBfrtip',
+				fields: [			
 					{
-						label: "Signname:",
+						label: "이메일:",
 						name: "users.signname",
 					},
 					{
-						label: "Name:",
+						label: "이름:",
 						name: "users.name",
 					},
 					{
-						label: "Phone:",
+						label: "핸드폰번호:",
 						name: "users.phone",
 					},
 					{
 						label: "회사명:",
 						name: "users.company_id",
-						// name: "users.company_id[].id",
-				   type: "select",
-        //   multiple: true,
-				//	type: "select",
-						 placeholder: "Select a location"
+				    type: 'text',
+						placeholder: "Select a location",	
+						id : "asearch"				
 					},
 					{
-						label: "Position:",
+						label: "직위/직급:",
 						name: "users.position",
 					},
 					{
-						label: "Tel:",
+						label: "전화번호:",
 						name: "users.tel",
 					},
 					{
@@ -109,8 +113,7 @@
 					// 	// HH:mm:ss"
 					},
 				],
-			});
-			
+			})					
 			// 항목별 검색기능
 			$("#example thead tr")
 				.clone(true)
@@ -177,7 +180,7 @@
 					},
 					// 항목별 검색기능 끝.
 ///Binding
-					dom: "PBfrtip",
+					dom: "Bfrtip", // PBfrtip
 					ajax: "/api/list",
 					columns: [
 						// { data: null, render: function ( data, type, row ) {
@@ -188,25 +191,15 @@
 						{ data: "users.name" },
 						{ data: "users.signname" },
 						{ data: "users.phone" },
-						{ data: "companies.name"},
+						{ data: "companies.name", editField:"users.companies_id"},
 						// { data: "name",render:"[, ].name"},
 						{ data: "users.position" },
 						{ data: "users.tel" },
 						{ data: "users.created_at" },				
 						{ data: "users.updated_at" },
 					],
-			// 		columnDefs:[{
-      //       searchPanes:{
-      //           show: true,
-      //       },
-      //       targets: [0, 1, 2, 3],
-      //   }
-			// ],
-					AutoComplete:true,
-					select: true,
-					AutoComplete: {
-						editor:editor
-					},
+				select: true,
+				searching: false,		
 					buttons: [
 						{ extend: "create", editor: editor, text: "등록" },
 						{ extend: "edit", editor: editor, text: "수정" },
@@ -216,6 +209,47 @@
 			);
 		});
 	</script>
+
+<!-- 자동완성 리스트를 불러오기위한 로직?-->
+<script>
+	$(function() {
+			// $.ajax({
+			// 	type: "get",
+			// 	url : "/api/companies",
+			// 	async:false,
+			// 	dataType:"json"
+			// });
+			var availableTags = [
+					"ActionScript",
+					"AppleScript",
+					"Asp",
+					"BASIC",
+					"C",
+					"C++",
+					"Clojure",
+					"COBOL",
+					"ColdFusion",
+					"Erlang",
+					"Fortran",
+					"Groovy",
+					"Haskell",
+					"Java",
+					"JavaScript",
+					"Lisp",
+					"Perl",
+					"PHP",
+					"Python",
+					"Ruby",
+					"Scala",
+					"Scheme"
+			];
+			$(document).on('keydown.autocomplete', '#asearch',function(){
+					$(this).autocomplete({source:availableTags});
+					console.log('확인');
+			});
+	});
+</script>
+
 </head>
 <body class="dt-example node">
 
