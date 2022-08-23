@@ -4,28 +4,18 @@ let dbConfig = {
   client: "mysql2",
 
   connection: {
-    //   // user: "root",
-    //   // password: "1234",
-    //   // database: "conaz",
-    //   // host: "localhost",
-    user: "datatables",
-    password: "test",
+    user:
+      process.env.NODE_ENV === "development"
+        ? "datatables"
+        : "zerotwo@zerotwo-mysql",
+    password: process.env.NODE_ENV === "development" ? "test" : "wpfhxn1234!",
     database: "conaz",
-    host: "10.23.100.73",
-
-    // connection: {
-    //   user: process.env.NODE_ENV === 'development' ? "datatables" :"zerotwo@zerotwo-mysql",
-    //   password: process.env.NODE_ENV === 'development' ? "test" : "wpfhxn1234!",
-    //   database: "conaz",
-    //   host: process.env.NODE_ENV === 'development' ? "10.23.100.73":"zerotwo-mysql.mysql.database.azure.com",
-    //   filename: "", // Only used for SQLite
-    //   dateStrings: true,
-    // user: "zerotwo@zerotwo-mysql",
-    // password: "wpfhxn1234!",
-    // database: "conaz",
-    // host: "zerotwo-mysql.mysql.database.azure.com",
-    // filename: "", // Only used for SQLite
-    // dateStrings: true,
+    host:
+      process.env.NODE_ENV === "development"
+        ? "10.23.100.73"
+        : "zerotwo-mysql.mysql.database.azure.com",
+    filename: "", // Only used for SQLite
+    dateStrings: true,
   },
 };
 

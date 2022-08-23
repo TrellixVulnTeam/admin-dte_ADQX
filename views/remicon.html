@@ -69,7 +69,9 @@
 					},
 					{
 						label: "회사명:",
-						name: "companies[].name",
+						name: "users.company_id",
+						type: "select",
+						placeholder: "Select a location"
 					},
 					{
 						label: "Position:",
@@ -168,7 +170,7 @@
 						{ data: "users.name" },
 						{ data: "users.signname" },
 						{ data: "users.phone" },
-						{ data: "companies", render:"[,].name"},
+						{ data: "companies.name"},
 						{ data: "users.position" },
 						{ data: "users.tel" },
 						{ data: "users.created_at" },				

@@ -36,15 +36,23 @@ router.all("/api/list", async function (req, res) {
         // .SetValue(new Date().toISOString())
         .getFormatter(Format.sqlDateToFormat("YYYY-MM-DD"))
         .setFormatter(Format.formatToSqlDate("YYYY-MM-DD")),
-      new Field("users.company_id")
+      new Field("users.company_id").options(
+        new Options().table("companies").value("id").label("name")
+      )
       // new Field("name")
     )
-    .join(
-      new Mjoin("companies")
-        .link("users.company_id", "companies.id")
-        .fields(new Field("name"))
-    )
-    .where({ company_type: "remicon" }); // users 테이블에 company_type이 remicon인 경우만
+    .leftJoin("companies", "users.company_id", "=", "companies.id")
+    .field(
+      new Field("companies.name").options(
+        new Options().table("companies").value("id").label("name")
+      )
+    );
+  // .join(
+  //   new Mjoin("companies")
+  //     .link("users.company_id", "companies.id")
+  //     .fields(new Field("name"))
+  // )
+  // .where({ company_type: "remicon" }); // users 테이블에 company_type이 remicon인 경우만
   await editor.process(req.body);
   res.json(editor.data());
 });
