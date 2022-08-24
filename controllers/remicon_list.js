@@ -12,13 +12,7 @@ let {
 
 // 레미콘사 회원 요청
 router.all("/api/list", async function (req, res) {
-  // var idvalue = req.body.data;
   console.log("요청확인");
-
-  // console.log(idvalue);
-  // console.log(req.company_id);
-  // console.log(req.body);
-  // console.log(req.query);
   let editor = new Editor(db, "users")
     .fields(
       new Field("users.id").set(false),
@@ -29,11 +23,9 @@ router.all("/api/list", async function (req, res) {
       new Field("users.position"),
       new Field("users.tel"),
       new Field("users.created_at")
-        // .SetValue(new Date().toISOString())
         .getFormatter(Format.sqlDateToFormat("YYYY-MM-DD"))
         .setFormatter(Format.formatToSqlDate("YYYY-MM-DD")),
       new Field("users.updated_at")
-        // .SetValue(new Date().toISOString())
         .getFormatter(Format.sqlDateToFormat("YYYY-MM-DD"))
         .setFormatter(Format.formatToSqlDate("YYYY-MM-DD")),
       new Field("companies.name"),

@@ -14,7 +14,7 @@
 	<link rel="stylesheet" type="text/css" href="./resources/demo.css">
 	<!-- 추가-->
 	<link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
-		<!-- 추가 끝-->
+	<!-- 추가 끝-->
 	<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.4/css/all.css" integrity="sha384-DyZ88mC6Up2uqS4h/KRgHuoeGwBcD4Ng9SiP4dIRy0EXTlnuz47vAwmeGwVChigm" crossorigin="anonymous"/>
 	<style type="text/css" class="init">
 	
@@ -173,8 +173,13 @@
 					},
 					// 항목별 검색기능 끝.
 ///Binding
+
 					dom: "Bfrtip", // PBfrtip
 					ajax: "/api/list",
+					// language:"lang_kor",
+					language:{"paginate":{
+						"next":"다음"
+					}},
 					columns: [					
 						{ data: "users.name" },
 						{ data: "users.signname" },
