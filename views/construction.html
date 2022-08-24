@@ -66,11 +66,10 @@
 					{
 						label: "건설사",
 						name: "name",
-					},
-					
+					},					
 					{
 						label: "주소",
-						name: "name",
+						name: "address",
 					},
 					{
 						label: "CEO이름",
@@ -80,11 +79,15 @@
 						label: "가입일",
 						name: "created_at",
 						type: "datetime",
+						def: function () { return new Date(); },
+    			 	format: "YYYY-MM-DD" 
 					},
 					{
 						label: "수정일",
 						name: "updated_at",
 						type: "datetime",
+						def: function () { return new Date(); },
+    			 	format: "YYYY-MM-DD" 
 					},
 				],
 			});
@@ -161,7 +164,7 @@
 						{ data: "name" },
 						{ data: "address"},
 						{ data: "ceo_name"},
-						{ data: "users.position" },
+						// { data: "users.position" },
 						{ data: "created_at" },
 						{ data: "updated_at" },
 
@@ -281,6 +284,8 @@
 									<th>건설사</th>
 									<th>주소</th>
 									<th>CEO이름</th>
+									<th>생성일</th>
+									<th>수정일</th>
 								</tr>
 							</thead>
 						

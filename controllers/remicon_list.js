@@ -10,7 +10,7 @@ let {
   SearchPaneOptions,
 } = require("datatables.net-editor-server");
 
-// 레미콘사 요청
+// 레미콘사 회원 요청
 router.all("/api/list", async function (req, res) {
   // var idvalue = req.body.data;
   console.log("요청확인");
@@ -37,15 +37,6 @@ router.all("/api/list", async function (req, res) {
         .getFormatter(Format.sqlDateToFormat("YYYY-MM-DD"))
         .setFormatter(Format.formatToSqlDate("YYYY-MM-DD")),
       new Field("companies.name"),
-      // .options(
-      //   new Options()
-      //     .table("users")
-      //     .value("company_id")
-      //     .label("company_id")
-      //     .where((q) => {
-      //       q.where("company_type", "=", "REMICON");
-      //     })
-      // ),
       new Field("users.company_id").options(
         new Options()
           .table("companies")
