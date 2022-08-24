@@ -12,10 +12,13 @@ let {
 
 // 레미콘사 요청
 router.all("/api/list", async function (req, res) {
+  // var idvalue = req.body.data;
   console.log("요청확인");
 
-  console.log(req.body);
-  console.log(req.query);
+  // console.log(idvalue);
+  // console.log(req.company_id);
+  // console.log(req.body);
+  // console.log(req.query);
   let editor = new Editor(db, "users")
     .fields(
       new Field("users.id").set(false),
@@ -34,6 +37,15 @@ router.all("/api/list", async function (req, res) {
         .getFormatter(Format.sqlDateToFormat("YYYY-MM-DD"))
         .setFormatter(Format.formatToSqlDate("YYYY-MM-DD")),
       new Field("companies.name"),
+      // .options(
+      //   new Options()
+      //     .table("users")
+      //     .value("company_id")
+      //     .label("company_id")
+      //     .where((q) => {
+      //       q.where("company_type", "=", "REMICON");
+      //     })
+      // ),
       new Field("users.company_id").options(
         new Options()
           .table("companies")
@@ -49,7 +61,6 @@ router.all("/api/list", async function (req, res) {
       //company_type , 건설사 or 레미콘
       q.where("users.company_type", "=", "REMICON");
     });
-
   await editor.process(req.body);
   res.json(editor.data());
 });
@@ -63,12 +74,10 @@ router.get("/api/companies", async function (req, res) {
       new Field("company_type"),
       new Field("name")
     )
-    .where({ company_type: "REMICON" });
-  // console.log(req.params);
-  // console.log(req.body);
-  // console.log(req.query);
-  console.log(req.query.index);
-  // console.log(editor.data());
+    .where((q) => {
+      //company_type , 건설사 or 레미콘
+      q.where("company_type", "=", "REMICON");
+    });
   await editor.process(req.body);
   res.json(editor.data());
 });
