@@ -16,7 +16,7 @@ router.all("/api/construction_member", async function (req, res) {
     new Field("users.name"),
     new Field("users.signname"),
     new Field("users.phone"),
-    new Field("users.company_type"),
+    new Field("users.company_type").setValue("CONSTRUCTION"),
     new Field("users.company_id").options(
       new Options().table('companies').value('id').label('name').where((q)=>{
         q.where('company_type', '=', 'CONSTRUCTION')
