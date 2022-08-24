@@ -1,0 +1,11 @@
+div{
+    border: 2px solid rgb(255, 0, 0);
+    width: fit-content;
+    margin: 20px auto;
+    padding: 2px 20px;
+    cursor: pointer;
+}
+
+p{
+    font-size: 14px;
+}
