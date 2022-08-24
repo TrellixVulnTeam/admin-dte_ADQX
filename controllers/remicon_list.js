@@ -64,9 +64,11 @@ router.get("/api/companies", async function (req, res) {
       new Field("name")
     )
     .where({ company_type: "REMICON" });
-
-  console.log(req.query);
-  console.log(editor.data());
+  // console.log(req.params);
+  // console.log(req.body);
+  // console.log(req.query);
+  console.log(req.query.index);
+  // console.log(editor.data());
   await editor.process(req.body);
   res.json(editor.data());
 });

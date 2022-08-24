@@ -14,8 +14,7 @@
 	<link rel="stylesheet" type="text/css" href="./resources/demo.css">
 	<!-- 추가-->
 	<link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
-	<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/searchpanes/1.2.1/css/searchPanes.dataTables.min.css">
-		<!-- 추가-->
+		<!-- 추가 끝-->
 	<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.4/css/all.css" integrity="sha384-DyZ88mC6Up2uqS4h/KRgHuoeGwBcD4Ng9SiP4dIRy0EXTlnuz47vAwmeGwVChigm" crossorigin="anonymous"/>
 	<style type="text/css" class="init">
 	
@@ -47,14 +46,8 @@
 	src="https://cdn.datatables.net/select/1.3.1/js/dataTables.select.min.js"
   ></script>
 	<!-- 추가 -->
-	<script
-	type="text/javascript"
-	language="javascript"
-	src="https://cdn.datatables.net/datetime/1.1.2/js/dataTables.dateTime.min.js"
-  ></script>
 	<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
-	<!-- <script src="https://code.jquery.com/ui/1.12.0/themes/smoothness/jquery-ui.css"></script> -->
-		<!-- 추가 -->
+		<!-- 추가 끝-->
 	<script type="text/javascript" language="javascript" src="https://cdn.datatables.net/searchpanes/1.2.1/js/dataTables.searchPanes.min.js"></script>
 	<script type="text/javascript" language="javascript" src="../js/dataTables.editor.min.js"></script>
 	<script type="text/javascript" language="javascript" src="./resources/syntax/shCore.js"></script>
@@ -68,7 +61,6 @@
 			editor = new $.fn.dataTable.Editor({
 				ajax: "/api/list",
 				table: "#example",
-				dom: 'PBfrtip',
 				fields: [			
 					{
 						label: "이메일:",
@@ -84,7 +76,8 @@
 					},
 					{
 						label: "회사명:",
-						name: "users.company_id",
+						// name: "users.company_id",
+						name :"companies.name",
 				    type: 'text',
 						placeholder: "Select a location",	
 						id : "asearch"				
@@ -102,14 +95,14 @@
 						name: "users.created_at",
 						type: "datetime",
 						def: function () { return new Date(); },
-    			 format: "YYYY-MM-DD" 
+    			 	format: "YYYY-MM-DD" 
 					},
 					{
 					  label: "Updated_at:",
 					  name: "users.updated_at",
 					  type: "datetime",
 						 def: function () { return new Date(); },
-    			 format: "YYYY-MM-DD" 
+    			  format: "YYYY-MM-DD" 
 					// 	// HH:mm:ss"
 					},
 				],
@@ -210,45 +203,29 @@
 		});
 	</script>
 
-<!-- 자동완성 리스트를 불러오기위한 로직?-->
+<!-- 자동완성 리스트를 불러오기위한 로직? -->
 <script>
 	$(function() {
-			// $.ajax({
-			// 	type: "get",
-			// 	url : "/api/companies",
-			// 	async:false,
-			// 	dataType:"json"
-			// });
-			var availableTags = [
-					"ActionScript",
-					"AppleScript",
-					"Asp",
-					"BASIC",
-					"C",
-					"C++",
-					"Clojure",
-					"COBOL",
-					"ColdFusion",
-					"Erlang",
-					"Fortran",
-					"Groovy",
-					"Haskell",
-					"Java",
-					"JavaScript",
-					"Lisp",
-					"Perl",
-					"PHP",
-					"Python",
-					"Ruby",
-					"Scala",
-					"Scheme"
-			];
+		let key=[];
+		$.ajax({
+				type: "get",
+				url : "/api/companies",
+				async:false,
+				dataType:"json",
+				success : function (data) {			
+					console.log(data.data);
+					for(var i in data.data) {
+						key[i] = data.data[i].name;
+					}
+				}			
+			});
 			$(document).on('keydown.autocomplete', '#asearch',function(){
-					$(this).autocomplete({source:availableTags});
+					$(this).autocomplete({source:key});
 					console.log('확인');
 			});
 	});
 </script>
+<!-- 자동완성 리스트를 불러오기위한 로직? 끝 -->
 
 </head>
 <body class="dt-example node">
@@ -355,7 +332,6 @@
 									<th>사내 전화번호</th>
 									<th>가입일</th>
 									<th>수정일</th>
-									<!-- <th>Salary</th> -->
 								</tr>
 							</thead>
 						
