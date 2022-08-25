@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1.0, user-scalable=no">
+	<link rel="shortcut icon" type="image/ico" href="http://www.datatables.net/favicon.ico">
+	<title>Conaz_admin</title>
+	<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.22/css/jquery.dataTables.min.css">
+	<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/buttons/1.6.5/css/buttons.dataTables.min.css">
+	<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/select/1.3.1/css/select.dataTables.min.css">
+	<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/datetime/1.1.2/css/dataTables.dateTime.min.css">
+	<link rel="stylesheet" type="text/css" href="../css/editor.dataTables.min.css">
+	<link rel="stylesheet" type="text/css" href="./resources/syntax/shCore.css">
+	<link rel="stylesheet" type="text/css" href="./resources/demo.css">
+	<!-- 추가-->
+	<link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+	<!-- 추가 끝-->
+	<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.4/css/all.css" integrity="sha384-DyZ88mC6Up2uqS4h/KRgHuoeGwBcD4Ng9SiP4dIRy0EXTlnuz47vAwmeGwVChigm" crossorigin="anonymous"/>
+	<style type="text/css" class="init">
+	
+	</style>
+	   <style>
+		thead input {
+		  width: 100%;
+			text-align: center;
+		}
+	  </style>
+	<script
+	type="text/javascript"
+	language="javascript"
+	src="https://code.jquery.com/jquery-3.5.1.js"
+  ></script>
+  <script
+	type="text/javascript"
+	language="javascript"
+	src="https://cdn.datatables.net/1.10.22/js/jquery.dataTables.min.js"
+  ></script>
+  <script
+	type="text/javascript"
+	language="javascript"
+	src="https://cdn.datatables.net/buttons/1.6.5/js/dataTables.buttons.min.js"
+  ></script>
+  <script
+	type="text/javascript"
+	language="javascript"
+	src="https://cdn.datatables.net/select/1.3.1/js/dataTables.select.min.js"
+  ></script>
+	<!-- 추가 -->
+	<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+		<!-- 추가 끝-->
+	<script type="text/javascript" language="javascript" src="https://cdn.datatables.net/searchpanes/1.2.1/js/dataTables.searchPanes.min.js"></script>
+	<script type="text/javascript" language="javascript" src="../js/dataTables.editor.min.js"></script>
+	<script type="text/javascript" language="javascript" src="./resources/syntax/shCore.js"></script>
+	<script type="text/javascript" language="javascript" src="./resources/demo.js"></script>
+	<script type="text/javascript" language="javascript" src="./resources/editor-demo.js"></script>
+	<script type="text/javascript" language="javascript" class="init">
+		var editor; // use a global for the submit and return data rendering in the examples
+
+		$(document).ready(function () {
+			//CRUD
+			editor = new $.fn.dataTable.Editor({
+				ajax: "/api/list",
+				table: "#remicon_table",
+				fields: [			
+					{
+						label: "이메일:",
+						name: "users.signname",
+					},
+					{
+						label: "이름:",
+						name: "users.name",
+					},
+					{
+						label: "핸드폰번호:",
+						name: "users.phone",
+					},
+					{
+						label: "회사명:",
+						name: "users.company_id",
+						// name :"companies.name",
+				    type: 'text',
+						placeholder: "Select a location",	
+						id : "asearch"				
+					},
+					{
+						label: "직위/직급:",
+						name: "users.position",
+					},
+					{
+						label: "전화번호:",
+						name: "users.tel",
+					},
+					{
+						label: "Created_at:",
+						name: "users.created_at",
+						type: "datetime",
+						def: function () { return new Date(); },
+    			 	format: "YYYY-MM-DD" 
+					},
+					{
+					  label: "Updated_at:",
+					  name: "users.updated_at",
+					  type: "datetime",
+						 def: function () { return new Date(); },
+    			  format: "YYYY-MM-DD" 
+					// 	// HH:mm:ss"
+					},
+				],
+			})					
+			// 항목별 검색기능
+			$("#remicon_table thead tr")
+				.clone(true)
+				.addClass("filters")
+				.appendTo("#remicon_table thead");
+
+			$("#remicon_table").DataTable(
+				{
+					orderCellsTop: true,
+					fixedHeader: true,
+					initComplete: function () {
+						var api = this.api();
+
+						// For each column
+						api
+							.columns()
+							.eq(0)
+							.each(function (colIdx) {
+								// Set the header cell to contain the input element
+								var cell = $(".filters th").eq(
+									$(api.column(colIdx).header()).index()
+								);
+								var title = $(cell).text();
+								$(cell).html(
+									'<input type="text" placeholder="' + title + '" />'
+								);
+
+								// On every keypress in this input
+								$(
+									"input",
+									$(".filters th").eq($(api.column(colIdx).header()).index())
+								)
+									.off("keyup change")
+									.on("change", function (e) {
+										// Get the search value
+										$(this).attr("title", $(this).val());
+										var regexr = "({search})"; //$(this).parents('th').find('select').val();
+
+										var cursorPosition = this.selectionStart;
+										// Search the column for that value
+										api
+											.column(colIdx)
+											.search(
+												this.value != ""
+													? regexr.replace(
+															"{search}",
+															"(((" + this.value + ")))"
+														)
+													: "",
+												this.value != "",
+												this.value == ""
+											)
+											.draw();
+									})
+									.on("keyup", function (e) {
+										e.stopPropagation();
+
+										$(this).trigger("change");
+										$(this)
+											.focus()[0]
+											.setSelectionRange(cursorPosition, cursorPosition);
+									});
+							});
+					},
+					// 항목별 검색기능 끝.
+///Binding
+
+					dom: "Bfrtip", // PBfrtip
+					ajax: "/api/list",
+					// language:"lang_kor",
+					language:{"paginate":{
+						"next":"다음"
+					}},
+					columns: [					
+						{ data: "users.name" },
+						{ data: "users.signname" },
+						{ data: "users.phone" },
+						{ data: "companies.name", editField:"users.companies_id"},
+						// { data: "name",render:"[, ].name"},
+						{ data: "users.position" },
+						{ data: "users.tel" },
+						{ data: "users.created_at" },				
+						{ data: "users.updated_at" },
+					],
+				select: true,
+				searching: true,		
+					buttons: [
+						{ extend: "create", editor: editor, text: "등록" },
+						{ extend: "edit", editor: editor, text: "수정" },
+						{ extend: "remove", editor: editor, text: "삭제" },
+					],
+				},
+			);
+		});
+	</script>
+
+<!-- 자동완성 리스트를 불러오기위한 로직 -->
+<script>
+	$(function() {
+		let companies_namelist=[];
+		$.ajax({
+				type: "get",
+				url : "/api/companies",
+				dataType:"json",
+				success : function (data) {			
+					console.log(data.data);
+					for(var i in data.data) {
+						companies_namelist[i] = data.data[i].name +"-"+data.data[i].id;
+						console.log(companies_namelist[i]);
+					}
+				}			
+			});
+			$(document).on('keydown.autocomplete', '#asearch',function(){
+					$(this).autocomplete({source:companies_namelist});
+					console.log('확인');
+			});
+	});
+</script>
+<!-- 자동완성 리스트를 불러오기위한 로직 끝 -->
+
+</head>
+<body class="dt-example node">
+
+	<nav class="navbar navbar-expand navbar-dark bg-dark static-top">
+
+		<a class="navbar-brand mr-1" href="/">Conaz</a>
+	
+		<button class="btn btn-link btn-sm text-white order-1 order-sm-0" id="sidebarToggle" href="#">
+		  <i class="fas fa-bars"></i>
+		</button>
+	
+		<!-- Navbar Search -->
+		<form class="d-none d-md-inline-block form-inline ml-auto mr-0 mr-md-3 my-2 my-md-0">
+		  <div class="input-group">
+		  </div>
+		</form>
+	
+		<!-- Navbar -->
+		<ul class="navbar-nav ml-auto ml-md-0">
+		 
+		  <li class="nav-item dropdown no-arrow mx-1">
+		   <span class="badge badge-danger">9+</span>
+			<div class="dropdown-menu dropdown-menu-right" aria-labelledby="messagesDropdown">
+			  <a class="dropdown-item" href="#">Action</a>
+			  <a class="dropdown-item" href="#">Another action</a>
+			  <div class="dropdown-divider"></div>
+			  <a class="dropdown-item" href="#">Something else here</a>
+			</div>
+		  </li>
+		  <li class="nav-item dropdown no-arrow">
+			<a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+			  <img src="../public/images/user.png"class="avatar"/>
+			</a>
+			<div class="dropdown-menu dropdown-menu-right" aria-labelledby="userDropdown">
+			  <a class="dropdown-item" href="#">Settings</a>
+			  <a class="dropdown-item" href="#">Activity Log</a>
+			  <div class="dropdown-divider"></div>
+			  <a class="dropdown-item" href="#" data-toggle="modal" data-target="#logoutModal">Logout</a>
+			</div>
+		  </li>
+		</ul>
+	
+	  </nav>
+	  <div id="wrapper">
+
+		<!-- Sidebar -->
+		<ul class="sidebar navbar-nav">
+		  <li class="nav-item dropdown" >
+			<a class="nav-link dropdown-toggle" href="/" id="pagesDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+			  <i class="fas fa-fw fa-table"></i>
+			  <span>업체/회원관리</span></a>
+			  <div class="dropdown-menu" aria-labelledby="pagesDropdown">
+				<a class="dropdown-item" href="/views/simple.html">레미콘 공장</a>
+				<a class="dropdown-item" href="/views/simple.html">레미콘사 회원</a>
+				<a class="dropdown-item" href="/views/simple.html">건설회사</a>
+				<a class="dropdown-item" href="/views/simple.html">건설사 회원</a>
+			 
+		  </li>
+		  <li class="nav-item dropdown" >
+			<a class="nav-link dropdown-toggle" href="/" id="pagesDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+			  <i class="fas fa-fw fa-table"></i>
+			  <span>거래관리</span></a>
+			  <div class="dropdown-menu" aria-labelledby="pagesDropdown">
+				<a class="dropdown-item" href="/">견적</a>
+				<a class="dropdown-item" href="/">주문</a>
+				<a class="dropdown-item" href="/">거래네역</a>
+		  </li>
+		  <li class="nav-item dropdown" >
+			<a class="nav-link dropdown-toggle" href="/" id="pagesDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+			  <i class="fas fa-fw fa-table"></i>
+			  <span>자료실</span></a>
+			  <div class="dropdown-menu" aria-labelledby="pagesDropdown">
+				<a class="dropdown-item" href="/">단가표</a>
+				<a class="dropdown-item" href="/">단가표 금액 수정</a>
+		  </li>
+		  <li class="nav-item dropdown" >
+			<a class="nav-link dropdown-toggle" href="/" id="pagesDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+			  <i class="fas fa-fw fa-table"></i>
+			  <span>기타</span></a>
+			  <div class="dropdown-menu" aria-labelledby="pagesDropdown">
+				<a class="dropdown-item" href="/">팝업설정</a>
+				<a class="dropdown-item" href="/">메인화면 이미지 변경</a>
+				<a class="dropdown-item" href="/">인허가지도</a>
+				<a class="dropdown-item" href="/">공지사항</a>
+				<a class="dropdown-item" href="/">FAQ</a>
+				<a class="dropdown-item" href="/">1:1문의</a>
+				<a class="dropdown-item" href="/">메일보내기</a>
+				<a class="dropdown-item" href="/">관리자메일함</a>
+		  </li>
+		</ul>
+		<div id="content-wrapper">
+		  <div class="container-fluid">
+					<div class="demo-html">
+						<table id="remicon_table" class="display" style="width:100%" ellspacing="0">
+							<thead>
+								<tr>
+									<th>이름</th>
+									<th>이메일</th>
+									<th>휴대전화</th>
+									<th>회사명</th>
+									<th>직위/직급</th>
+									<!-- <th>부서</th> -->
+									<th>사내 전화번호</th>
+									<th>가입일</th>
+									<th>수정일</th>
+								</tr>
+							</thead>
+						
+						</table>
+					</div>
+		  </div>
+		</div>
+	  </div>
+</body>
+</html>

@@ -16,14 +16,9 @@ router.all("/api/remicon", async function (req, res) {
   console.log("요청확인");
   let editor = new Editor(db, "companies")
     .fields(
-      new Field("id").set(false),
+      // new Field("id").set(false),
       new Field("name"),
-      new Field("company_type").options(
-        new Options()
-          .table("companies")
-          .value("company_type")
-          .label("company_type")
-      ),
+      new Field("company_type").setValue("remicon"),
       new Field("address"),
       new Field("ceo_name"),
       new Field("created_at")
