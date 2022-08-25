@@ -5,19 +5,31 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1.0, user-scalable=no">
 	<link rel="shortcut icon" type="image/ico" href="http://www.datatables.net/favicon.ico">
 	<title>Conaz_admin</title>
+	</style>
+	  <script
+	  src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js"></script> 
+	<script>
+	   // You have a 'moment' global here
+	   const today = moment();
+	 </script>
 	   <style>
 		thead input {
 		  width: 100%;
-		  text-align: center;
+			text-align: center;
 		}
 	  </style>
+	
 
+	<!-- <script src="https://code.jquery.com/ui/1.12.0/themes/smoothness/jquery-ui.css"></script> -->
+		<!-- 추가 -->
+	<script type="text/javascript" language="javascript" src="https://cdn.datatables.net/searchpanes/1.2.1/js/dataTables.searchPanes.min.js"></script>
 	<script type="text/javascript" language="javascript" src="../js/dataTables.editor.min.js"></script>
 	<script type="text/javascript" language="javascript" src="./resources/syntax/shCore.js"></script>
 	<script type="text/javascript" language="javascript" src="./resources/demo.js"></script>
 	<script type="text/javascript" language="javascript" src="./resources/editor-demo.js"></script>
 	<script type="text/javascript" language="javascript" class="init">
-		var lang_kor={
+	//Korean    
+	var lang_kor={
 		"decimal":"","emptyTable":"데이터가 없습니다.","info":"_START_ 부터- _END_ 까지 (총 _TOTAL_ 데이터)","infoEmpty":"0개","infoFiltered":"(전체 _MAX_명 중 검색결과)",
 		"infoPostFix":"","thousands":",",
 		"lengthMenu":"_MENU_개씩 보기",
@@ -27,51 +39,66 @@
 		var editor; // use a global for the submit and return data rendering in the examples
 
 		$(document).ready(function () {
-			
 			//CRUD
 			editor = new $.fn.dataTable.Editor({
-				ajax: "/api/construction",
-				table: "#construction",
+				ajax: "/api/construction_member",
+				table: "#construction_member",
 				fields: [
 					{
-						label: "건설사 타입",
-						name: "company_type",
+						label: "이름",
+						name: "users.name",
 					},
 					{
-						label: "건설사",
-						name: "name",
-					},					
+						label: "이메일",
+						name: "users.signname",
+					},
+					
 					{
-						label: "주소",
-						name: "address",
+						label: "휴대전화",
+						name: "users.phone",
 					},
 					{
-						label: "CEO이름",
-						name: "ceo_name",
+						label: "회사명",
+						name: "users.company_id",
+					    type: 'text',
+							
+						id : "search"		
+					},
+					{
+						label: "직위/직급",
+						name: "users.position",
+					},
+					{
+						label: "사내 전화번호",
+						name: "users.tel",
 					},
 					{
 						label: "가입일",
-						name: "created_at",
+						name: "users.created_at",
 						type: "datetime",
-						def: function () { return new Date(); },
-    			 	format: "YYYY-MM-DD" 
+						 def: function () { return new Date(); },
+    			 		format: "YYYY-MM-DD" 
 					},
 					{
 						label: "수정일",
-						name: "updated_at",
+						name: "users.updated_at",
 						type: "datetime",
-						def: function () { return new Date(); },
-    			 	format: "YYYY-MM-DD" 
+						 def: function () { return new Date(); },
+    					format: "YYYY-MM-DD" 
 					},
 				],
+				
 			});
+
+		
+			
 			// 항목별 검색기능
-			$("#construction thead tr")
+			$("#construction_member thead tr")
 				.clone(true)
 				.addClass("filters")
-				.appendTo("#construction thead");
+				.appendTo("#construction_member thead");
 
-			$("#construction").DataTable(
+			$("#construction_member").DataTable(
 				{
 					orderCellsTop: true,
 					fixedHeader: true,
@@ -132,17 +159,17 @@
 					// 항목별 검색기능 끝.
 				//DATA 바인딩
 					dom: "Bfrtip",
-					ajax: "/api/construction",
+					ajax: "/api/construction_member",
 					language : lang_kor,
 					columns: [
-						{ data: "company_type"},
-						{ data: "name" },
-						{ data: "address"},
-						{ data: "ceo_name"},
-						// { data: "users.position" },
-						{ data: "created_at" },
-						{ data: "updated_at" },
-
+						{ data: "users.name"},
+						{ data: "users.signname" },
+						{ data: "users.phone"},
+						{ data: "companies.name"},
+						{ data: "users.position" },
+						{ data: "users.tel" },
+						{ data: "users.created_at" },
+					
 					],
 					select: true,
 					buttons: [
@@ -151,30 +178,60 @@
 						{ extend: "remove", editor: editor, text: "삭제" },
 					],
 				},
-				function () {
-					console.log("확인");
-				}
+				
 			);
 		});
-	</script>
+</script>
+<script>
+	var data 
+	var availableTags = []
+	$(function() {
+			$.ajax({
+				method: "get",
+				url : "/api/construction_member",
+				dataType:"json",
+		
+			}).done(function(data){
+				for(var ele in data.options){
+			
+       				 for(var ele2 in data.options[ele]){
+						var ele2name = []
+						// ele 는 users.company_id 가 된다
+						availableTags.push({label:data.options[ele][ele2].label + - +data.options[ele][ele2].value,value:data.options[ele][ele2].value})	
+						
+						console.log("availableTags",availableTags)
+       				 }	
+   					 }
+			})
+		
+		
+			$(document).on('keydown.autocomplete', '#search',function(){
+					$(this).autocomplete({source:availableTags});
+					console.log('확인');
+			});
+		
+	});
+</script>
 </head>
 <body class="dt-example node">
-		<h1 style="margin: 10px;" >건설사</h1> <!--건설사 회원에서 건설사 공장으로 수정-->
-			<div class="demo-html">
-				<table id="construction" class="display" style="width:100%">
-					<thead>
-						<tr>
-							<th>회사 유형</th>
-							<th>건설사</th>
-							<th>주소</th>
-							<th>CEO이름</th>
-							<th>생성일</th>
-							<th>수정일</th>
-						</tr>
-					</thead>				
-				</table>
-			</div>
+			<h1 style="margin: 10px;" >건설사 주문내역</h1>
 	
-	
+					<div class="demo-html">
+						<table id="construction_member" class="display" style="width:100%" cellspacing="0">
+							<thead>
+								<tr>
+									<th>이름</th>
+									<th>이메일</th>
+									<th>휴대전화</th>
+									<th>회사명</th>
+									<th>직위/직급</th>
+									<th>사내 전화번호</th>
+									<th>가입일</th>
+								</tr>
+							</thead>
+						
+						</table>
+				
+		  </div>
 </body>
 </html>
