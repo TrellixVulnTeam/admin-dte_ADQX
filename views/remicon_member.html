@@ -60,7 +60,7 @@
 			//CRUD
 			editor = new $.fn.dataTable.Editor({
 				ajax: "/api/list",
-				table: "#example",
+				table: "#remicon_table",
 				fields: [			
 					{
 						label: "이메일:",
@@ -108,12 +108,12 @@
 				],
 			})					
 			// 항목별 검색기능
-			$("#example thead tr")
+			$("#remicon_table thead tr")
 				.clone(true)
 				.addClass("filters")
-				.appendTo("#example thead");
+				.appendTo("#remicon_table thead");
 
-			$("#example").DataTable(
+			$("#remicon_table").DataTable(
 				{
 					orderCellsTop: true,
 					fixedHeader: true,
@@ -320,7 +320,7 @@
 		<div id="content-wrapper">
 		  <div class="container-fluid">
 					<div class="demo-html">
-						<table id="example" class="display" style="width:100%" ellspacing="0">
+						<table id="remicon_table" class="display" style="width:100%" ellspacing="0">
 							<thead>
 								<tr>
 									<th>이름</th>

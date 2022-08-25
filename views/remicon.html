@@ -70,7 +70,7 @@
 			//CRUD
 			editor = new $.fn.dataTable.Editor({
 				ajax: "/api/remicon",
-				table: "#example",
+				table: "#remicon_table",
 				fields: [			
 				{
 						label: "건설사 타입",
@@ -106,12 +106,12 @@
 				],
 			})					
 			// 항목별 검색기능
-			$("#example thead tr")
+			$("#remicon_table thead tr")
 				.clone(true)
 				.addClass("filters")
-				.appendTo("#example thead");
+				.appendTo("#remicon_table thead");
 
-			$("#example").DataTable(
+			$("#remicon_table").DataTable(
 				{
 					orderCellsTop: true,
 					fixedHeader: true,
@@ -300,7 +300,7 @@
 			<h1 style="margin: 10px;" >레미콘 공장</h1>
 		  <div class="container-fluid">
 					<div class="demo-html">
-						<table id="example" class="display" style="width:100%">
+						<table id="remicon_table" class="display" style="width:100%">
 							<thead>
 								<tr>
 									<th>회사 유형</th>
