@@ -7,13 +7,23 @@ let {
   Format,
   Options,
   Mjoin,
+  SearchPaneOptions,
 } = require("datatables.net-editor-server");
 
-router.all("/api/construction", async function (req, res) {
+// 레미콘사 요청
+router.all("/api/remicon", async function (req, res) {
+  // var idvalue = req.body.data;
+  console.log("요청확인");
   let editor = new Editor(db, "companies")
     .fields(
-      new Field("company_type").setValue("CONSTRUCTION"),
+      new Field("id").set(false),
       new Field("name"),
+      new Field("company_type").options(
+        new Options()
+          .table("companies")
+          .value("company_type")
+          .label("company_type")
+      ),
       new Field("address"),
       new Field("ceo_name"),
       new Field("created_at")
@@ -25,7 +35,7 @@ router.all("/api/construction", async function (req, res) {
     )
     .where((q) => {
       //company_type , 건설사 or 레미콘
-      q.where("company_type", "=", "CONSTRUCTION");
+      q.where("company_type", "=", "REMICON");
     });
   await editor.process(req.body);
   res.json(editor.data());

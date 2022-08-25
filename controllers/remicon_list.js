@@ -10,12 +10,9 @@ let {
   SearchPaneOptions,
 } = require("datatables.net-editor-server");
 
-// 레미콘사 요청
+// 레미콘사 회원 요청
 router.all("/api/list", async function (req, res) {
   console.log("요청확인");
-
-  console.log(req.body);
-  console.log(req.query);
   let editor = new Editor(db, "users")
     .fields(
       new Field("users.id").set(false),
@@ -26,11 +23,9 @@ router.all("/api/list", async function (req, res) {
       new Field("users.position"),
       new Field("users.tel"),
       new Field("users.created_at")
-        // .SetValue(new Date().toISOString())
         .getFormatter(Format.sqlDateToFormat("YYYY-MM-DD"))
         .setFormatter(Format.formatToSqlDate("YYYY-MM-DD")),
       new Field("users.updated_at")
-        // .SetValue(new Date().toISOString())
         .getFormatter(Format.sqlDateToFormat("YYYY-MM-DD"))
         .setFormatter(Format.formatToSqlDate("YYYY-MM-DD")),
       new Field("companies.name"),
@@ -49,7 +44,6 @@ router.all("/api/list", async function (req, res) {
       //company_type , 건설사 or 레미콘
       q.where("users.company_type", "=", "REMICON");
     });
-
   await editor.process(req.body);
   res.json(editor.data());
 });
@@ -63,10 +57,10 @@ router.get("/api/companies", async function (req, res) {
       new Field("company_type"),
       new Field("name")
     )
-    .where({ company_type: "REMICON" });
-
-  console.log(req.query);
-  console.log(editor.data());
+    .where((q) => {
+      //company_type , 건설사 or 레미콘
+      q.where("company_type", "=", "REMICON");
+    });
   await editor.process(req.body);
   res.json(editor.data());
 });

@@ -5,23 +5,13 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1.0, user-scalable=no">
 	<link rel="shortcut icon" type="image/ico" href="http://www.datatables.net/favicon.ico">
 	<title>Conaz_admin</title>
-	</style>
-	  <script
-	  src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js"></script> 
-	<script>
-	   // You have a 'moment' global here
-	   const today = moment();
-	 </script>
 	   <style>
 		thead input {
 		  width: 100%;
 			text-align: center;
 		}
 	  </style>
-	
-
-	<!-- <script src="https://code.jquery.com/ui/1.12.0/themes/smoothness/jquery-ui.css"></script> -->
-		<!-- 추가 -->
+		<!-- 추가 끝-->
 	<script type="text/javascript" language="javascript" src="https://cdn.datatables.net/searchpanes/1.2.1/js/dataTables.searchPanes.min.js"></script>
 	<script type="text/javascript" language="javascript" src="../js/dataTables.editor.min.js"></script>
 	<script type="text/javascript" language="javascript" src="./resources/syntax/shCore.js"></script>
@@ -33,64 +23,61 @@
 		$(document).ready(function () {
 			//CRUD
 			editor = new $.fn.dataTable.Editor({
-				ajax: "/api/construction_member",
-				table: "#construction_member",
-				fields: [
+				ajax: "/api/list",
+				table: "#remicon_table",
+				fields: [			
 					{
-						label: "이름",
+						label: "이메일:",
+						name: "users.signname",
+					},
+					{
+						label: "이름:",
 						name: "users.name",
 					},
 					{
-						label: "이메일",
-						name: "users.signname",
-					},
-					
-					{
-						label: "휴대전화",
+						label: "핸드폰번호:",
 						name: "users.phone",
 					},
 					{
-						label: "회사명",
+						label: "회사명:",
 						name: "users.company_id",
-					    type: 'text',
-							
-						id : "search"		
+						// name :"companies.name",
+				    type: 'text',
+						placeholder: "Select a location",	
+						id : "asearch"				
 					},
 					{
-						label: "직위/직급",
+						label: "직위/직급:",
 						name: "users.position",
 					},
 					{
-						label: "사내 전화번호",
+						label: "전화번호:",
 						name: "users.tel",
 					},
 					{
-						label: "가입일",
+						label: "Created_at:",
 						name: "users.created_at",
 						type: "datetime",
-						 def: function () { return new Date(); },
-    			 		format: "YYYY-MM-DD" 
+						def: function () { return new Date(); },
+    			 	format: "YYYY-MM-DD" 
 					},
 					{
-						label: "수정일",
-						name: "users.updated_at",
-						type: "datetime",
+					  label: "Updated_at:",
+					  name: "users.updated_at",
+					  type: "datetime",
 						 def: function () { return new Date(); },
-    					format: "YYYY-MM-DD" 
+    			  format: "YYYY-MM-DD" 
+					// 	// HH:mm:ss"
 					},
 				],
-				
-			});
-
-		
-			
+			})					
 			// 항목별 검색기능
-			$("#construction_member thead tr")
+			$("#remicon_table thead tr")
 				.clone(true)
 				.addClass("filters")
-				.appendTo("#construction_member thead");
+				.appendTo("#remicon_table thead");
 
-			$("#construction_member").DataTable(
+			$("#remicon_table").DataTable(
 				{
 					orderCellsTop: true,
 					fixedHeader: true,
@@ -149,80 +136,84 @@
 							});
 					},
 					// 항목별 검색기능 끝.
-				//DATA 바인딩
-					dom: "Bfrtip",
-					ajax: "/api/construction_member",
-					columns: [
-						{ data: "users.name"},
+///Binding
+
+					dom: "Bfrtip", // PBfrtip
+					ajax: "/api/list",
+					// language:"lang_kor",
+					language:{"paginate":{
+						"next":"다음"
+					}},
+					columns: [					
+						{ data: "users.name" },
 						{ data: "users.signname" },
-						{ data: "users.phone"},
-						{ data: "companies.name"},
+						{ data: "users.phone" },
+						{ data: "companies.name", editField:"users.companies_id"},
+						// { data: "name",render:"[, ].name"},
 						{ data: "users.position" },
 						{ data: "users.tel" },
-						{ data: "users.created_at" },
-					
+						{ data: "users.created_at" },				
+						{ data: "users.updated_at" },
 					],
-					select: true,
+				select: true,
+				searching: true,		
 					buttons: [
 						{ extend: "create", editor: editor, text: "등록" },
 						{ extend: "edit", editor: editor, text: "수정" },
 						{ extend: "remove", editor: editor, text: "삭제" },
 					],
 				},
-				
 			);
 		});
-</script>
+	</script>
+
+<!-- 자동완성 리스트를 불러오기위한 로직 -->
 <script>
-	var data 
-	var availableTags = []
 	$(function() {
-			$.ajax({
-				method: "get",
-				url : "/api/construction_member",
+		let companies_namelist=[];
+		$.ajax({
+				type: "get",
+				url : "/api/companies",
 				dataType:"json",
-		
-			}).done(function(data){
-				for(var ele in data.options){
-			
-       				 for(var ele2 in data.options[ele]){
-						var ele2name = []
-						// ele 는 users.company_id 가 된다
-						availableTags.push({label:data.options[ele][ele2].label + - +data.options[ele][ele2].value,value:data.options[ele][ele2].value})	
-						
-						console.log("availableTags",availableTags)
-       				 }	
-   					 }
-			})
-		
-		
-			$(document).on('keydown.autocomplete', '#search',function(){
-					$(this).autocomplete({source:availableTags});
+				success : function (data) {			
+					console.log(data.data);
+					for(var i in data.data) {
+						companies_namelist[i] = data.data[i].name +"-"+data.data[i].id;
+						console.log(companies_namelist[i]);
+					}
+				}			
+			});
+			$(document).on('keydown.autocomplete', '#asearch',function(){
+					$(this).autocomplete({source:companies_namelist});
 					console.log('확인');
 			});
-		
 	});
 </script>
+<!-- 자동완성 리스트를 불러오기위한 로직 끝 -->
+
 </head>
 <body class="dt-example node">
-			<h1 style="margin: 10px;" >건설사 회원2</h1>
-	
-					<div class="demo-html">
-						<table id="construction_member" class="display" style="width:100%" cellspacing="0">
-							<thead>
-								<tr>
-									<th>이름</th>
-									<th>이메일</th>
-									<th>휴대전화</th>
-									<th>회사명</th>
-									<th>직위/직급</th>
-									<th>사내 전화번호</th>
-									<th>가입일</th>
-								</tr>
-							</thead>
+	<h1 style="margin: 10px;" >레미콘공장 회원</h1>
+		<div class="demo-html">
+			<table id="remicon_table" class="display" style="width:100%" ellspacing="0">
+					<thead>
+						<tr>
+							<th>이름</th>
+							<th>이메일</th>
+							<th>휴대전화</th>
+							<th>회사명</th>
+							<th>직위/직급</th>
+							<!-- <th>부서</th> -->
+							<th>사내 전화번호</th>
+							<th>가입일</th>
+							<th>수정일</th>
+							</tr>
+						</thead>
 						
 						</table>
-				
-		  </div>
+					</div>
+		
+	
+	  
 </body>
 </html>
