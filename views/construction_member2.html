@@ -41,7 +41,7 @@
 		$(document).ready(function () {
 			//CRUD
 			editor = new $.fn.dataTable.Editor({
-				ajax: "/api/construction_member",
+				ajax: "/api/construction_member2",
 				table: "#construction_member",
 				fields: [
 					{
@@ -62,7 +62,7 @@
 						name: "users.company_id",
 					    type: 'text',
 							
-						id : "search"		
+						id : "csearch"		
 					},
 					{
 						label: "직위/직급",
@@ -159,7 +159,7 @@
 					// 항목별 검색기능 끝.
 				//DATA 바인딩
 					dom: "Bfrtip",
-					ajax: "/api/construction_member",
+					ajax: "/api/construction_member2",
 					language : lang_kor,
 					columns: [
 						{ data: "users.name"},
@@ -183,12 +183,38 @@
 		});
 </script>
 <script>
+    
+	var availableTags = []
+	$(function() {
+					$.ajax({
+							method: "get",
+							url : "/api/construction_member_info",
+							dataType:"json",
+			
+					}).done(function (data) {
+				// console.log(data.data);
+				for (var i in data.data) {
+					availableTags.push({
+						label: data.data[i].name + -+data.data[i].id,
+						value: data.data[i].id,
+					});
+					console.log(availableTags[i]);
+				}
+			});
+			$(document).on("keydown.autocomplete", "#csearch", function () {
+				$(this).autocomplete({ source: availableTags });
+				console.log("확인");
+			});
+			
+	});
+</script>
+<!-- <script>
 	var data 
 	var availableTags = []
 	$(function() {
 			$.ajax({
 				method: "get",
-				url : "/api/construction_member",
+				url : "/api/construction_member_info",
 				dataType:"json",
 		
 			}).done(function(data){
@@ -199,7 +225,7 @@
 						// ele 는 users.company_id 가 된다
 						availableTags.push({label:data.options[ele][ele2].label + - +data.options[ele][ele2].value,value:data.options[ele][ele2].value})	
 						
-						console.log("availableTags",availableTags)
+						// console.log("availableTags",availableTags)
        				 }	
    					 }
 			})
@@ -211,7 +237,7 @@
 			});
 		
 	});
-</script>
+</script> -->
 </head>
 <body class="dt-example node">
 			<h1 style="margin: 10px;" >건설사 회원</h1>
@@ -228,8 +254,7 @@
 									<th>사내 전화번호</th>
 									<th>가입일</th>
 								</tr>
-							</thead>
-						
+							</thead>						
 						</table>
 				
 		  </div>
