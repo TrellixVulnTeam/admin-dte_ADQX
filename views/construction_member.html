@@ -6,12 +6,7 @@
 	<link rel="shortcut icon" type="image/ico" href="http://www.datatables.net/favicon.ico">
 	<title>Conaz_admin</title>
 	</style>
-	  <script
-	  src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js"></script> 
-	<script>
-	   // You have a 'moment' global here
-	   const today = moment();
-	 </script>
+	
 	   <style>
 		thead input {
 		  width: 100%;
@@ -23,10 +18,7 @@
 	<!-- <script src="https://code.jquery.com/ui/1.12.0/themes/smoothness/jquery-ui.css"></script> -->
 		<!-- 추가 -->
 	<script type="text/javascript" language="javascript" src="https://cdn.datatables.net/searchpanes/1.2.1/js/dataTables.searchPanes.min.js"></script>
-	<script type="text/javascript" language="javascript" src="../js/dataTables.editor.min.js"></script>
-	<script type="text/javascript" language="javascript" src="./resources/syntax/shCore.js"></script>
-	<script type="text/javascript" language="javascript" src="./resources/demo.js"></script>
-	<script type="text/javascript" language="javascript" src="./resources/editor-demo.js"></script>
+	
 	<script type="text/javascript" language="javascript" class="init">
 	//Korean    
 	var lang_kor={
@@ -160,6 +152,7 @@
 				//DATA 바인딩
 					dom: "Bfrtip",
 					ajax: "/api/construction_member",
+					deferRender: true, // 2~3초 빨라짐
 					language : lang_kor,
 					columns: [
 						{ data: "users.name"},
@@ -198,7 +191,7 @@
               label: data.data[i].name + -+data.data[i].id,
               value: data.data[i].id,
             });
-            console.log(availableTags[i]);
+         
           }
         });
         $(document).on("keydown.autocomplete", "#csearch", function () {
