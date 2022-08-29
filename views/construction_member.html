@@ -62,7 +62,7 @@
 						name: "users.company_id",
 					    type: 'text',
 							
-						id : "search"		
+						id : "csearch"		
 					},
 					{
 						label: "직위/직급",
@@ -183,32 +183,28 @@
 		});
 </script>
 <script>
-	var data 
+	
 	var availableTags = []
 	$(function() {
 			$.ajax({
 				method: "get",
-				url : "/api/construction_member",
+				url : "/api/construction_member_info",
 				dataType:"json",
 		
-			}).done(function(data){
-				for(var ele in data.options){
-			
-       				 for(var ele2 in data.options[ele]){
-						var ele2name = []
-						// ele 는 users.company_id 가 된다
-						availableTags.push({label:data.options[ele][ele2].label + - +data.options[ele][ele2].value,value:data.options[ele][ele2].value})	
-						
-						console.log("availableTags",availableTags)
-       				 }	
-   					 }
-			})
-		
-		
-			$(document).on('keydown.autocomplete', '#search',function(){
-					$(this).autocomplete({source:availableTags});
-					console.log('확인');
-			});
+			}).done(function (data) {
+          // console.log(data.data);
+          for (var i in data.data) {
+            availableTags.push({
+              label: data.data[i].name + -+data.data[i].id,
+              value: data.data[i].id,
+            });
+            console.log(availableTags[i]);
+          }
+        });
+        $(document).on("keydown.autocomplete", "#csearch", function () {
+          $(this).autocomplete({ source: availableTags });
+          console.log("확인");
+        });
 		
 	});
 </script>

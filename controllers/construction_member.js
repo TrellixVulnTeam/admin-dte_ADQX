@@ -47,4 +47,21 @@ router.all("/api/construction_member", async function (req, res) {
   res.json(editor.data());
 });
 
+// 회사정보 얻어오기
+router.get("/api/construction_member_info", async function (req, res) {
+  console.log("요청확인");
+  let editor = new Editor(db, "companies")
+    .fields(
+      new Field("id").set(false),
+      new Field("company_type"),
+      new Field("name")
+    )
+    .where((q) => {
+      //company_type , 건설사 or 레미콘
+      q.where("company_type", "=", "CONSTRUCTION");
+    });
+  await editor.process(req.body);
+  res.json(editor.data());
+});
+
 module.exports = router;
