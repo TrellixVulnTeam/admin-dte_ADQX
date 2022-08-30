@@ -157,17 +157,11 @@
             //DATA 바인딩
             dom: "Bfrtip",
             // serverSide: true,
-            processing: true,
-            serverSide: true,
+
             ajax: {
               url: "/api/construction",
-              type: "GET",
-              draw: 1,
-              start: 0,
-              length: 10,
+              type: "POST",
             },
-            deferRender: true, // 2~3초 빨라짐
-
             language: lang_kor,
             columns: [
               { data: "company_type" },
@@ -178,7 +172,8 @@
               { data: "created_at" },
               { data: "updated_at" },
             ],
-
+            select: true,
+            serverSide: true,
             buttons: [
               { extend: "create", editor: editor, text: "등록" },
               { extend: "edit", editor: editor, text: "수정" },

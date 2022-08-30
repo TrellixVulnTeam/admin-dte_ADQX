@@ -139,7 +139,10 @@
 					// 항목별 검색기능 끝.
 ///Binding
 					dom: "'Bfrtip'", // PBfrtip
-					ajax: "/api/remicon",
+					ajax: {
+						url:  "/api/remicon",
+						type: "POST"
+					},
 					language : lang_kor,
 					columns: [	
 					  // { data: "company_type"},		
@@ -149,6 +152,7 @@
 						{ data: "created_at" },				
 						{ data: "updated_at" },
 					],
+				serverSide: true,
 				select: true,
 				colReorder: true,
 				searching: true,		

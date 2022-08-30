@@ -206,16 +206,6 @@
           type: "get",
           url: "/api/companies",
           dataType: "json",
-          // success: function (data) {
-          //   // console.log(data.data);
-          //   for (var i in data.data) {
-          //     companies_namelist.push({
-          //       label: data.data[i].name + -+data.data[i].id,
-          //       value: data.data[i].id,
-          //     });
-          //     console.log(companies_namelist[i]);
-          //   }
-          // },
         }).done(function (data) {
           // console.log(data.data);
           for (var i in data.data) {
