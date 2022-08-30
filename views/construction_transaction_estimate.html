@@ -164,7 +164,10 @@
 					// 항목별 검색기능 끝.
 				//DATA 바인딩
 					dom: "Bfrtip",
-					ajax: "/api/history",
+					ajax: {
+						url:"/api/history",
+						type:"POST"
+					},
 					language : lang_kor,
 					columns: [
 						{ data: "spaces.name"},
@@ -177,6 +180,7 @@
 						// { data: "users.name" },
 					
 					],
+					serverSide: true,
 					select: true,
 					buttons: [
 						{ extend: "create", editor: editor, text: "등록" },
@@ -188,36 +192,6 @@
 			);
 		});
 </script>
-<!-- <script>
-	var data 
-	var availableTags = []
-	$(function() {
-			$.ajax({
-				method: "get",
-				url : "/api/construction_member",
-				dataType:"json",
-		
-			}).done(function(data){
-				for(var ele in data.options){
-			
-       				 for(var ele2 in data.options[ele]){
-						var ele2name = []
-						// ele 는 users.company_id 가 된다
-						availableTags.push({label:data.options[ele][ele2].label + - +data.options[ele][ele2].value,value:data.options[ele][ele2].value})	
-						
-						console.log("availableTags",availableTags)
-       				 }	
-   					 }
-			})
-		
-		
-			$(document).on('keydown.autocomplete', '#search',function(){
-					$(this).autocomplete({source:availableTags});
-					console.log('확인');
-			});
-		
-	});
-</script> -->
 </head>
 <body class="dt-example node">
 			<h1 style="margin: 10px;" >건설사 견적내역</h1>
