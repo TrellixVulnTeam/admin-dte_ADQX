@@ -12,8 +12,6 @@ let {
 
 // 레미콘사 요청
 router.all("/api/remicon", async function (req, res) {
-  // var idvalue = req.body.data;
-  console.log("요청확인");
   let editor = new Editor(db, "companies")
     .fields(
       // new Field("id").set(false),

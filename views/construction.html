@@ -1,18 +1,3 @@
-<div class="demo-html">
-  <table id="construction" class="display" style="width: 100%">
-    <thead>
-      <tr>
-        <th>회사 유형</th>
-        <th>건설사</th>
-        <th>주소</th>
-        <th>CEO이름</th>
-        <th>생성일</th>
-        <th>수정일</th>
-      </tr>
-    </thead>
-  </table>
-</div>
-
 <script type="text/javascript" language="javascript" class="init">
   var lang_kor = {
     decimal: "",
@@ -89,89 +74,100 @@
       .addClass("filters")
       .appendTo("#construction thead");
 
-    $("#construction").DataTable(
-      {
-        orderCellsTop: true,
-        fixedHeader: true,
-        initComplete: function () {
-          var api = this.api();
+    $("#construction").DataTable({
+      orderCellsTop: true,
+      fixedHeader: true,
+      initComplete: function () {
+        var api = this.api();
 
-          // For each column
-          api
-            .columns()
-            .eq(0)
-            .each(function (colIdx) {
-              // Set the header cell to contain the input element
-              var cell = $(".filters th").eq(
-                $(api.column(colIdx).header()).index()
-              );
-              var title = $(cell).text();
-              $(cell).html('<input type="text" placeholder="' + title + '" />');
+        // For each column
+        api
+          .columns()
+          .eq(0)
+          .each(function (colIdx) {
+            // Set the header cell to contain the input element
+            var cell = $(".filters th").eq(
+              $(api.column(colIdx).header()).index()
+            );
+            var title = $(cell).text();
+            $(cell).html('<input type="text" placeholder="' + title + '" />');
 
-              // On every keypress in this input
-              $(
-                "input",
-                $(".filters th").eq($(api.column(colIdx).header()).index())
-              )
-                .off("keyup change")
-                .on("change", function (e) {
-                  // Get the search value
-                  $(this).attr("title", $(this).val());
-                  var regexr = "({search})"; //$(this).parents('th').find('select').val();
+            // On every keypress in this input
+            $(
+              "input",
+              $(".filters th").eq($(api.column(colIdx).header()).index())
+            )
+              .off("keyup change")
+              .on("change", function (e) {
+                // Get the search value
+                $(this).attr("title", $(this).val());
+                var regexr = "({search})"; //$(this).parents('th').find('select').val();
 
-                  var cursorPosition = this.selectionStart;
-                  // Search the column for that value
-                  api
-                    .column(colIdx)
-                    .search(
-                      this.value != ""
-                        ? regexr.replace("{search}", "(((" + this.value + ")))")
-                        : "",
-                      this.value != "",
-                      this.value == ""
-                    )
-                    .draw();
-                })
-                .on("keyup", function (e) {
-                  e.stopPropagation();
+                var cursorPosition = this.selectionStart;
+                // Search the column for that value
+                api
+                  .column(colIdx)
+                  .search(
+                    this.value != ""
+                      ? regexr.replace("{search}", "(((" + this.value + ")))")
+                      : "",
+                    this.value != "",
+                    this.value == ""
+                  )
+                  .draw();
+              })
+              .on("keyup", function (e) {
+                e.stopPropagation();
 
-                  $(this).trigger("change");
-                  $(this)
-                    .focus()[0]
-                    .setSelectionRange(cursorPosition, cursorPosition);
-                });
-            });
-        },
-        // 항목별 검색기능 끝.
-        //DATA 바인딩
-        dom: "Bfrtip",
-        // serverSide: true,
-
-        ajax: {
-          url: "/api/construction",
-          type: "POST",
-        },
-        language: lang_kor,
-        columns: [
-          { data: "company_type" },
-          { data: "name" },
-          { data: "address" },
-          { data: "ceo_name" },
-          // { data: "users.position" },
-          { data: "created_at" },
-          { data: "updated_at" },
-        ],
-        select: true,
-        serverSide: true,
-        buttons: [
-          { extend: "create", editor: editor, text: "등록" },
-          { extend: "edit", editor: editor, text: "수정" },
-          { extend: "remove", editor: editor, text: "삭제" },
-        ],
+                $(this).trigger("change");
+                $(this)
+                  .focus()[0]
+                  .setSelectionRange(cursorPosition, cursorPosition);
+              });
+          });
       },
-      function () {
-        console.log("확인");
-      }
-    );
+      // 항목별 검색기능 끝.
+      //DATA 바인딩
+      dom: "Bfrtip",
+      // serverSide: true,
+
+      ajax: {
+        url: "/api/construction",
+        type: "POST",
+      },
+      language: lang_kor,
+      columns: [
+        { data: "company_type" },
+        { data: "name" },
+        { data: "address" },
+        { data: "ceo_name" },
+        // { data: "users.position" },
+        { data: "created_at" },
+        { data: "updated_at" },
+      ],
+      select: true,
+      serverSide: true,
+      buttons: [
+        { extend: "create", editor: editor, text: "등록" },
+        { extend: "edit", editor: editor, text: "수정" },
+        { extend: "remove", editor: editor, text: "삭제" },
+      ],
+    });
   });
 </script>
+
+<div class="demo-html">
+  <h1>건설사</h1>
+  <table id="construction" class="display" style="width: 100%">
+    <thead>
+      <tr>
+        <th>회사 유형</th>
+        <th>건설사</th>
+        <th>주소</th>
+        <th>CEO이름</th>
+        <th>생성일</th>
+        <th>수정일</th>
+      </tr>
+    </thead>
+  </table>
+</div>

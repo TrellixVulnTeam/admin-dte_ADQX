@@ -43,14 +43,14 @@ router.all("/api/construction_member", async function (req, res) {
       q.where("users.company_type", "=", "CONSTRUCTION");
     });
   await editor.process(req.body);
-  console.log("req.body");
+
   res.json(editor.data());
 });
 
 // 회사정보 얻어오기
 router.get("/api/construction_member_info", async function (req, res) {
   req.body;
-  console.log("요청확인");
+
   let editor = new Editor(db, "companies")
     .fields(
       new Field("id").set(false),

@@ -1,33 +1,5 @@
-<!DOCTYPE html>
-<html>
-<head>
-	<meta charset="utf-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1.0, user-scalable=no">
-	<link rel="shortcut icon" type="image/ico" href="http://www.datatables.net/favicon.ico">
-	<title>Conaz_admin</title>
-	<!-- 추가-->
-	   <style>
-		thead input {
-		  width: 100%;
-			text-align: center;
-		}
-	  </style>
-	<!-- 추가 -->
-	<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script> <!-- 자동검색 라이브러리 -->
 
-	<script src="https://cdn.datatables.net/colreorder/1.5.3/js/dataTables.colReorder.min.js"></script> <!-- 엑셀추출 라이브러리-->
-	<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
-	<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/pdfmake.min.js"></script>
-	<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js"></script>
-	<script src="https://cdn.datatables.net/buttons/1.6.5/js/buttons.html5.min.js"></script>
-	<script src="https://cdn.datatables.net/buttons/1.6.5/js/buttons.print.min.js"></script> <!-- 엑셀추출 라이브러리 끝-->
 
-		<!-- 추가 끝-->
-	<script type="text/javascript" language="javascript" src="https://cdn.datatables.net/searchpanes/1.2.1/js/dataTables.searchPanes.min.js"></script>
-	<script type="text/javascript" language="javascript" src="../js/dataTables.editor.min.js"></script>
-	<script type="text/javascript" language="javascript" src="./resources/syntax/shCore.js"></script>
-	<script type="text/javascript" language="javascript" src="./resources/demo.js"></script>
-	<script type="text/javascript" language="javascript" src="./resources/editor-demo.js"></script>
 	<script type="text/javascript" language="javascript" class="init">
 		var lang_kor={
 		"decimal":"","emptyTable":"데이터가 없습니다.","info":"_START_ 부터- _END_ 까지 (총 _TOTAL_ 데이터)","infoEmpty":"0개","infoFiltered":"(전체 _MAX_명 중 검색결과)",
@@ -137,7 +109,7 @@
 							});
 					},
 					// 항목별 검색기능 끝.
-///Binding
+					///Binding
 					dom: "'Bfrtip'", // PBfrtip
 					ajax: {
 						url:  "/api/remicon",
@@ -145,7 +117,7 @@
 					},
 					language : lang_kor,
 					columns: [	
-					  // { data: "company_type"},		
+						
 						{ data: "name" },
 						{ data: "address" },
 						{ data: "ceo_name" },
@@ -153,37 +125,22 @@
 						{ data: "updated_at" },
 					
 					],
-				serverSide: true,
-				select: true,
-				colReorder: true,
-				searching: true,		
+					serverSide: true,
+					select: true,
+					
 					buttons: [
 						{ extend: "create", editor: editor, text: "등록" },
 						{ extend: "edit", editor: editor, text: "수정" },
 						{ extend: "remove", editor: editor, text: "삭제" },
-						
-						{
-				extend: 'collection',
-				text: 'Export',
-				buttons: [
-					// 'copy',
-					'excel',
-					'csv',
-					// 'pdf',
-					// 'print'
-				]
-			}
+			
 					],
 				},
 			);
 		});
 	</script>
-
-
-</head>
-<body>
-			<h1 style="margin: 10px;" >레미콘 공장</h1>
+			
 					<div class="demo-html">
+						<h1>레미콘사</h1>
 						<table id="remicon_table" class="display" style="width:100%">
 							<thead>
 								<tr>
@@ -192,11 +149,9 @@
 									<th>CEO이름</th>
 									<th>생성일</th>
 									<th>수정일</th>
-									<th>상세보기</th>
+								
 								</tr>
 							</thead>					
 						</table>
 					</div>	
 	  </div>
-</body>
-</html>

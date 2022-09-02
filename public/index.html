@@ -50,6 +50,7 @@
       href="https://unpkg.com/boxicons@2.1.1/css/boxicons.min.css"
       rel="stylesheet"
     />
+    <link href="/css/deal.css" rel="stylesheet" />
     <!-- 추가-->
     <link
       rel="stylesheet"
@@ -125,6 +126,12 @@
       language="javascript"
       src="../views/resources/editor-demo.js"
     ></script>
+    <style>
+      thead input {
+        width: 100%;
+        text-align: center;
+      }
+      </style>
   </head>
   <script type="text/javascript">
     $(document).ready(function () {
@@ -280,16 +287,12 @@
             <span>거래관리</span>
           </a>
           <div class="dropdown-menu" aria-labelledby="pagesDropdown">
-            <a class="dropdown-item"          id="remicon_deal_history_Container"
-            href="remicon_deal_history.html">레미콘사</a>
-            <a class="dropdown-item"          id="construction_deal_history_Container"
-            href="construction_deal_history.html">건설사</a>
-            <!-- <div class="dropdown-divider"></div>
-            <h6 class="dropdown-header">레미콘사</h6>
-            <a class="dropdown-item" href="#">견적내역</a>
-            <a class="dropdown-item" href="#">주문내역</a>
-            <a class="dropdown-item" href="#">거래내역</a>
-          </div> -->
+            <a class="dropdown-item"    
+            id="remicon_deal_history_Container"
+            href="/views/remicon_deal_history.html">레미콘사</a>
+            <a class="dropdown-item"          
+            id="construction_transaction_history_Container"
+            href="/views/construction_transaction_history.html">건설사</a>
         </li>
         <li class="nav-item dropdown">
           <a

@@ -1,251 +1,214 @@
-<!DOCTYPE html>
-<html>
-  <head>
-    <meta charset="utf-8" />
-    <meta
-      name="viewport"
-      content="width=device-width, initial-scale=1, minimum-scale=1.0, user-scalable=no"
-    />
-    <link
-      rel="shortcut icon"
-      type="image/ico"
-      href="http://www.datatables.net/favicon.ico"
-    />
-    <title>Conaz_admin</title>
-    <style>
-      thead input {
-        width: 100%;
-        text-align: center;
-      }
-    </style>
-    <!-- 추가 끝-->
-    <script
-      type="text/javascript"
-      language="javascript"
-      src="https://cdn.datatables.net/searchpanes/1.2.1/js/dataTables.searchPanes.min.js"
-    ></script>
-    <script
-      type="text/javascript"
-      language="javascript"
-      src="../js/dataTables.editor.min.js"
-    ></script>
-    <script
-      type="text/javascript"
-      language="javascript"
-      src="./resources/syntax/shCore.js"
-    ></script>
-    <script
-      type="text/javascript"
-      language="javascript"
-      src="./resources/demo.js"
-    ></script>
-    <script
-      type="text/javascript"
-      language="javascript"
-      src="./resources/editor-demo.js"
-    ></script>
-    <script type="text/javascript" language="javascript" class="init">
-      var editor; // use a global for the submit and return data rendering in the examples
+<script type="text/javascript" language="javascript" class="init">
+  var lang_kor = {
+    decimal: "",
+    emptyTable: "데이터가 없습니다.",
+    info: "_START_ 부터- _END_ 까지 (총 _TOTAL_ 데이터)",
+    infoEmpty: "0개",
+    infoFiltered: "(전체 _MAX_명 중 검색결과)",
+    infoPostFix: "",
+    thousands: ",",
+    lengthMenu: "_MENU_개씩 보기",
+    loadingRecords: "로딩중...",
+    processing: "처리중...",
+    search: "검색 :",
+    zeroRecords: "검색된 데이터가 없습니다.",
+    paginate: {
+      first: "첫 페이지",
+      last: "마지막페이지",
+      next: "다음",
+      previous: "이전",
+    },
+    aria: {
+      sortAscending: ":오름차순 정렬",
+      sortDescending: ":내림차순 정렬",
+    },
+  };
 
-      $(document).ready(function () {
-        //CRUD
-        editor = new $.fn.dataTable.Editor({
-          ajax: "/api/list",
-          table: "#remicon_table",
-          fields: [
-            {
-              label: "이메일:",
-              name: "users.signname",
-            },
-            {
-              label: "이름:",
-              name: "users.name",
-            },
-            {
-              label: "핸드폰번호:",
-              name: "users.phone",
-            },
-            {
-              label: "회사명:",
-              name: "users.company_id",
-              // name :"companies.name",
-              type: "text",
-              placeholder: "Select a location",
-              id: "asearch",
-            },
-            {
-              label: "직위/직급:",
-              name: "users.position",
-            },
-            {
-              label: "전화번호:",
-              name: "users.tel",
-            },
-            {
-              label: "Created_at:",
-              name: "users.created_at",
-              type: "datetime",
-              def: function () {
-                return new Date();
-              },
-              format: "YYYY-MM-DD",
-            },
-            {
-              label: "Updated_at:",
-              name: "users.updated_at",
-              type: "datetime",
-              def: function () {
-                return new Date();
-              },
-              format: "YYYY-MM-DD",
-              // 	// HH:mm:ss"
-            },
-          ],
-        });
-        // 항목별 검색기능
-        $("#remicon_table thead tr")
-          .clone(true)
-          .addClass("filters")
-          .appendTo("#remicon_table thead");
+  var editor; // use a global for the submit and return data rendering in the examples
 
-        $("#remicon_table").DataTable({
-          orderCellsTop: true,
-          fixedHeader: true,
-          initComplete: function () {
-            var api = this.api();
+  $(document).ready(function () {
+    //CRUD
+    editor = new $.fn.dataTable.Editor({
+      ajax: "/api/remicon_member",
+      table: "#remicon_table",
+      fields: [
+        {
+          label: "이메일:",
+          name: "users.signname",
+        },
+        {
+          label: "이름:",
+          name: "users.name",
+        },
+        {
+          label: "핸드폰번호:",
+          name: "users.phone",
+        },
+        {
+          label: "회사명:",
+          name: "users.company_id",
+          // name :"companies.name",
+          type: "text",
+          placeholder: "Select a location",
+          id: "asearch",
+        },
+        {
+          label: "직위/직급:",
+          name: "users.position",
+        },
+        {
+          label: "전화번호:",
+          name: "users.tel",
+        },
+        {
+          label: "Created_at:",
+          name: "users.created_at",
+          type: "datetime",
+          def: function () {
+            return new Date();
+          },
+          format: "YYYY-MM-DD",
+        },
+        {
+          label: "Updated_at:",
+          name: "users.updated_at",
+          type: "datetime",
+          def: function () {
+            return new Date();
+          },
+          format: "YYYY-MM-DD",
+          // 	// HH:mm:ss"
+        },
+      ],
+    });
+    // 항목별 검색기능
+    $("#remicon_table thead tr")
+      .clone(true)
+      .addClass("filters")
+      .appendTo("#remicon_table thead");
 
-            // For each column
-            api
-              .columns()
-              .eq(0)
-              .each(function (colIdx) {
-                // Set the header cell to contain the input element
-                var cell = $(".filters th").eq(
-                  $(api.column(colIdx).header()).index()
-                );
-                var title = $(cell).text();
-                $(cell).html(
-                  '<input type="text" placeholder="' + title + '" />'
-                );
+    $("#remicon_table").DataTable({
+      orderCellsTop: true,
+      fixedHeader: true,
+      initComplete: function () {
+        var api = this.api();
 
-                // On every keypress in this input
-                $(
-                  "input",
-                  $(".filters th").eq($(api.column(colIdx).header()).index())
-                )
-                  .off("keyup change")
-                  .on("change", function (e) {
-                    // Get the search value
-                    $(this).attr("title", $(this).val());
-                    var regexr = "({search})"; //$(this).parents('th').find('select').val();
+        // For each column
+        api
+          .columns()
+          .eq(0)
+          .each(function (colIdx) {
+            // Set the header cell to contain the input element
+            var cell = $(".filters th").eq(
+              $(api.column(colIdx).header()).index()
+            );
+            var title = $(cell).text();
+            $(cell).html('<input type="text" placeholder="' + title + '" />');
 
-                    var cursorPosition = this.selectionStart;
-                    // Search the column for that value
-                    api
-                      .column(colIdx)
-                      .search(
-                        this.value != ""
-                          ? regexr.replace(
-                              "{search}",
-                              "(((" + this.value + ")))"
-                            )
-                          : "",
-                        this.value != "",
-                        this.value == ""
-                      )
-                      .draw();
-                  })
-                  .on("keyup", function (e) {
-                    e.stopPropagation();
+            // On every keypress in this input
+            $(
+              "input",
+              $(".filters th").eq($(api.column(colIdx).header()).index())
+            )
+              .off("keyup change")
+              .on("change", function (e) {
+                // Get the search value
+                $(this).attr("title", $(this).val());
+                var regexr = "({search})"; //$(this).parents('th').find('select').val();
 
-                    $(this).trigger("change");
-                    $(this)
-                      .focus()[0]
-                      .setSelectionRange(cursorPosition, cursorPosition);
-                  });
+                var cursorPosition = this.selectionStart;
+                // Search the column for that value
+                api
+                  .column(colIdx)
+                  .search(
+                    this.value != ""
+                      ? regexr.replace("{search}", "(((" + this.value + ")))")
+                      : "",
+                    this.value != "",
+                    this.value == ""
+                  )
+                  .draw();
+              })
+              .on("keyup", function (e) {
+                e.stopPropagation();
+
+                $(this).trigger("change");
+                $(this)
+                  .focus()[0]
+                  .setSelectionRange(cursorPosition, cursorPosition);
               });
-          },
-          // 항목별 검색기능 끝.
-          ///Binding
+          });
+      },
+      // 항목별 검색기능 끝.
+      ///Binding
 
-          dom: "Bfrtip", // PBfrtip
-          ajax: "/api/list",
-          // language:"lang_kor",
-          language: {
-            paginate: {
-              next: "다음",
-              previous: "이전",
-            },
-          },
-          columns: [
-            { data: "users.name" },
-            { data: "users.signname" },
-            { data: "users.phone" },
-            { data: "companies.name" },
-            { data: "users.position" },
-            { data: "users.tel" },
-            { data: "users.created_at" },
-            { data: "users.updated_at" },
-          ],
-          select: true,
-          searching: true,
-          buttons: [
-            { extend: "create", editor: editor, text: "등록" },
-            { extend: "edit", editor: editor, text: "수정" },
-            { extend: "remove", editor: editor, text: "삭제" },
-          ],
-        });
-      });
-    </script>
+      dom: "Bfrtip", // PBfrtip
+      ajax: {
+        url: "/api/remicon_member",
+        type: "POST",
+      },
+      language: lang_kor,
+      columns: [
+        { data: "users.name" },
+        { data: "users.signname" },
+        { data: "users.phone" },
+        { data: "companies.name" },
+        { data: "users.position" },
+        { data: "users.tel" },
+        { data: "users.created_at" },
+        { data: "users.updated_at" },
+      ],
+      serverSide: true,
+      select: true,
+      searching: true,
+      buttons: [
+        { extend: "create", editor: editor, text: "등록" },
+        { extend: "edit", editor: editor, text: "수정" },
+        { extend: "remove", editor: editor, text: "삭제" },
+      ],
+    });
+  });
+</script>
 
-    <!-- 자동완성 리스트를 불러오기위한 로직 -->
-    <script>
-      $(function () {
-        let companies_namelist = [];
-        $.ajax({
-          type: "get",
-          url: "/api/companies",
-          dataType: "json",
-        }).done(function (data) {
-          // console.log(data.data);
-          for (var i in data.data) {
-            companies_namelist.push({
-              label: data.data[i].name + -+data.data[i].id,
-              value: data.data[i].id,
-            });
-            console.log(companies_namelist[i]);
-          }
+<!-- 자동완성 리스트를 불러오기위한 로직 -->
+<script>
+  $(function () {
+    let companies_namelist = [];
+    $.ajax({
+      type: "get",
+      url: "/api/remicon_info",
+      dataType: "json",
+    }).done(function (data) {
+      // console.log(data.data);
+      for (var i in data.data) {
+        companies_namelist.push({
+          label: data.data[i].name + -+data.data[i].id,
+          value: data.data[i].id,
         });
-        $(document).on("keydown.autocomplete", "#asearch", function () {
-          $(this).autocomplete({ source: companies_namelist });
-          console.log("확인");
-        });
-      });
-    </script>
-    <!-- 자동완성 리스트를 불러오기위한 로직 끝 -->
-  </head>
-  <body class="dt-example node">
-    <h1 style="margin: 10px">레미콘공장 회원</h1>
-    <div class="demo-html">
-      <table
-        id="remicon_table"
-        class="display"
-        style="width: 100%"
-        ellspacing="0"
-      >
-        <thead>
-          <tr>
-            <th>이름</th>
-            <th>이메일</th>
-            <th>휴대전화</th>
-            <th>회사명</th>
-            <th>직위/직급</th>
-            <th>사내 전화번호</th>
-            <th>가입일</th>
-            <th>수정일</th>
-          </tr>
-        </thead>
-      </table>
-    </div>
-  </body>
-</html>
+        console.log(companies_namelist[i]);
+      }
+    });
+    $(document).on("keydown.autocomplete", "#asearch", function () {
+      $(this).autocomplete({ source: companies_namelist });
+    });
+  });
+</script>
+<!-- 자동완성 리스트를 불러오기위한 로직 끝 -->
+
+<h1>레미콘공장 회원</h1>
+<div class="demo-html">
+  <table id="remicon_table" class="display" style="width: 100%" ellspacing="0">
+    <thead>
+      <tr>
+        <th>이름</th>
+        <th>이메일</th>
+        <th>휴대전화</th>
+        <th>회사명</th>
+        <th>직위/직급</th>
+        <th>사내 전화번호</th>
+        <th>가입일</th>
+        <th>수정일</th>
+      </tr>
+    </thead>
+  </table>
+</div>

@@ -1,9 +1,9 @@
-let controllers = require("./controllers/index");
+let controllers = require("../controllers/index");
 let bodyParser = require("body-parser");
 let express = require("express");
 let bb = require("express-busboy");
 require("source-map-support").install();
-let db = require("./db");
+let db = require("../db");
 require("dotenv").config({ path: `${__dirname}/../.env` });
 let app = express();
 app.set("trust proxy", true);
@@ -37,14 +37,13 @@ app.use(function (req, res) {
 
 // Listening
 let PORT = 8090;
-app.listen(PORT, "0.0.0.0", function () {
-  console.log(`DataTables Editor demo - navigate to http://localhost:${PORT}/`);
-  console.log(process.env.NODE_ENV);
-});
+const handleListening = () => console.log(`http://localhost:${PORT} 🚀`);
+app.listen(PORT, handleListening);
 
 // Test the database connection on startup by getting a list of table names in the db
 // This can safely be removed if you are happy with your db connection configuration.
 // It is used purely to show a console error if the connection is not available.
+
 let query;
 let bindings;
 

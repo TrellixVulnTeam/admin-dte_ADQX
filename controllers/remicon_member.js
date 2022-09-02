@@ -11,8 +11,7 @@ let {
 } = require("datatables.net-editor-server");
 
 // 레미콘사 회원 요청
-router.all("/api/list", async function (req, res) {
-  console.log("요청확인");
+router.all("/api/remicon_member", async function (req, res) {
   let editor = new Editor(db, "users")
     .fields(
       new Field("users.id").set(false),
@@ -44,14 +43,13 @@ router.all("/api/list", async function (req, res) {
       //company_type , 건설사 or 레미콘
       q.where("users.company_type", "=", "REMICON");
     });
-  console.log("editor", editor);
+
   await editor.process(req.body);
   res.json(editor.data());
 });
 
 // 회사정보 얻어오기
-router.get("/api/companies", async function (req, res) {
-  console.log("요청확인");
+router.get("/api/remicon_info", async function (req, res) {
   let editor = new Editor(db, "companies")
     .fields(
       new Field("id").set(false),
@@ -59,7 +57,6 @@ router.get("/api/companies", async function (req, res) {
       new Field("name")
     )
     .where((q) => {
-      //company_type , 건설사 or 레미콘
       q.where("company_type", "=", "REMICON");
     });
   await editor.process(req.body);
