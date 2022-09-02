@@ -42,4 +42,26 @@ router.all("/api/remicon_management_list", async function (req, res) {
   res.json(editor.data());
 });
 
+//2. 레미콘사 견적내역
+
+router.all("/api/remicon_esimate_management/:id", async function (req, res) {
+  let editor = new Editor(db, "estimations")
+    .fields(
+      new Field("estimations.id").set(false),
+      new Field("spaces.name"),
+      new Field("spaces.basic_address"),
+      new Field("users.name"),
+      new Field("estimations.percent"),
+      new Field("estimations.created_at"),
+      new Field("estimations.status")
+    )
+    .leftJoin("spaces", "estimations.field_space_id", "=", "spaces.id")
+    .leftJoin("users", "estimations.sales_user_id", "=", "users.id")
+    .where((q) => {
+      q.where("estimations.factory_space_id", "=", req.params.id);
+    });
+  await editor.process(req.body);
+  res.json(editor.data());
+});
+
 module.exports = router;
