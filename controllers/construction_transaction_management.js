@@ -49,9 +49,6 @@ router.all("/api/history_management_list", async function (req, res) {
 router.all(
   "/api/construction_esimate_management/:id",
   async function (req, res) {
-    var check = req.params;
-    console.log(req.params.id);
-    console.log("req", check);
     let editor = new Editor(db, "estimations")
       .fields(
         new Field("estimations.id").set(false),
@@ -74,8 +71,6 @@ router.all(
 
 //3. 건설사 주문내역
 router.all("/api/order_history", async function (req, res) {
-  console.log("주문내역 : 요청확인");
-  console.log(req.params.id);
   let editor = new Editor(db, "assignments")
     .fields(
       new Field("assignments.id"),
