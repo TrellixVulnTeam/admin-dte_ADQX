@@ -10,20 +10,21 @@ let {
   SearchPaneOptions,
 } = require("datatables.net-editor-server");
 
-// 건설사 내역관리 요청
-
-router.all("/api/estimate_info", async function (req, res) {
+// 레미콘사 내역
+router.all("/api/remicon_management_list", async function (req, res) {
   let editor = new Editor(db, "spaces")
     .fields(
-      new Field("spaces.id").set(false),
+      new Field("spaces.id"),
       new Field("spaces.name"),
-      new Field("admin_user.name"),
-      new Field("admin_user.position"),
-      new Field("site_user.name"),
-      new Field("site_user.position")
+      new Field(
+        "(select count(space_id)" +
+          "from space_members where space_id = spaces.id " +
+          "group by space_id)"
+      ),
+      new Field("concat(admin_user.name,'',admin_user.position)"),
+      new Field("concat(site_user.name,'',site_user.position)")
     )
 
-    .leftJoin("space_members", "space_members.space_id", "=", "spaces.id")
     .leftJoin(
       "users as admin_user",
       "spaces.admin_user_id",
@@ -38,7 +39,6 @@ router.all("/api/estimate_info", async function (req, res) {
     });
 
   await editor.process(req.body);
-  console.log("editor", editor.data(2).options);
   res.json(editor.data());
 });
 
