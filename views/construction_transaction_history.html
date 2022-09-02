@@ -197,13 +197,14 @@
       var td = tr.children();
       // td.eq(index)를 통해 값을 가져올 수도 있다.
       id = td.eq(0).text();
+
       sessionStorage.setItem("construction_id", id); //다른페이지로 변수값 보내는 메소드
     });
   });
 </script>
 <!-- 건설사내역 -->
 <!-- 건설사견적내역 -->
-<!-- <script type="text/javascript" language="javascript" class="init">
+<script type="text/javascript" language="javascript" class="init">
   //Korean
   var lang_kor = {
     decimal: "",
@@ -349,7 +350,7 @@
       ],
     });
   });
-</script> -->
+</script>
 
 <!-- 건설사견적내역 -->
 <div class="main">
@@ -387,7 +388,7 @@
       </div>
     </div>
     <div class="content-dis">
-      <!-- <div class="demo-html">
+      <div class="demo-html">
         <table
           id="construction_estimate_table"
           class="display"
@@ -404,7 +405,7 @@
             </tr>
           </thead>
         </table>
-      </div> -->
+      </div>
     </div>
     <div class="content-dis">Color의 body안 내용을 넣으세요.</div>
     <div class="content-dis">Textile의 body안 내용을 넣으세요.</div>

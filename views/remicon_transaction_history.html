@@ -124,6 +124,7 @@
           data: "spaces.id",
           render: function (data, type, row) {
             if (type == "display") {
+              console.log("data", data);
               data = '<label for="tab-2">' + data;
             }
             return data;
@@ -165,6 +166,10 @@
         let tr = $(this);
         let td = tr.children();
         id = td.eq(0).text();
+
+        // alert(id);
+        // $("#aaa").src("/aaa.js?c_id=" + id);
+        // $('#my_frame').attr('src', url);
         sessionStorage.setItem("construction_id", id); //다른페이지로 변수값 보내는 메소드
 
         console.log("se", sessionStorage.getItem("construction_id", id));
@@ -210,3 +215,4 @@
     <div class="content-dis">Textile의 body안 내용을 넣으세요.</div>
   </div>
 </div>
+<!-- <div><iframe id="aaa" src=""></iframe></div> -->
