@@ -177,7 +177,7 @@
         { data: "admin_user.name" },
         { data: "site_user.name" },
       ],
-      serverSide: true,
+      // serverSide: true,
       select: true,
       buttons: [
         { extend: "create", editor: editor, text: "등록" },
@@ -202,8 +202,11 @@
     });
   });
 </script>
+
 <!-- 건설사내역 -->
+
 <!-- 건설사견적내역 -->
+<!--
 <script type="text/javascript" language="javascript" class="init">
   //Korean
   var lang_kor = {
@@ -314,9 +317,7 @@
               .on("keyup", function (e) {
                 e.stopPropagation();
 
-<<<<<<< HEAD
-      sessionStorage.setItem("remicon_id", id); //다른페이지로 변수값 보내는 메소드
-=======
+
                 $(this).trigger("change");
                 $(this)
                   .focus()[0]
@@ -324,7 +325,7 @@
               });
           });
       },
->>>>>>> a3a0d5a4f5ef9d507fd99bcc1ffd127c10052f44
+
 
       //DATA 바인딩
       dom: "Bfrtip",
@@ -352,7 +353,9 @@
   });
 </script>
 
+-->
 <!-- 건설사견적내역 -->
+
 <div class="main">
   <input type="radio" id="tab-1" name="show" checked />
   <input type="radio" id="tab-2" name="show" />
@@ -394,7 +397,7 @@
           class="display"
           style="width: 100%"
         >
-          <thead>
+          <!-- <thead>
             <tr>
               <th>레미콘공장</th>
               <th>레미콘 공장 주소</th>
@@ -403,7 +406,7 @@
               <th>견적요청 일시</th>
               <th>상태</th>
             </tr>
-          </thead>
+          </thead> -->
         </table>
       </div>
     </div>
