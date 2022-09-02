@@ -154,7 +154,29 @@
             return data.field_infos.start_at + " ~ " + data.field_infos.end_at;
           },
         },
-        { data: "field_infos.payment_method" },
+        {
+          data: "field_infos.payment_method",
+          render: function (data, type, row) {
+            switch (data) {
+              case "CASH":
+                return "현금";
+                break;
+              case "CARD":
+                return "카드";
+                break;
+              case "NOTE":
+                return "NOTE";
+                break;
+              case "BOND":
+                return "BOND";
+                break;
+              case null:
+                return "";
+                break;
+            }
+          },
+        },
+        // { data: "field_infos.payment_method" },
         { data: "admin_user.name" },
         { data: "site_user.name" },
       ],
@@ -193,7 +215,7 @@
       var name = td.eq(2).text();
       var email = td.eq(3).text();
 
-      sessionStorage.setItem("id", id); //다른페이지로 변수값 보내는 메소드
+      sessionStorage.setItem("remicon_id", id); //다른페이지로 변수값 보내는 메소드
 
       console.log("츨력확인 : " + id);
     });
