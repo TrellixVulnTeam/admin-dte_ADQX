@@ -10,8 +10,7 @@ let {
   SearchPaneOptions,
 } = require("datatables.net-editor-server");
 
-// 건설사 내역관리
-// esimate_management
+//1.건설사 내역리스트
 router.all("/api/history_management_list", async function (req, res) {
   let editor = new Editor(db, "spaces")
     .fields(
@@ -45,32 +44,35 @@ router.all("/api/history_management_list", async function (req, res) {
   res.json(editor.data());
 });
 
-// 건설사 견적관리
+//2. 건설사 견적내역
 
-router.all("/api/esimate_management/:id", async function (req, res) {
-  var check = req.params;
-  console.log(req.params.id);
-  console.log("req", check);
-  let editor = new Editor(db, "estimations")
-    .fields(
-      new Field("estimations.id").set(false),
-      new Field("spaces.name"),
-      new Field("spaces.basic_address"),
-      new Field("users.name"),
-      new Field("estimations.percent"),
-      new Field("estimations.created_at"),
-      new Field("estimations.status")
-    )
-    .leftJoin("spaces", "estimations.factory_space_id", "=", "spaces.id")
-    .leftJoin("users", "estimations.sales_user_id", "=", "users.id")
-    .where((q) => {
-      q.where("estimations.field_space_id", "=", req.params.id);
-    });
-  await editor.process(req.body);
-  res.json(editor.data());
-});
+router.all(
+  "/api/construction_esimate_management/:id",
+  async function (req, res) {
+    var check = req.params;
+    console.log(req.params.id);
+    console.log("req", check);
+    let editor = new Editor(db, "estimations")
+      .fields(
+        new Field("estimations.id").set(false),
+        new Field("spaces.name"),
+        new Field("spaces.basic_address"),
+        new Field("users.name"),
+        new Field("estimations.percent"),
+        new Field("estimations.created_at"),
+        new Field("estimations.status")
+      )
+      .leftJoin("spaces", "estimations.factory_space_id", "=", "spaces.id")
+      .leftJoin("users", "estimations.sales_user_id", "=", "users.id")
+      .where((q) => {
+        q.where("estimations.field_space_id", "=", req.params.id);
+      });
+    await editor.process(req.body);
+    res.json(editor.data());
+  }
+);
 
-// 건설사 주문내역
+//3. 건설사 주문내역
 router.all("/api/order_history", async function (req, res) {
   console.log("주문내역 : 요청확인");
   console.log(req.params.id);

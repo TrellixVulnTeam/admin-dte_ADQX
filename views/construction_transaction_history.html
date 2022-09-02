@@ -1,3 +1,4 @@
+<!-- 건설사내역 -->
 <script type="text/javascript" language="javascript" class="init">
   //Korean
   var lang_kor = {
@@ -28,7 +29,7 @@
     //CRUD
     editor = new $.fn.dataTable.Editor({
       ajax: "/api/history_management_list",
-      table: "#history_management",
+      table: "#history_management_table",
       fields: [
         {
           label: "아이디",
@@ -65,12 +66,12 @@
     });
 
     // 항목별 검색기능
-    $("#history_management thead tr")
+    $("#history_management_table thead tr")
       .clone(true)
       .addClass("filters")
-      .appendTo("#history_management thead");
+      .appendTo("#history_management_table thead");
 
-    $("#history_management").DataTable({
+    $("#history_management_table").DataTable({
       orderCellsTop: true,
       fixedHeader: true,
       initComplete: function () {
@@ -136,11 +137,7 @@
           data: "spaces.id",
           render: function (data, type, row) {
             if (type == "display") {
-              console.log("확인", data);
-              console.log("확인 id ", id);
-              data =
-                '<a href="/views/construction_transaction_estimate.html">' +
-                data;
+              data = '<label for="tab-2">' + data;
             }
             return data;
           },
@@ -170,36 +167,165 @@
     var id;
 
     // 선택한 로우값 가져오기
-    $(document).on("click", "#history_management tbody tr", function () {
+    $(document).on("click", "#history_management_table tbody tr", function () {
       var str = "";
       // 배열 선언
       // 현재 클릭된 Row(<tr>)
       var tr = $(this);
       var td = tr.children();
-
-      // tr.text()는 클릭된 Row 즉 tr에 있는 모든 값을 가져온다.
-      console.log("클릭한 Row의 모든 데이터 : " + tr.text());
-
-      // 반복문을 이용해서 배열에 값을 담아 사용할 수 도 있다.
-      // td.each(function(i){
-      // 	tdArr.push(td.eq(i).text());
-      // });
-
-      // console.log("배열에 담긴 값 : "+tdArr);
-
       // td.eq(index)를 통해 값을 가져올 수도 있다.
       id = td.eq(0).text();
-      var userid = td.eq(1).text();
-      var name = td.eq(2).text();
-      var email = td.eq(3).text();
-
-      sessionStorage.setItem("id", id); //다른페이지로 변수값 보내는 메소드
-
-      console.log("츨력확인 : " + id);
+      sessionStorage.setItem("construction_id", id); //다른페이지로 변수값 보내는 메소드
     });
   });
 </script>
+<!-- 건설사내역 -->
+<!-- 건설사견적내역 -->
+<!-- <script type="text/javascript" language="javascript" class="init">
+  //Korean
+  var lang_kor = {
+    decimal: "",
+    emptyTable: "데이터가 없습니다.",
+    info: "_START_ 부터- _END_ 까지 (총 _TOTAL_ 데이터)",
+    infoEmpty: "0개",
+    infoFiltered: "(전체 _MAX_명 중 검색결과)",
+    infoPostFix: "",
+    thousands: ",",
+    lengthMenu: "_MENU_개씩 보기",
+    loadingRecords: "로딩중...",
+    processing: "처리중...",
+    search: "검색 :",
+    zeroRecords: "검색된 데이터가 없습니다.",
+    paginate: {
+      first: "첫 페이지",
+      last: "마지막페이지",
+      next: "다음",
+      previous: "이전",
+    },
+    aria: { sortAscending: ":오름차순 정렬", sortDescending: ":내림차순 정렬" },
+  };
 
+  var editor; // use a global for the submit and return data rendering in the examples
+  var keyId = sessionStorage.getItem("construction_id");
+  $(document).ready(function () {
+    //CRUD
+    editor = new $.fn.dataTable.Editor({
+      ajax: `/api/construction_esimate_management/${keyId}`,
+      table: "#construction_estimate_table",
+      fields: [
+        {
+          label: "레미콘 공장",
+          name: "spaces.name",
+        },
+        {
+          label: "레미콘 공장 주소",
+          name: "spaces.basic_address",
+        },
+        {
+          label: "영업사원",
+          name: "users.name",
+        },
+        {
+          label: "단가율",
+          name: "estimations.percent",
+        },
+        {
+          label: "견적요청 일시",
+          name: "estimations.created_at",
+        },
+        {
+          label: "상태",
+          name: "estimations.status",
+        },
+      ],
+    });
+
+    // 항목별 검색기능
+    $("#construction_estimate_table thead tr")
+      .clone(true)
+      .addClass("filters")
+      .appendTo("#construction_estimate_table thead");
+
+    $("#construction_estimate_table").DataTable({
+      orderCellsTop: true,
+      fixedHeader: true,
+      initComplete: function () {
+        var api = this.api();
+
+        // For each column
+        api
+          .columns()
+          .eq(0)
+          .each(function (colIdx) {
+            // Set the header cell to contain the input element
+            var cell = $(".filters th").eq(
+              $(api.column(colIdx).header()).index()
+            );
+            var title = $(cell).text();
+            $(cell).html('<input type="text" placeholder="' + title + '" />');
+
+            // On every keypress in this input
+            $(
+              "input",
+              $(".filters th").eq($(api.column(colIdx).header()).index())
+            )
+              .off("keyup change")
+              .on("change", function (e) {
+                // Get the search value
+                $(this).attr("title", $(this).val());
+                var regexr = "({search})"; //$(this).parents('th').find('select').val();
+
+                var cursorPosition = this.selectionStart;
+                // Search the column for that value
+                api
+                  .column(colIdx)
+                  .search(
+                    this.value != ""
+                      ? regexr.replace("{search}", "(((" + this.value + ")))")
+                      : "",
+                    this.value != "",
+                    this.value == ""
+                  )
+                  .draw();
+              })
+              .on("keyup", function (e) {
+                e.stopPropagation();
+
+                $(this).trigger("change");
+                $(this)
+                  .focus()[0]
+                  .setSelectionRange(cursorPosition, cursorPosition);
+              });
+          });
+      },
+
+      //DATA 바인딩
+      dom: "Bfrtip",
+      ajax: {
+        url: `/api/construction_esimate_management/${keyId}`,
+        type: "POST",
+      },
+      language: lang_kor,
+      columns: [
+        { data: "spaces.name" },
+        { data: "spaces.basic_address" },
+        { data: "users.name" },
+        { data: "estimations.percent" },
+        { data: "estimations.created_at" },
+        { data: "estimations.status" },
+      ],
+      serverSide: true,
+      select: true,
+      buttons: [
+        { extend: "create", editor: editor, text: "등록" },
+        { extend: "edit", editor: editor, text: "수정" },
+        { extend: "remove", editor: editor, text: "삭제" },
+      ],
+    });
+  });
+</script> -->
+
+<!-- 건설사견적내역 -->
 <div class="main">
   <input type="radio" id="tab-1" name="show" checked />
   <input type="radio" id="tab-2" name="show" />
@@ -214,7 +340,11 @@
   <div class="content">
     <div class="content-dis">
       <div class="demo-html">
-        <table id="history_management" class="display" style="width: 100%">
+        <table
+          id="history_management_table"
+          class="display"
+          style="width: 100%"
+        >
           <thead>
             <tr>
               <th>번호</th>
@@ -230,7 +360,26 @@
         </table>
       </div>
     </div>
-    <div class="content-dis">Concept의 body안 내용을 넣으세요.</div>
+    <div class="content-dis">
+      <!-- <div class="demo-html">
+        <table
+          id="construction_estimate_table"
+          class="display"
+          style="width: 100%"
+        >
+          <thead>
+            <tr>
+              <th>레미콘공장</th>
+              <th>레미콘 공장 주소</th>
+              <th>영업사원</th>
+              <th>단가율</th>
+              <th>견적요청 일시</th>
+              <th>상태</th>
+            </tr>
+          </thead>
+        </table>
+      </div> -->
+    </div>
     <div class="content-dis">Color의 body안 내용을 넣으세요.</div>
     <div class="content-dis">Textile의 body안 내용을 넣으세요.</div>
   </div>
