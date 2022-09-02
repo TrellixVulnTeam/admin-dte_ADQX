@@ -38,7 +38,7 @@ router.all("/api/estimate_info", async function (req, res) {
     });
 
   await editor.process(req.body);
-
+  console.log("editor", editor.data(2).options);
   res.json(editor.data());
 });
 

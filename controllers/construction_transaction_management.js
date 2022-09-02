@@ -12,7 +12,7 @@ let {
 
 // 건설사 내역관리
 // esimate_management
-router.all("/api/deal_construction_list", async function (req, res) {
+router.all("/api/history_management_list", async function (req, res) {
   let editor = new Editor(db, "spaces")
     .fields(
       new Field("spaces.id"),
@@ -46,11 +46,9 @@ router.all("/api/deal_construction_list", async function (req, res) {
 });
 
 // 건설사 견적관리
-router.all("/api/esimate_management2/:id", async function (req, res) {
-  console.log("견적관리 : 요청확인");
-  //tableName이 건설현장 이름
+
+router.all("/api/esimate_management/:id", async function (req, res) {
   var check = req.params;
-  // console.log(params);
   console.log(req.params.id);
   console.log("req", check);
   let editor = new Editor(db, "estimations")
