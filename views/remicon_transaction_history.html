@@ -6,12 +6,7 @@
 	<link rel="shortcut icon" type="image/ico" href="http://www.datatables.net/favicon.ico">
 	<title>Conaz_admin</title>
 	</style>
-	  <script
-	  src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js"></script> 
-	<script>
-	   // You have a 'moment' global here
-	   const today = moment();
-	 </script>
+	
 	   <style>
 		thead input {
 		  width: 100%;
@@ -22,11 +17,7 @@
 
 	<!-- <script src="https://code.jquery.com/ui/1.12.0/themes/smoothness/jquery-ui.css"></script> -->
 		<!-- 추가 -->
-	<script type="text/javascript" language="javascript" src="https://cdn.datatables.net/searchpanes/1.2.1/js/dataTables.searchPanes.min.js"></script>
-	<script type="text/javascript" language="javascript" src="../js/dataTables.editor.min.js"></script>
-	<script type="text/javascript" language="javascript" src="./resources/syntax/shCore.js"></script>
-	<script type="text/javascript" language="javascript" src="./resources/demo.js"></script>
-	<script type="text/javascript" language="javascript" src="./resources/editor-demo.js"></script>
+	
 	<script type="text/javascript" language="javascript" class="init">
 	//Korean    
 	var lang_kor={
@@ -182,36 +173,7 @@
 			);
 		});
 </script>
-<script>
-	var data 
-	var availableTags = []
-	$(function() {
-			$.ajax({
-				method: "get",
-				url : "/api/construction_member",
-				dataType:"json",
-		
-			}).done(function(data){
-				for(var ele in data.options){
-			
-       				 for(var ele2 in data.options[ele]){
-						var ele2name = []
-						// ele 는 users.company_id 가 된다
-						availableTags.push({label:data.options[ele][ele2].label + - +data.options[ele][ele2].value,value:data.options[ele][ele2].value})	
-						
-						console.log("availableTags",availableTags)
-       				 }	
-   					 }
-			})
-		
-		
-			$(document).on('keydown.autocomplete', '#search',function(){
-					$(this).autocomplete({source:availableTags});
-					console.log('확인');
-			});
-		
-	});
-</script>
+
 </head>
 <body class="dt-example node">
 			<h1 style="margin: 10px;" >레미콘사 거래내역</h1>

@@ -44,6 +44,7 @@ router.all("/api/list", async function (req, res) {
       //company_type , 건설사 or 레미콘
       q.where("users.company_type", "=", "REMICON");
     });
+  console.log("editor", editor);
   await editor.process(req.body);
   res.json(editor.data());
 });

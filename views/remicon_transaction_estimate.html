@@ -6,12 +6,8 @@
 	<link rel="shortcut icon" type="image/ico" href="http://www.datatables.net/favicon.ico">
 	<title>Conaz_admin</title>
 	</style>
-	  <script
-	  src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js"></script> 
-	<script>
-	   // You have a 'moment' global here
-	   const today = moment();
-	 </script>
+	
+
 	   <style>
 		thead input {
 		  width: 100%;
@@ -20,13 +16,7 @@
 	  </style>
 	
 
-	<!-- <script src="https://code.jquery.com/ui/1.12.0/themes/smoothness/jquery-ui.css"></script> -->
-		<!-- 추가 -->
-	<script type="text/javascript" language="javascript" src="https://cdn.datatables.net/searchpanes/1.2.1/js/dataTables.searchPanes.min.js"></script>
-	<script type="text/javascript" language="javascript" src="../js/dataTables.editor.min.js"></script>
-	<script type="text/javascript" language="javascript" src="./resources/syntax/shCore.js"></script>
-	<script type="text/javascript" language="javascript" src="./resources/demo.js"></script>
-	<script type="text/javascript" language="javascript" src="./resources/editor-demo.js"></script>
+
 	<script type="text/javascript" language="javascript" class="init">
 	//Korean    
 	var lang_kor={
@@ -41,64 +31,48 @@
 		$(document).ready(function () {
 			//CRUD
 			editor = new $.fn.dataTable.Editor({
-				ajax: "/api/construction_member",
-				table: "#construction_member",
+				ajax: "/api/estimate_info",
+				table: "#estimate_info",
 				fields: [
 					{
-						label: "이름",
-						name: "users.name",
+						label: "레미콘사",
+						name: "spaces.name",
+					},	
+					// {
+					// 	label: "공장맴버",
+					// 	name: "users.company_id",
+					  
+					// },
+					{
+						label: "담당자",
+						name: "admin_user.name",
 					},
 					{
-						label: "이메일",
-						name: "users.signname",
+						label: "담당자직책",
+						name: "admin_user.position",
 					},
 					
 					{
-						label: "휴대전화",
-						name: "users.phone",
+						label: "담당자(현장)",
+						name: "site_user.name",
 					},
 					{
-						label: "회사명",
-						name: "users.company_id",
-					    type: 'text',
-							
-						id : "search"		
+						label: "담당자(현장)직책",
+						name: "site_user.position",
 					},
-					{
-						label: "직위/직급",
-						name: "users.position",
-					},
-					{
-						label: "사내 전화번호",
-						name: "users.tel",
-					},
-					{
-						label: "가입일",
-						name: "users.created_at",
-						type: "datetime",
-						 def: function () { return new Date(); },
-    			 		format: "YYYY-MM-DD" 
-					},
-					{
-						label: "수정일",
-						name: "users.updated_at",
-						type: "datetime",
-						 def: function () { return new Date(); },
-    					format: "YYYY-MM-DD" 
-					},
+				
+					
 				],
 				
 			});
-
-		
 			
 			// 항목별 검색기능
-			$("#construction_member thead tr")
+			$("#estimate_info thead tr")
 				.clone(true)
 				.addClass("filters")
-				.appendTo("#construction_member thead");
+				.appendTo("#estimate_info thead");
 
-			$("#construction_member").DataTable(
+			var table = $("#estimate_info").DataTable(
 				{
 					orderCellsTop: true,
 					fixedHeader: true,
@@ -159,17 +133,35 @@
 					// 항목별 검색기능 끝.
 				//DATA 바인딩
 					dom: "Bfrtip",
-					ajax: "/api/construction_member",
+					ajax: {
+						url:"/api/estimate_info",
+						type:"POST"
+					},
+					serverSide:true,
 					language : lang_kor,
 					columns: [
-						{ data: "users.name"},
-						{ data: "users.signname" },
-						{ data: "users.phone"},
-						{ data: "companies.name"},
-						{ data: "users.position" },
-						{ data: "users.tel" },
-						{ data: "users.created_at" },
-					
+					{ data: "spaces.id",
+            		"render": function(data, type, row){
+                	if(type == 'display'){
+                 	 console.log("확인", data);
+                    // data = '<a href="'+ data + '"></a>';
+                      //  data = '<a href="/views/construction_transaction_estimate2.html>'+ data;
+                      //  data = '<a href="/views/construction_transaction_estimate2.html?테스트12">'+ data;
+                        data = '<a href="#remicon_transaction_order_Container">';
+                          // $.ajax ({
+                          // url:"/api/esimate_management2:테스트1",
+                          // type:"post"})
+               	 }             
+               	 return data;
+           			 }},
+						{ data: "spaces.name"},
+						{ data: null, render: function ( data, type, row ) {
+						return data.admin_user.name+' '+data.admin_user.position;
+						} },
+						{ data: null, render: function ( data, type, row ) {
+						return data.site_user.name+' '+data.site_user.position;
+						} },
+					 
 					],
 					select: true,
 					buttons: [
@@ -180,58 +172,38 @@
 				},
 				
 			);
+		// 	$('#estimate_info tbody').on( 'click', 'tr', function () {
+  		// var rowData = table.row( this ).data();
+        // console.log("rowData",rowData.spaces.id)
+		// let data = rowData.spaces.id
+  		//   `<a id=#remicon_transaction_order_Container?${data}></a>`;
+		// } );
 		});
+      
+	
+		
 </script>
-<script>
-	var data 
-	var availableTags = []
-	$(function() {
-			$.ajax({
-				method: "get",
-				url : "/api/construction_member",
-				dataType:"json",
-		
-			}).done(function(data){
-				for(var ele in data.options){
-			
-       				 for(var ele2 in data.options[ele]){
-						var ele2name = []
-						// ele 는 users.company_id 가 된다
-						availableTags.push({label:data.options[ele][ele2].label + - +data.options[ele][ele2].value,value:data.options[ele][ele2].value})	
-						
-						console.log("availableTags",availableTags)
-       				 }	
-   					 }
-			})
-		
-		
-			$(document).on('keydown.autocomplete', '#search',function(){
-					$(this).autocomplete({source:availableTags});
-					console.log('확인');
-			});
-		
-	});
-</script>
+
 </head>
 <body class="dt-example node">
 			<h1 style="margin: 10px;" >레미콘사 견적내역</h1>
 	
 					<div class="demo-html">
-						<table id="construction_member" class="display" style="width:100%" cellspacing="0">
+						<table id="estimate_info" class="display" style="width:100%" cellspacing="0">
 							<thead>
 								<tr>
-									<th>이름</th>
-									<th>이메일</th>
-									<th>휴대전화</th>
-									<th>회사명</th>
-									<th>직위/직급</th>
-									<th>사내 전화번호</th>
-									<th>가입일</th>
+									<th>번호</th>
+									<th>레미콘사</th>
+									<!-- <th>공장맴버</th> -->
+			
+									<th>담당자</th>
+									<th>담당자(현장)</th>
 								</tr>
 							</thead>
 						
 						</table>
 				
 		  </div>
+	
 </body>
 </html>

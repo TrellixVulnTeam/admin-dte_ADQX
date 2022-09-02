@@ -6,4 +6,5 @@ router.use(require("./remicon_list"));
 router.use(require("./construction"));
 router.use(require("./construction_member"));
 router.use(require("./construction_transaction_management"));
+router.use(require("./remicon_transaction_management"));
 module.exports = router;
