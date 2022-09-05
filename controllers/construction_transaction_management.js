@@ -1,5 +1,6 @@
 let db = require("../db");
 let router = require("express").Router();
+
 let {
   Editor,
   Field,
@@ -12,6 +13,7 @@ let {
 
 //1.건설사 내역리스트
 router.all("/api/history_management_list", async function (req, res) {
+  console.log("내역관리 요청확인", req.params);
   let editor = new Editor(db, "spaces")
     .fields(
       new Field("spaces.id"),
@@ -47,8 +49,10 @@ router.all("/api/history_management_list", async function (req, res) {
 //2. 건설사 견적내역
 
 router.all(
+  // "/api/construction_esimate_management",
   "/api/construction_esimate_management/:id",
   async function (req, res) {
+    console.log("견적내역 요청확인", req.params);
     let editor = new Editor(db, "estimations")
       .fields(
         new Field("estimations.id").set(false),

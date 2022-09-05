@@ -1,0 +1,308 @@
+// alert($("#construction_estimate").attr("src"));
+// alert($("#construction_estimate").data("idcheck"));
+// var test = $("#construction_estimate").attr("src");
+// console.log(test);
+
+// jQuery(document).ready(function () {
+//   var a = jQuery("#construction_estimate").attr("src");
+//   alert(a);
+// });
+// function loadJQuery() {
+//   var oScript = document.createElement("script");
+//   oScript.type = "text/javascript";
+//   oScript.charset = "utf-8";
+//   oScript.src = "http://code.jquery.com/jquery-1.6.2.min.js";
+//   document.getElementsByTagName("head")[0].appendChild(oScript);
+// }
+
+console.log("확인");
+
+var lang_kor = {
+  decimal: "",
+  emptyTable: "데이터가 없습니다.",
+  info: "_START_ 부터- _END_ 까지 (총 _TOTAL_ 데이터)",
+  infoEmpty: "0개",
+  infoFiltered: "(전체 _MAX_명 중 검색결과)",
+  infoPostFix: "",
+  thousands: ",",
+  lengthMenu: "_MENU_개씩 보기",
+  loadingRecords: "로딩중...",
+  processing: "처리중...",
+  search: "검색 :",
+  zeroRecords: "검색된 데이터가 없습니다.",
+  paginate: {
+    first: "첫 페이지",
+    last: "마지막페이지",
+    next: "다음",
+    previous: "이전",
+  },
+  aria: { sortAscending: ":오름차순 정렬", sortDescending: ":내림차순 정렬" },
+};
+
+// window.location.reload();
+var editor; // use a global for the submit and return data rendering in the examples
+var keyid = sessionStorage.getItem("id");
+console.log("키값확인", keyid);
+$(document).ready(function () {
+  //CRUD
+
+  editor = new $.fn.dataTable.Editor({
+    ajax: `/api/construction_esimate_management/${keyid}`,
+    table: "#esimate_management",
+    fields: [
+      {
+        label: "레미콘 공장",
+        name: "spaces.name",
+      },
+      {
+        label: "레미콘 공장 주소",
+        name: "spaces.basic_address",
+      },
+      {
+        label: "영업사원",
+        name: "users.name",
+      },
+      {
+        label: "단가율",
+        name: "estimations.percent",
+      },
+      {
+        label: "견적요청 일시",
+        name: "estimations.created_at",
+      },
+      {
+        label: "상태",
+        name: "estimations.status",
+      },
+    ],
+  });
+
+  // 항목별 검색기능
+  $("#esimate_management thead tr")
+    .clone(true)
+    .addClass("filters")
+    .appendTo("#esimate_management thead");
+
+  $("#esimate_management").DataTable({
+    orderCellsTop: true,
+    fixedHeader: true,
+    initComplete: function () {
+      var api = this.api();
+
+      // For each column
+      api
+        .columns()
+        .eq(0)
+        .each(function (colIdx) {
+          // Set the header cell to contain the input element
+          var cell = $(".filters th").eq(
+            $(api.column(colIdx).header()).index()
+          );
+          var title = $(cell).text();
+          $(cell).html('<input type="text" placeholder="' + title + '" />');
+
+          // On every keypress in this input
+          $(
+            "input",
+            $(".filters th").eq($(api.column(colIdx).header()).index())
+          )
+            .off("keyup change")
+            .on("change", function (e) {
+              // Get the search value
+              $(this).attr("title", $(this).val());
+              var regexr = "({search})"; //$(this).parents('th').find('select').val();
+
+              var cursorPosition = this.selectionStart;
+              // Search the column for that value
+              api
+                .column(colIdx)
+                .search(
+                  this.value != ""
+                    ? regexr.replace("{search}", "(((" + this.value + ")))")
+                    : "",
+                  this.value != "",
+                  this.value == ""
+                )
+                .draw();
+            })
+            .on("keyup", function (e) {
+              e.stopPropagation();
+
+              $(this).trigger("change");
+              $(this)
+                .focus()[0]
+                .setSelectionRange(cursorPosition, cursorPosition);
+            });
+        });
+    },
+    // 항목별 검색기능 끝. keyid		url:`/api/esimate_management/:${id}`,
+    //DATA 바인딩
+    dom: "Bfrtip",
+    ajax: {
+      url: `/api/construction_esimate_management/${keyid}`,
+      type: "get",
+    },
+    language: lang_kor,
+    columns: [
+      { data: "spaces.name" },
+      { data: "spaces.basic_address" },
+      { data: "users.name" },
+      { data: "estimations.percent" },
+      { data: "estimations.created_at" },
+      { data: "estimations.status" },
+    ],
+    serverSide: true,
+    select: true,
+    buttons: [
+      { extend: "create", editor: editor, text: "등록" },
+      { extend: "edit", editor: editor, text: "수정" },
+      { extend: "remove", editor: editor, text: "삭제" },
+    ],
+  });
+});
+
+//Korean
+// var lang_kor = {
+//   decimal: "",
+//   emptyTable: "데이터가 없습니다.",
+//   info: "_START_ 부터- _END_ 까지 (총 _TOTAL_ 데이터)",
+//   infoEmpty: "0개",
+//   infoFiltered: "(전체 _MAX_명 중 검색결과)",
+//   infoPostFix: "",
+//   thousands: ",",
+//   lengthMenu: "_MENU_개씩 보기",
+//   loadingRecords: "로딩중...",
+//   processing: "처리중...",
+//   search: "검색 :",
+//   zeroRecords: "검색된 데이터가 없습니다.",
+//   paginate: {
+//     first: "첫 페이지",
+//     last: "마지막페이지",
+//     next: "다음",
+//     previous: "이전",
+//   },
+//   aria: { sortAscending: ":오름차순 정렬", sortDescending: ":내림차순 정렬" },
+// };
+
+// var editor; // use a global for the submit and return data rendering in the examples
+// var keyid = sessionStorage.getItem("id");
+// console.log("키값확인", keyid);
+
+// $(document).ready(function () {
+//   //CRUD
+//   editor = new $.fn.dataTable.Editor({
+//     ajax: `/api/construction_esimate_management/${keyid}`,
+//     table: "#history_management_table",
+//     fields: [
+//       {
+//         label: "레미콘 공장",
+//         name: "spaces.name",
+//       },
+//       {
+//         label: "레미콘 공장 주소",
+//         name: "spaces.basic_address",
+//       },
+//       {
+//         label: "영업사원",
+//         name: "users.name",
+//       },
+//       {
+//         label: "단가율",
+//         name: "estimations.percent",
+//       },
+//       {
+//         label: "견적요청 일시",
+//         name: "estimations.created_at",
+//         type: date,
+//       },
+//       {
+//         label: "상태",
+//         name: "estimations.status",
+//       },
+//     ],
+//   });
+
+//   // 항목별 검색기능
+//   $("#history_management_table thead tr")
+//     .clone(true)
+//     .addClass("filters")
+//     .appendTo("#history_management_table thead");
+
+//   $("#history_management_table").DataTable({
+//     orderCellsTop: true,
+//     fixedHeader: true,
+//     initComplete: function () {
+//       var api = this.api();
+
+//       // For each column
+//       api
+//         .columns()
+//         .eq(0)
+//         .each(function (colIdx) {
+//           // Set the header cell to contain the input element
+//           var cell = $(".filters th").eq(
+//             $(api.column(colIdx).header()).index()
+//           );
+//           var title = $(cell).text();
+//           $(cell).html('<input type="text" placeholder="' + title + '" />');
+
+//           // On every keypress in this input
+//           $(
+//             "input",
+//             $(".filters th").eq($(api.column(colIdx).header()).index())
+//           )
+//             .off("keyup change")
+//             .on("change", function (e) {
+//               // Get the search value
+//               $(this).attr("title", $(this).val());
+//               var regexr = "({search})"; //$(this).parents('th').find('select').val();
+
+//               var cursorPosition = this.selectionStart;
+//               // Search the column for that value
+//               api
+//                 .column(colIdx)
+//                 .search(
+//                   this.value != ""
+//                     ? regexr.replace("{search}", "(((" + this.value + ")))")
+//                     : "",
+//                   this.value != "",
+//                   this.value == ""
+//                 )
+//                 .draw();
+//             })
+//             .on("keyup", function (e) {
+//               e.stopPropagation();
+
+//               $(this).trigger("change");
+//               $(this)
+//                 .focus()[0]
+//                 .setSelectionRange(cursorPosition, cursorPosition);
+//             });
+//         });
+//     },
+//     // 항목별 검색기능 끝.
+//     //DATA 바인딩
+//     dom: "Bfrtip",
+//     ajax: {
+//       url: `/api/construction_esimate_management/${keyid}`,
+//     },
+//     language: lang_kor,
+//     columns: [
+//       { data: "spaces.id" },
+//       { data: "spaces.name" },
+//       { data: "spaces.basic_address" },
+//       { data: "users.name" },
+//       { data: "estimations.percent" },
+//       { data: "estimations.created_at" },
+//       { data: "estimations.status" },
+//     ],
+//     select: true,
+//     buttons: [
+//       { extend: "create", editor: editor, text: "등록" },
+//       { extend: "edit", editor: editor, text: "수정" },
+//       { extend: "remove", editor: editor, text: "삭제" },
+//     ],
+//   });
+// });
+
+// alert("실행");

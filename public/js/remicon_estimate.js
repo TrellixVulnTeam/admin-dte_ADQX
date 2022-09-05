@@ -26,7 +26,8 @@ var editor; // use a global for the submit and return data rendering in the exam
 $(document).ready(function () {
   //CRUD
   editor = new $.fn.dataTable.Editor({
-    ajax: `/api/remicon_esimate_management/${id}`,
+    //`/api/remicon_esimate_management/${id}`,
+    ajax: `/api/remicon_esimate_management`,
     table: "#remicon_esimate_table",
     fields: [
       {
