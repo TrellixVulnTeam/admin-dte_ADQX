@@ -199,20 +199,34 @@
 
       sessionStorage.setItem("id", id); //다른페이지로 변수값 보내는 메소드
       console.log("출력확인", id);
-      $("#construction_estimate").attr("src");
+      // $("#construction_estimate").attr("src");
 
-      var s = document.createElement("script");
-      s.type = "text/javascript";
-      s.src = "js/construction_estimate.js";
-      $("head").append(s);
+      // var s = document.createElement("script");
+      // s.type = "text/javascript";
+      // s.src = "js/construction_estimate.js";
+      // $("head").append(s);
+
+      $.ajax({
+        type: "GET",
+        url: "/api/construction_esimate_management/" + id,
+        success: function (res) {
+          var s = document.createElement("script");
+          s.type = "text/javascript";
+          s.src = "js/construction_estimate.js";
+          $("head").append(s);
+        },
+      });
+
       // $.ajax({
       //   type: "GET",
-      //   data: "html",
-      //   url: "construction_transaction_estimate2.html",
+      //   url: "/views/construction_transaction_estimate2.html",
+      //   success: function (res) {
+      //     var s = document.createElement("script");
+      //     s.type = "text/javascript";
+      //     s.src = "js/construction_estimate.js";
+      //     $("head").append(s);
+      //   },
       // });
-
-      // $("#construction_estimate").attr("src")
-      // alert($("#construction_estimate").attr("src"));
     });
   });
 </script>
@@ -272,3 +286,9 @@
     </div> -->
   </div>
 </div>
+
+<script
+  type="text/javascript"
+  language="javascript"
+  src="/js/construction_estimate.js"
+></script>

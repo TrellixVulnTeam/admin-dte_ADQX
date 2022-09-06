@@ -1,21 +1,4 @@
-// alert($("#construction_estimate").attr("src"));
-// alert($("#construction_estimate").data("idcheck"));
-// var test = $("#construction_estimate").attr("src");
-// console.log(test);
-
-// jQuery(document).ready(function () {
-//   var a = jQuery("#construction_estimate").attr("src");
-//   alert(a);
-// });
-// function loadJQuery() {
-//   var oScript = document.createElement("script");
-//   oScript.type = "text/javascript";
-//   oScript.charset = "utf-8";
-//   oScript.src = "http://code.jquery.com/jquery-1.6.2.min.js";
-//   document.getElementsByTagName("head")[0].appendChild(oScript);
-// }
-
-console.log("확인");
+// console.log("확인");
 
 var lang_kor = {
   decimal: "",
@@ -151,6 +134,7 @@ $(document).ready(function () {
       { data: "estimations.created_at" },
       { data: "estimations.status" },
     ],
+    destory: true,
     serverSide: true,
     select: true,
     buttons: [
