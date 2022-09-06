@@ -74,7 +74,8 @@ router.all(
 );
 
 //3. 건설사 주문내역
-router.all("/api/order_history", async function (req, res) {
+router.all("/api/order_history/:id", async function (req, res) {
+  console.log("주문내역 요청확인", req.params);
   let editor = new Editor(db, "assignments")
     .fields(
       new Field("assignments.id"),
@@ -93,31 +94,26 @@ router.all("/api/order_history", async function (req, res) {
           "from space_members where space_id = spaces.id " +
           "group by space_id)"
       )
-      // new Field(
-      //   "(case when (space_members.space_id = spaces.id)" +
-      //     "then (select count(space_id) from space_members where space_id = spaces.id group by space_id)" +
-      //     "else 0 end)"
-      // )
     )
     .leftJoin("estimations", "assignments.estimation_id", "=", "estimations.id")
     .leftJoin("spaces", "estimations.factory_space_id", "=", "spaces.id")
     .leftJoin("users", "estimations.sales_user_id", "=", "users.id")
     // .leftJoin("space_members", "spaces.id", "=", "space_members.space_id")
     .where((q) => {
-      q.where("estimations.field_space_id", "=", 2417); // 아이디값 받아야함
+      q.where("estimations.field_space_id", "=", req.params.id); // 아이디값 받아야함
     });
   await editor.process(req.body);
   res.json(editor.data());
 });
 
 // 건설사 거래내역
-router.all("/api/Transaction_history", async function (req, res) {
+router.all("/api/Transaction_history/:id", async function (req, res) {
   console.log("거래내역 : 요청확인");
   console.log(req.params.id);
   let editor = new Editor(db, "assignments")
     .fields(
       new Field("assignments.id"),
-      new Field("users.name"),
+      new Field("spaces.name"),
       new Field("assignments.date")
         .getFormatter(Format.sqlDateToFormat("YYYY-MM-DD-HH:MM"))
         .setFormatter(Format.formatToSqlDate("YYYY-MM-DD-HH:MM")),
@@ -125,10 +121,10 @@ router.all("/api/Transaction_history", async function (req, res) {
     )
     .leftJoin("estimations", "assignments.estimation_id", "=", "estimations.id")
     .leftJoin("spaces", "estimations.factory_space_id", "=", "spaces.id")
-    .leftJoin("users", "estimations.sales_user_id", "=", "users.id")
-    .leftJoin("space_members", "spaces.id", "=", "space_members.space_id")
+    // .leftJoin("users", "estimations.sales_user_id", "=", "users.id")
+    // .leftJoin("space_members", "spaces.id", "=", "space_members.space_id")
     .where((q) => {
-      q.where("estimations.field_space_id", "=", 2417); // 아이디값 받아야함
+      q.where("estimations.field_space_id", "=", req.params.id); // 아이디값 받아야함
     });
   await editor.process(req.body);
   res.json(editor.data());

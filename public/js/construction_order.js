@@ -1,5 +1,5 @@
 // 건설사견적내역
-function getApi(id) {
+function getApi_construction_order(id) {
   var lang_kor = {
     decimal: "",
     emptyTable: "데이터가 없습니다.",
@@ -36,8 +36,8 @@ function getApi(id) {
     //CRUD
 
     editor = new $.fn.dataTable.Editor({
-      ajax: `/api/construction_esimate_management_list/${id}`,
-      table: "#esimate_management_table",
+      ajax: "/api/order_history",
+      table: "#order_management_table",
       fields: [
         {
           label: "레미콘 공장",
@@ -67,12 +67,12 @@ function getApi(id) {
     });
 
     // 항목별 검색기능
-    $("#esimate_management_table thead tr")
+    $("#order_management_table thead tr")
       .clone(true)
-      .appendTo("#esimate_management_table thead tr")
+      .appendTo("#order_management_table thead tr")
       .addClass("filters");
 
-    $("#esimate_management_table").DataTable({
+    $("#order_management_table").DataTable({
       orderCellsTop: true,
       fixedHeader: true,
       destroy: true,
@@ -126,22 +126,54 @@ function getApi(id) {
               });
           });
       },
-      // 항목별 검색기능 끝. keyid		url:`/api/esimate_management_table/:${id}`,
+      // 항목별 검색기능 끝. keyid		url:`/api/order_management_table/:${id}`,
       //DATA 바인딩
       dom: "Bfrtip",
       ajax: {
-        url: `/api/construction_esimate_management/${id}`,
+        url: `/api/order_history/${id}`,
         // type: "get",
       },
-
       language: lang_kor,
       columns: [
+        // { data: "assignments.id"},
         { data: "spaces.name" },
-        { data: "spaces.basic_address" },
-        { data: "users.name" },
-        { data: "estimations.percent" },
-        { data: "estimations.created_at" },
-        { data: "estimations.status" },
+        {
+          data: null,
+          render: function (data, type, row) {
+            return (
+              data.assignments.start_time +
+              " ~ " +
+              data.assignments.end_time.substring(14)
+            );
+          },
+        },
+        { data: "concat(users.name, ' ' ,users.position)" },
+        { data: "assignments.type" },
+        {
+          data: "assignments.status",
+          render: function (data, type, row) {
+            switch (data) {
+              case "REQUESTED":
+                return "요청";
+                break;
+              case "CONFIRMED":
+                return "확인";
+                break;
+              case "REMOVED":
+                return "삭제";
+                break;
+              case null:
+                return "";
+                break;
+            }
+          },
+        },
+        {
+          data:
+            "(select count(space_id)" +
+            "from space_members where space_id = spaces.id " +
+            "group by space_id)",
+        },
       ],
 
       buttons: [

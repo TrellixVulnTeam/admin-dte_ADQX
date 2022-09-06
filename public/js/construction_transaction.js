@@ -1,5 +1,5 @@
 // 건설사견적내역
-function getApi(id) {
+function getApi_construction_transaction(id) {
   var lang_kor = {
     decimal: "",
     emptyTable: "데이터가 없습니다.",
@@ -36,43 +36,31 @@ function getApi(id) {
     //CRUD
 
     editor = new $.fn.dataTable.Editor({
-      ajax: `/api/construction_esimate_management_list/${id}`,
-      table: "#esimate_management_table",
+      ajax: `/api/Transaction_history/${id}`,
+      table: "#transaction_management_table",
       fields: [
         {
-          label: "레미콘 공장",
+          label: "납품일자",
+          name: "assignments.date",
+        },
+        {
+          label: "납품업체",
           name: "spaces.name",
         },
         {
-          label: "레미콘 공장 주소",
-          name: "spaces.basic_address",
-        },
-        {
-          label: "영업사원",
-          name: "users.name",
-        },
-        {
-          label: "단가율",
-          name: "estimations.percent",
-        },
-        {
-          label: "견적요청 일시",
-          name: "estimations.created_at",
-        },
-        {
           label: "상태",
-          name: "estimations.status",
+          name: "assignments.status",
         },
       ],
     });
 
     // 항목별 검색기능
-    $("#esimate_management_table thead tr")
+    $("#transaction_management_table thead tr")
       .clone(true)
-      .appendTo("#esimate_management_table thead tr")
+      .appendTo("#transaction_management_table thead tr")
       .addClass("filters");
 
-    $("#esimate_management_table").DataTable({
+    $("#transaction_management_table").DataTable({
       orderCellsTop: true,
       fixedHeader: true,
       destroy: true,
@@ -126,22 +114,37 @@ function getApi(id) {
               });
           });
       },
-      // 항목별 검색기능 끝. keyid		url:`/api/esimate_management_table/:${id}`,
+      // 항목별 검색기능 끝. keyid		url:`/api/transaction_management_table/:${id}`,
       //DATA 바인딩
       dom: "Bfrtip",
       ajax: {
-        url: `/api/construction_esimate_management/${id}`,
+        url: `/api/Transaction_history/${id}`,
         // type: "get",
       },
-
       language: lang_kor,
       columns: [
+        // { data: "assignments.id"},
+        { data: "assignments.date" },
         { data: "spaces.name" },
-        { data: "spaces.basic_address" },
-        { data: "users.name" },
-        { data: "estimations.percent" },
-        { data: "estimations.created_at" },
-        { data: "estimations.status" },
+        {
+          data: "assignments.status",
+          render: function (data, type, row) {
+            switch (data) {
+              case "REQUESTED":
+                return "요청";
+                break;
+              case "CONFIRMED":
+                return "확인";
+                break;
+              case "REMOVED":
+                return "삭제";
+                break;
+              case null:
+                return "";
+                break;
+            }
+          },
+        },
       ],
 
       buttons: [
