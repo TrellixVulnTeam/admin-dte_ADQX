@@ -141,7 +141,31 @@ function getApi(id) {
         { data: "users.name" },
         { data: "estimations.percent" },
         { data: "estimations.created_at" },
-        { data: "estimations.status" },
+        {
+          data: "estimations.status",
+          render: function (data, type, row) {
+            switch (data) {
+              case "REQUESTED":
+                return "요청";
+                break;
+              case "RESPONDED":
+                return "응답";
+                break;
+              case "REGISTERED":
+                return "등록";
+                break;
+              case "APPLIED":
+                return "적용";
+                break;
+              case "FINISHED":
+                return "완료";
+                break;
+              case null:
+                return "";
+                break;
+            }
+          },
+        },
       ],
 
       buttons: [

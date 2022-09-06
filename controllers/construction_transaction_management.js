@@ -108,8 +108,7 @@ router.all("/api/order_history/:id", async function (req, res) {
 
 // 건설사 거래내역
 router.all("/api/Transaction_history/:id", async function (req, res) {
-  console.log("거래내역 : 요청확인");
-  console.log(req.params.id);
+  console.log("거래내역 요청확인", req.params);
   let editor = new Editor(db, "assignments")
     .fields(
       new Field("assignments.id"),
