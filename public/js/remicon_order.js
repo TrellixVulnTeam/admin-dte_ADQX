@@ -1,5 +1,6 @@
-// 건설사견적내역
-function getApi_construction_transaction(id) {
+//레미콘사 견적내역
+function remicon_getApi_order(id) {
+  //Korean
   var lang_kor = {
     decimal: "",
     emptyTable: "데이터가 없습니다.",
@@ -19,48 +20,62 @@ function getApi_construction_transaction(id) {
       next: "다음",
       previous: "이전",
     },
-    aria: {
-      sortAscending: ":오름차순 정렬",
-      sortDescending: ":내림차순 정렬",
-    },
+    aria: { sortAscending: ":오름차순 정렬", sortDescending: ":내림차순 정렬" },
   };
-
-  // window.location.reload();
+  console.log("주문내역확인");
   var editor; // use a global for the submit and return data rendering in the examples
-  // var id = sessionStorage.getItem("id", id);
-  console.log("키값확인", id);
-  if (id === null) {
-    retrun;
-  }
+
   $(document).ready(function () {
     //CRUD
-
     editor = new $.fn.dataTable.Editor({
-      ajax: `/api/construction_Transaction_history/${id}`,
-      table: "#construction_transaction_table",
+      //`/api/remicon_esimate_management/${id}`,
+      ajax: `/api/remicon_order_management/${id}`,
+      table: "#remicon_order_table",
       fields: [
         {
-          label: "납품일자",
-          name: "assignments.date",
+          label: "건설사",
+          name: "c.name",
         },
         {
-          label: "납품업체",
+          label: "건설현장",
           name: "spaces.name",
         },
         {
-          label: "상태",
-          name: "assignments.status",
+          label: "건설사주소",
+          name: "spaces.basic_address",
+        },
+        {
+          label: "영업사원",
+          name: "users.name",
+        },
+
+        {
+          label: "견적률",
+          name: "estimations.percent",
+        },
+        {
+          label: "견적상태",
+          name: "estimations.status",
+        },
+        {
+          label: "일시",
+          name: "estimations.created_at",
+          type: "datetime",
+          def: function () {
+            return new Date();
+          },
+          format: "YYYY-MM-DD",
         },
       ],
     });
 
     // 항목별 검색기능
-    $("#construction_transaction_table thead tr")
+    $("#remicon_order_table thead tr")
       .clone(true)
-      .appendTo("#construction_transaction_table thead tr")
+      .appendTo("#remicon_order_table thead tr")
       .addClass("filters");
 
-    $("#construction_transaction_table").DataTable({
+    $("#remicon_order_table").DataTable({
       orderCellsTop: true,
       fixedHeader: true,
       destroy: true,
@@ -114,18 +129,35 @@ function getApi_construction_transaction(id) {
               });
           });
       },
-      // 항목별 검색기능 끝. keyid		url:`/api/construction_transaction_table/:${id}`,
+      // 항목별 검색기능 끝.
       //DATA 바인딩
       dom: "Bfrtip",
       ajax: {
-        url: `/api/construction_Transaction_history/${id}`,
-        // type: "get",
+        url: `/api/remicon_order_management/${id}`,
       },
       language: lang_kor,
       columns: [
         // { data: "assignments.id"},
-        { data: "assignments.date" },
+        { data: "companies.name" },
         { data: "spaces.name" },
+        {
+          data: null,
+          render: function (data, type, row) {
+            return (
+              data.assignments.start_time +
+              " ~ " +
+              data.assignments.end_time.substring(14)
+            );
+          },
+        },
+        { data: "concat(users.name, ' ' ,users.position)" },
+        {
+          data:
+            "(select count(space_id)" +
+            "from space_members where space_id = spaces.id " +
+            "group by space_id)",
+        },
+        { data: "assignments.type" },
         {
           data: "assignments.status",
           render: function (data, type, row) {
@@ -146,7 +178,7 @@ function getApi_construction_transaction(id) {
           },
         },
       ],
-
+      select: true,
       buttons: [
         { extend: "create", editor: editor, text: "등록" },
         { extend: "edit", editor: editor, text: "수정" },

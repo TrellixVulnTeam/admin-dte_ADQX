@@ -1,5 +1,5 @@
 // 건설사견적내역
-function getApi_construction_transaction(id) {
+function remicon_getApi_Transaction(id) {
   var lang_kor = {
     decimal: "",
     emptyTable: "데이터가 없습니다.",
@@ -25,9 +25,8 @@ function getApi_construction_transaction(id) {
     },
   };
 
-  // window.location.reload();
+  console.log("거래내역확인");
   var editor; // use a global for the submit and return data rendering in the examples
-  // var id = sessionStorage.getItem("id", id);
   console.log("키값확인", id);
   if (id === null) {
     retrun;
@@ -36,16 +35,24 @@ function getApi_construction_transaction(id) {
     //CRUD
 
     editor = new $.fn.dataTable.Editor({
-      ajax: `/api/construction_Transaction_history/${id}`,
-      table: "#construction_transaction_table",
+      ajax: `/api/remicon_Transaction_history/${id}`,
+      table: "#remicon_transaction_table",
       fields: [
         {
           label: "납품일자",
           name: "assignments.date",
         },
         {
-          label: "납품업체",
+          label: "건설사",
+          name: "companies.name",
+        },
+        {
+          label: "건설현장",
           name: "spaces.name",
+        },
+        {
+          label: "건설현장주소",
+          name: "spaces.basic_address",
         },
         {
           label: "상태",
@@ -55,12 +62,12 @@ function getApi_construction_transaction(id) {
     });
 
     // 항목별 검색기능
-    $("#construction_transaction_table thead tr")
+    $("#remicon_transaction_table thead tr")
       .clone(true)
-      .appendTo("#construction_transaction_table thead tr")
+      .appendTo("#remicon_transaction_table thead tr")
       .addClass("filters");
 
-    $("#construction_transaction_table").DataTable({
+    $("#remicon_transaction_table").DataTable({
       orderCellsTop: true,
       fixedHeader: true,
       destroy: true,
@@ -114,18 +121,20 @@ function getApi_construction_transaction(id) {
               });
           });
       },
-      // 항목별 검색기능 끝. keyid		url:`/api/construction_transaction_table/:${id}`,
+      // 항목별 검색기능 끝. keyid		url:`/api/remicon_transaction_table/:${id}`,
       //DATA 바인딩
       dom: "Bfrtip",
       ajax: {
-        url: `/api/construction_Transaction_history/${id}`,
+        url: `/api/remicon_Transaction_history/${id}`,
         // type: "get",
       },
       language: lang_kor,
       columns: [
         // { data: "assignments.id"},
         { data: "assignments.date" },
+        { data: "companies.name" },
         { data: "spaces.name" },
+        { data: "spaces.basic_address" },
         {
           data: "assignments.status",
           render: function (data, type, row) {
@@ -146,7 +155,7 @@ function getApi_construction_transaction(id) {
           },
         },
       ],
-
+      select: true,
       buttons: [
         { extend: "create", editor: editor, text: "등록" },
         { extend: "edit", editor: editor, text: "수정" },

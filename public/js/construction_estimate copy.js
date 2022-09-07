@@ -1,5 +1,5 @@
 // 건설사견적내역
-function getApi_construction_transaction(id) {
+function getApi(id) {
   var lang_kor = {
     decimal: "",
     emptyTable: "데이터가 없습니다.",
@@ -36,31 +36,43 @@ function getApi_construction_transaction(id) {
     //CRUD
 
     editor = new $.fn.dataTable.Editor({
-      ajax: `/api/construction_Transaction_history/${id}`,
-      table: "#construction_transaction_table",
+      ajax: `/api/construction_esimate_management_list/${id}`,
+      table: "#esimate_management_table",
       fields: [
         {
-          label: "납품일자",
-          name: "assignments.date",
+          label: "레미콘 공장",
+          name: "companies.name",
         },
         {
-          label: "납품업체",
-          name: "spaces.name",
+          label: "레미콘 공장 주소",
+          name: "spaces.basic_address",
+        },
+        {
+          label: "영업사원",
+          name: "users.name",
+        },
+        {
+          label: "단가율",
+          name: "estimations.percent",
+        },
+        {
+          label: "견적요청 일시",
+          name: "estimations.created_at",
         },
         {
           label: "상태",
-          name: "assignments.status",
+          name: "estimations.status",
         },
       ],
     });
 
     // 항목별 검색기능
-    $("#construction_transaction_table thead tr")
+    $("#esimate_management_table thead tr")
       .clone(true)
-      .appendTo("#construction_transaction_table thead tr")
+      .appendTo("#esimate_management_table thead tr")
       .addClass("filters");
 
-    $("#construction_transaction_table").DataTable({
+    $("#esimate_management_table").DataTable({
       orderCellsTop: true,
       fixedHeader: true,
       destroy: true,
@@ -114,30 +126,39 @@ function getApi_construction_transaction(id) {
               });
           });
       },
-      // 항목별 검색기능 끝. keyid		url:`/api/construction_transaction_table/:${id}`,
+      // 항목별 검색기능 끝. keyid		url:`/api/esimate_management_table/:${id}`,
       //DATA 바인딩
       dom: "Bfrtip",
       ajax: {
-        url: `/api/construction_Transaction_history/${id}`,
+        url: `/api/construction_esimate_management/${id}`,
         // type: "get",
       },
+
       language: lang_kor,
       columns: [
-        // { data: "assignments.id"},
-        { data: "assignments.date" },
         { data: "spaces.name" },
+        { data: "spaces.basic_address" },
+        { data: "users.name" },
+        { data: "estimations.percent" },
+        { data: "estimations.created_at" },
         {
-          data: "assignments.status",
+          data: "estimations.status",
           render: function (data, type, row) {
             switch (data) {
               case "REQUESTED":
                 return "요청";
                 break;
-              case "CONFIRMED":
-                return "확인";
+              case "RESPONDED":
+                return "응답";
                 break;
-              case "REMOVED":
-                return "삭제";
+              case "REGISTERED":
+                return "등록";
+                break;
+              case "APPLIED":
+                return "적용";
+                break;
+              case "FINISHED":
+                return "완료";
                 break;
               case null:
                 return "";
@@ -151,11 +172,6 @@ function getApi_construction_transaction(id) {
         { extend: "create", editor: editor, text: "등록" },
         { extend: "edit", editor: editor, text: "수정" },
         { extend: "remove", editor: editor, text: "삭제" },
-        {
-          extend: "collection",
-          text: "내보내기",
-          buttons: ["excel", "csv"],
-        },
       ],
     });
   });

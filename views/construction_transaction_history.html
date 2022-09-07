@@ -208,6 +208,11 @@
         { extend: "create", editor: editor, text: "등록" },
         { extend: "edit", editor: editor, text: "수정" },
         { extend: "remove", editor: editor, text: "삭제" },
+        {
+          extend: "collection",
+          text: "내보내기",
+          buttons: ["excel", "csv"],
+        },
       ],
     });
 
@@ -260,7 +265,11 @@
     </div>
     <div class="demo-html">
       <!-- 견적내역-->
-      <table id="esimate_management_table" class="display" style="width: 100%">
+      <table
+        id="construction_esimate_table"
+        class="display"
+        style="width: 100%"
+      >
         <thead>
           <tr>
             <th>레미콘공장</th>
@@ -275,7 +284,7 @@
     </div>
     <!-- 주문내역-->
     <div class="demo-html">
-      <table id="order_management_table" class="display" style="width: 100%">
+      <table id="construction_order_table" class="display" style="width: 100%">
         <thead>
           <tr>
             <!-- <th>주문아이디</th> -->
@@ -293,7 +302,7 @@
     <!-- 거래내역-->
     <div class="demo-html">
       <table
-        id="transaction_management_table"
+        id="construction_transaction_table"
         class="display"
         style="width: 100%"
       >

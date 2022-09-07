@@ -36,8 +36,8 @@ function getApi_construction_order(id) {
     //CRUD
 
     editor = new $.fn.dataTable.Editor({
-      ajax: "/api/order_history",
-      table: "#order_management_table",
+      ajax: "/api/construction_order_history",
+      table: "#construction_order_table",
       fields: [
         {
           label: "레미콘 공장",
@@ -67,12 +67,12 @@ function getApi_construction_order(id) {
     });
 
     // 항목별 검색기능
-    $("#order_management_table thead tr")
+    $("#construction_order_table thead tr")
       .clone(true)
-      .appendTo("#order_management_table thead tr")
+      .appendTo("#construction_order_table thead tr")
       .addClass("filters");
 
-    $("#order_management_table").DataTable({
+    $("#construction_order_table").DataTable({
       orderCellsTop: true,
       fixedHeader: true,
       destroy: true,
@@ -126,11 +126,11 @@ function getApi_construction_order(id) {
               });
           });
       },
-      // 항목별 검색기능 끝. keyid		url:`/api/order_management_table/:${id}`,
+      // 항목별 검색기능 끝. keyid		url:`/api/construction_order_table/:${id}`,
       //DATA 바인딩
       dom: "Bfrtip",
       ajax: {
-        url: `/api/order_history/${id}`,
+        url: `/api/construction_order_history/${id}`,
         // type: "get",
       },
       language: lang_kor,
@@ -180,6 +180,11 @@ function getApi_construction_order(id) {
         { extend: "create", editor: editor, text: "등록" },
         { extend: "edit", editor: editor, text: "수정" },
         { extend: "remove", editor: editor, text: "삭제" },
+        {
+          extend: "collection",
+          text: "내보내기",
+          buttons: ["excel", "csv"],
+        },
       ],
     });
   });

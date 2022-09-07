@@ -45,9 +45,11 @@ router.all("/api/remicon_management_list", async function (req, res) {
 //2. 레미콘사 견적내역
 
 router.all("/api/remicon_esimate_management/:id", async function (req, res) {
+  console.log("레미콘사 견적내역 요청확인", req.params.id);
   let editor = new Editor(db, "estimations")
     .fields(
       new Field("estimations.id").set(false),
+      new Field("companies.name"),
       new Field("spaces.name"),
       new Field("spaces.basic_address"),
       new Field("users.name"),
@@ -57,8 +59,68 @@ router.all("/api/remicon_esimate_management/:id", async function (req, res) {
     )
     .leftJoin("spaces", "estimations.field_space_id", "=", "spaces.id")
     .leftJoin("users", "estimations.sales_user_id", "=", "users.id")
+    .leftJoin("companies", "spaces.company_id", "=", "companies.id")
     .where((q) => {
       q.where("estimations.factory_space_id", "=", req.params.id);
+    });
+  await editor.process(req.body);
+  res.json(editor.data());
+});
+
+//3. 레미콘사 주문내역
+
+router.all("/api/remicon_order_management/:id", async function (req, res) {
+  console.log("레미콘사 주문내역 요청확인", req.params);
+  let editor = new Editor(db, "assignments")
+    .fields(
+      new Field("assignments.id").set(false),
+      new Field("companies.name"),
+      new Field("spaces.name"),
+      new Field("assignments.start_time"),
+      // .getFormatter(Format.sqlDateToFormat("YYYY-MM-DD-HH:MM"))
+      // .setFormatter(Format.formatToSqlDate("YYYY-MM-DD-HH:MM")),
+      new Field("assignments.end_time"),
+      //   .getFormatter(Format.sqlDateToFormat("YYYY-MM"))
+      //   .setFormatter(Format.formatToSqlDate("YYYY-MM")),
+      new Field("concat(users.name, ' ' ,users.position)"),
+      new Field("assignments.type"),
+      new Field("assignments.status"),
+      new Field(
+        "(select count(space_id)" +
+          "from space_members where space_id = spaces.id " +
+          "group by space_id)"
+      )
+    )
+    .leftJoin("estimations", "assignments.estimation_id", "=", "estimations.id")
+    .leftJoin("spaces", "estimations.field_space_id", "=", "spaces.id")
+    .leftJoin("users", "estimations.sales_user_id", "=", "users.id")
+    .leftJoin("companies", "spaces.company_id", "=", "companies.id")
+    .where((q) => {
+      q.where("estimations.factory_space_id", "=", req.params.id); // 아이디값 받아야함
+    });
+  await editor.process(req.body);
+  res.json(editor.data());
+});
+
+// 4. 레미콘사 거래내역
+router.all("/api/remicon_Transaction_history/:id", async function (req, res) {
+  console.log("레미콘사 거래내역 요청확인", req.params);
+  let editor = new Editor(db, "assignments")
+    .fields(
+      new Field("assignments.id").set(false),
+      new Field("companies.name"),
+      new Field("spaces.name"),
+      new Field("spaces.basic_address"),
+      new Field("assignments.date")
+        .getFormatter(Format.sqlDateToFormat("YYYY-MM-DD-HH:MM"))
+        .setFormatter(Format.formatToSqlDate("YYYY-MM-DD-HH:MM")),
+      new Field("assignments.status")
+    )
+    .leftJoin("estimations", "assignments.estimation_id", "=", "estimations.id")
+    .leftJoin("spaces", "estimations.field_space_id", "=", "spaces.id")
+    .leftJoin("companies", "spaces.company_id", "=", "companies.id")
+    .where((q) => {
+      q.where("estimations.factory_space_id", "=", req.params.id); // 아이디값 받아야함
     });
   await editor.process(req.body);
   res.json(editor.data());

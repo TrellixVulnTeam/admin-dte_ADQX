@@ -37,7 +37,7 @@ function getApi(id) {
 
     editor = new $.fn.dataTable.Editor({
       ajax: `/api/construction_esimate_management_list/${id}`,
-      table: "#esimate_management_table",
+      table: "#construction_esimate_table",
       fields: [
         {
           label: "레미콘 공장",
@@ -67,16 +67,16 @@ function getApi(id) {
     });
 
     // 항목별 검색기능
-    $("#esimate_management_table thead tr")
+    $("#construction_esimate_table thead tr")
       .clone(true)
-      .appendTo("#esimate_management_table thead tr")
-      .addClass("filters");
+      .addClass("filters")
+      .appendTo("#construction_esimate_table thead tr");
 
-    $("#esimate_management_table").DataTable({
+    $("#construction_esimate_table").DataTable({
       orderCellsTop: true,
       fixedHeader: true,
       destroy: true,
-      searching: true,
+      // searching: true,
       initComplete: function () {
         var api = this.api();
 
@@ -126,14 +126,15 @@ function getApi(id) {
               });
           });
       },
-      // 항목별 검색기능 끝. keyid		url:`/api/esimate_management_table/:${id}`,
+      // 항목별 검색기능 끝.
       //DATA 바인딩
       dom: "Bfrtip",
       ajax: {
         url: `/api/construction_esimate_management/${id}`,
         // type: "get",
       },
-
+      destroy: true,
+      select: true,
       language: lang_kor,
       columns: [
         { data: "spaces.name" },
@@ -172,6 +173,11 @@ function getApi(id) {
         { extend: "create", editor: editor, text: "등록" },
         { extend: "edit", editor: editor, text: "수정" },
         { extend: "remove", editor: editor, text: "삭제" },
+        {
+          extend: "collection",
+          text: "내보내기",
+          buttons: ["excel", "csv"],
+        },
       ],
     });
   });
