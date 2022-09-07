@@ -38,36 +38,47 @@ function getApi_construction_order(id) {
     //CRUD
 
     editor = new $.fn.dataTable.Editor({
-      ajax: "/api/construction_order_history",
+      ajax: `/api/construction_order_history/${id}`,
       table: "#construction_order_table",
       fields: [
+        {
+          label: "주문아이디",
+          name: "assignments.id",
+        },
         {
           label: "레미콘 공장",
           name: "spaces.name",
         },
+        // {
+        //   label: "영업사원명",
+        //   name: "users.name",
+        // },
+        // {
+        //   label: "영업사원직책",
+        //   name: "users.position",
+        // },
+        // {
+        //   label: "영업사원",
+        //   name: "concat(users.name, ' ' ,users.position)",
+        // },
         {
-          label: "레미콘 공장 주소",
-          name: "spaces.basic_address",
-        },
-        {
-          label: "영업사원명",
-          name: "users.name",
-        },
-        {
-          label: "영업사원직책",
-          name: "users.position",
-        },
-        {
-          label: "단가율",
-          name: "estimations.percent",
-        },
-        {
-          label: "견적요청 일시",
-          name: "estimations.created_at",
+          label: "발주처",
+          name: "assignments.type",
+          type: "select",
         },
         {
           label: "상태",
-          name: "estimations.status",
+          name: "assignments.status",
+          type: "select",
+          value: "요청",
+          options: [
+            //   // { label: "REQUESTED", value: "요청" },
+            //   // { label: "확인", value: "CONFIRMED" },
+            //   // { label: "REMOVE", value: "삭제" },
+            { label: "요청", value: "REQUESTED" },
+            { label: "확인", value: "CONFIRMED" },
+            { label: "삭제", value: "REMOVE" },
+          ],
         },
       ],
     });

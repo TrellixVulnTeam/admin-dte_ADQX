@@ -73,6 +73,7 @@ router.all(
 
 //3. 건설사 주문내역
 router.all("/api/construction_order_history/:id", async function (req, res) {
+  console.log("주문내역 수정확인");
   let editor = new Editor(db, "assignments")
     .fields(
       new Field("assignments.id"),
@@ -84,7 +85,11 @@ router.all("/api/construction_order_history/:id", async function (req, res) {
       //   .getFormatter(Format.sqlDateToFormat("YYYY-MM"))
       //   .setFormatter(Format.formatToSqlDate("YYYY-MM")),
       new Field("concat(users.name, ' ' ,users.position)"),
-      new Field("assignments.type"),
+      new Field("users.position"),
+      new Field("users.name"),
+      new Field("assignments.type").options(
+        new Options().table("assignments").value("type").label("type")
+      ),
       new Field("assignments.status"),
       new Field(
         "(select count(space_id)" +
