@@ -1,5 +1,7 @@
 // 건설사견적내역
 function getApi_construction_transaction(id) {
+  num_con_transaction++;
+  console.log("거래내역", num_con_transaction);
   var lang_kor = {
     decimal: "",
     emptyTable: "데이터가 없습니다.",
@@ -55,11 +57,12 @@ function getApi_construction_transaction(id) {
     });
 
     // 항목별 검색기능
-    $("#construction_transaction_table thead tr")
-      .clone(true)
-      .appendTo("#construction_transaction_table thead tr")
-      .addClass("filters");
-
+    if (num_con_transaction == 1) {
+      $("#construction_transaction_table thead tr")
+        .clone(true)
+        .appendTo("#construction_transaction_table thead")
+        .addClass("con_filters_transaction");
+    }
     $("#construction_transaction_table").DataTable({
       orderCellsTop: true,
       fixedHeader: true,
@@ -74,24 +77,24 @@ function getApi_construction_transaction(id) {
           .eq(0)
           .each(function (colIdx) {
             // Set the header cell to contain the input element
-            var cell = $(".filters th").eq(
+            var cell = $(".con_filters_transaction th").eq(
               $(api.column(colIdx).header()).index()
             );
             var title = $(cell).text();
-            $(cell).html('<input type="text" placeholder="' + title + '" />');
+            $(cell).html('<input type="text" placeholder="검색" />');
 
             // On every keypress in this input
             $(
               "input",
-              $(".filters th").eq($(api.column(colIdx).header()).index())
+              $(".con_filters_transaction th").eq(
+                $(api.column(colIdx).header()).index()
+              )
             )
               .off("keyup change")
               .on("change", function (e) {
                 // Get the search value
                 $(this).attr("title", $(this).val());
                 var regexr = "({search})"; //$(this).parents('th').find('select').val();
-
-                var cursorPosition = this.selectionStart;
                 // Search the column for that value
                 api
                   .column(colIdx)
@@ -108,9 +111,7 @@ function getApi_construction_transaction(id) {
                 e.stopPropagation();
 
                 $(this).trigger("change");
-                $(this)
-                  .focus()[0]
-                  .setSelectionRange(cursorPosition, cursorPosition);
+                $(this).focus()[0];
               });
           });
       },
