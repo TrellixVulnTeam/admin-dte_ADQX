@@ -50,10 +50,10 @@ function getApi(id) {
           label: "레미콘 공장 주소",
           name: "spaces.basic_address",
         },
-        {
-          label: "영업사원",
-          name: "users.name",
-        },
+        // {
+        //   label: "영업사원",
+        //   name: "users.name",
+        // },
         {
           label: "단가율",
           name: "estimations.percent",
@@ -65,6 +65,14 @@ function getApi(id) {
         {
           label: "상태",
           name: "estimations.status",
+          type: "select",
+          options: [
+            { label: "요청", value: "REQUESTED" },
+            { label: "응답", value: "RESPONDED" },
+            { label: "등록", value: "REGISTERED" },
+            { label: "적용", value: "APPLIED" },
+            { label: "완료", value: "FINISHED" },
+          ],
         },
       ],
     });
