@@ -13,7 +13,6 @@ let {
 
 //1.건설사 내역리스트
 router.all("/api/history_management_list", async function (req, res) {
-  console.log("내역관리 요청확인", req.params);
   let editor = new Editor(db, "spaces")
     .fields(
       new Field("spaces.id"),
@@ -52,7 +51,6 @@ router.all(
   // "/api/construction_esimate_management",
   "/api/construction_esimate_management/:id",
   async function (req, res) {
-    console.log("견적내역 요청확인", req.params);
     let editor = new Editor(db, "estimations")
       .fields(
         new Field("estimations.id").set(false),
@@ -75,7 +73,6 @@ router.all(
 
 //3. 건설사 주문내역
 router.all("/api/construction_order_history/:id", async function (req, res) {
-  console.log("주문내역 요청확인", req.params);
   let editor = new Editor(db, "assignments")
     .fields(
       new Field("assignments.id"),
@@ -110,7 +107,6 @@ router.all("/api/construction_order_history/:id", async function (req, res) {
 router.all(
   "/api/construction_Transaction_history/:id",
   async function (req, res) {
-    console.log("거래내역 요청확인", req.params);
     let editor = new Editor(db, "assignments")
       .fields(
         new Field("assignments.id"),

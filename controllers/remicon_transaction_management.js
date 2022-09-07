@@ -45,7 +45,6 @@ router.all("/api/remicon_management_list", async function (req, res) {
 //2. 레미콘사 견적내역
 
 router.all("/api/remicon_esimate_management/:id", async function (req, res) {
-  console.log("레미콘사 견적내역 요청확인", req.params.id);
   let editor = new Editor(db, "estimations")
     .fields(
       new Field("estimations.id").set(false),
@@ -70,7 +69,6 @@ router.all("/api/remicon_esimate_management/:id", async function (req, res) {
 //3. 레미콘사 주문내역
 
 router.all("/api/remicon_order_management/:id", async function (req, res) {
-  console.log("레미콘사 주문내역 요청확인", req.params);
   let editor = new Editor(db, "assignments")
     .fields(
       new Field("assignments.id").set(false),
@@ -104,7 +102,6 @@ router.all("/api/remicon_order_management/:id", async function (req, res) {
 
 // 4. 레미콘사 거래내역
 router.all("/api/remicon_Transaction_history/:id", async function (req, res) {
-  console.log("레미콘사 거래내역 요청확인", req.params);
   let editor = new Editor(db, "assignments")
     .fields(
       new Field("assignments.id").set(false),

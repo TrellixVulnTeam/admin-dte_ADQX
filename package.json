@@ -14,7 +14,6 @@
     "mysql": "^2.13.0",
     "nodemon": "^2.0.15",
     "pg": "^7.4.0",
-    "sqlite3": "^4.2.0",
     "mysql2": "^2.3.3"
   },
   "devDependencies": {

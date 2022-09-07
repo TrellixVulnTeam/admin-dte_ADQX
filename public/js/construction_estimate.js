@@ -28,7 +28,7 @@ function getApi(id) {
   // window.location.reload();
   var editor; // use a global for the submit and return data rendering in the examples
   // var id = sessionStorage.getItem("id", id);
-  console.log("키값확인", id);
+
   if (id === null) {
     retrun;
   }

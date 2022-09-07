@@ -39,7 +39,9 @@
   };
 
   var editor; // use a global for the submit and return data rendering in the examples
-
+  var num_remicon_estimate = 0;
+  var num_remicon_transaction = 0;
+  var num_remicon_order = 0;
   $(document).ready(function () {
     //CRUD
     editor = new $.fn.dataTable.Editor({
@@ -73,7 +75,7 @@
     // 항목별 검색기능
     $("#remicon_management_list_table thead tr")
       .clone(true)
-      .addClass("filters")
+      .addClass("remicon_filters_info")
       .appendTo("#remicon_management_list_table thead");
 
     var table = $("#remicon_management_list_table").DataTable({
@@ -88,16 +90,18 @@
           .eq(0)
           .each(function (colIdx) {
             // Set the header cell to contain the input element
-            var cell = $(".filters th").eq(
+            var cell = $(".remicon_filters_info th").eq(
               $(api.column(colIdx).header()).index()
             );
             var title = $(cell).text();
-            $(cell).html('<input type="text" placeholder="' + title + '" />');
+            $(cell).html('<input type="text" placeholder="검색" />');
 
             // On every keypress in this input
             $(
               "input",
-              $(".filters th").eq($(api.column(colIdx).header()).index())
+              $(".remicon_filters_info th").eq(
+                $(api.column(colIdx).header()).index()
+              )
             )
               .off("keyup change")
               .on("change", function (e) {
@@ -105,7 +109,6 @@
                 $(this).attr("title", $(this).val());
                 var regexr = "({search})"; //$(this).parents('th').find('select').val();
 
-                var cursorPosition = this.selectionStart;
                 // Search the column for that value
                 api
                   .column(colIdx)
@@ -122,9 +125,6 @@
                 e.stopPropagation();
 
                 $(this).trigger("change");
-                $(this)
-                  .focus()[0]
-                  .setSelectionRange(cursorPosition, cursorPosition);
               });
           });
       },
@@ -140,7 +140,6 @@
           data: "spaces.id",
           render: function (data, type, row) {
             if (type == "display") {
-              console.log("data", data);
               data =
                 `<label for="tab-2" onclick="remicon_getApi(${data}); remicon_getApi_order(${data}); remicon_getApi_Transaction(${data});">` +
                 data;
