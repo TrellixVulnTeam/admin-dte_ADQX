@@ -1,5 +1,7 @@
 // 건설사견적내역
 function getApi_construction_order(id) {
+  num_con_order++;
+  console.log("주문내역", num_con_order);
   var lang_kor = {
     decimal: "",
     emptyTable: "데이터가 없습니다.",
@@ -48,8 +50,12 @@ function getApi_construction_order(id) {
           name: "spaces.basic_address",
         },
         {
-          label: "영업사원",
+          label: "영업사원명",
           name: "users.name",
+        },
+        {
+          label: "영업사원직책",
+          name: "users.position",
         },
         {
           label: "단가율",
@@ -67,16 +73,17 @@ function getApi_construction_order(id) {
     });
 
     // 항목별 검색기능
-    $("#construction_order_table thead tr")
-      .clone(true)
-      .appendTo("#construction_order_table thead tr")
-      .addClass("filters");
-
+    if (num_con_order == 1) {
+      $("#construction_order_table thead tr")
+        .clone(true)
+        .addClass("con_filters_order")
+        .appendTo("#construction_order_table thead");
+    }
     $("#construction_order_table").DataTable({
       orderCellsTop: true,
       fixedHeader: true,
-      destroy: true,
-      searching: true,
+      // destroy: true,
+      // searching: true,
       initComplete: function () {
         var api = this.api();
 
@@ -86,16 +93,18 @@ function getApi_construction_order(id) {
           .eq(0)
           .each(function (colIdx) {
             // Set the header cell to contain the input element
-            var cell = $(".filters th").eq(
+            var cell = $(".con_filters_order th").eq(
               $(api.column(colIdx).header()).index()
             );
             var title = $(cell).text();
-            $(cell).html('<input type="text" placeholder="' + title + '" />');
+            $(cell).html('<input type="text" placeholder="검색" />');
 
             // On every keypress in this input
             $(
               "input",
-              $(".filters th").eq($(api.column(colIdx).header()).index())
+              $(".con_filters_order th").eq(
+                $(api.column(colIdx).header()).index()
+              )
             )
               .off("keyup change")
               .on("change", function (e) {
@@ -103,7 +112,6 @@ function getApi_construction_order(id) {
                 $(this).attr("title", $(this).val());
                 var regexr = "({search})"; //$(this).parents('th').find('select').val();
 
-                var cursorPosition = this.selectionStart;
                 // Search the column for that value
                 api
                   .column(colIdx)
@@ -120,9 +128,7 @@ function getApi_construction_order(id) {
                 e.stopPropagation();
 
                 $(this).trigger("change");
-                $(this)
-                  .focus()[0]
-                  .setSelectionRange(cursorPosition, cursorPosition);
+                $(this).focus()[0];
               });
           });
       },
@@ -175,7 +181,8 @@ function getApi_construction_order(id) {
             "group by space_id)",
         },
       ],
-
+      destroy: true,
+      select: true,
       buttons: [
         { extend: "create", editor: editor, text: "등록" },
         { extend: "edit", editor: editor, text: "수정" },

@@ -1,5 +1,9 @@
 // 건설사견적내역
+
 function getApi(id) {
+  num_con_estimate++;
+  console.log(num_con_estimate);
+
   var lang_kor = {
     decimal: "",
     emptyTable: "데이터가 없습니다.",
@@ -25,7 +29,6 @@ function getApi(id) {
     },
   };
 
-  // window.location.reload();
   var editor; // use a global for the submit and return data rendering in the examples
   // var id = sessionStorage.getItem("id", id);
 
@@ -65,17 +68,20 @@ function getApi(id) {
         },
       ],
     });
-
     // 항목별 검색기능
-    $("#construction_esimate_table thead tr")
-      .clone(true)
-      .addClass("filters")
-      .appendTo("#construction_esimate_table thead tr");
 
+    if (num_con_estimate == 1) {
+      console.log("검색창확인");
+      $("#construction_esimate_table thead tr")
+        .clone(true)
+        .addClass("con_filters_estimate")
+        .appendTo("#construction_esimate_table thead");
+    }
+    // $("#construction_esimate_table thead *").remove();
     $("#construction_esimate_table").DataTable({
       orderCellsTop: true,
       fixedHeader: true,
-      destroy: true,
+      // destroy: true,
       // searching: true,
       initComplete: function () {
         var api = this.api();
@@ -86,16 +92,18 @@ function getApi(id) {
           .eq(0)
           .each(function (colIdx) {
             // Set the header cell to contain the input element
-            var cell = $(".filters th").eq(
+            var cell = $(".con_filters_estimate th").eq(
               $(api.column(colIdx).header()).index()
             );
             var title = $(cell).text();
-            $(cell).html('<input type="text" placeholder="' + title + '" />');
+            $(cell).html('<input type="text" placeholder="검색" />');
 
             // On every keypress in this input
             $(
               "input",
-              $(".filters th").eq($(api.column(colIdx).header()).index())
+              $(".con_filters_estimate th").eq(
+                $(api.column(colIdx).header()).index()
+              )
             )
               .off("keyup change")
               .on("change", function (e) {
@@ -103,7 +111,8 @@ function getApi(id) {
                 $(this).attr("title", $(this).val());
                 var regexr = "({search})"; //$(this).parents('th').find('select').val();
 
-                var cursorPosition = this.selectionStart;
+                // var cursorPosition = this.selectionStart;
+
                 // Search the column for that value
                 api
                   .column(colIdx)
@@ -120,9 +129,8 @@ function getApi(id) {
                 e.stopPropagation();
 
                 $(this).trigger("change");
-                $(this)
-                  .focus()[0]
-                  .setSelectionRange(cursorPosition, cursorPosition);
+                $(this).focus()[0];
+                // .setSelectionRange(cursorPosition, cursorPosition);
               });
           });
       },
