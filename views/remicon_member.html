@@ -103,7 +103,7 @@
               $(api.column(colIdx).header()).index()
             );
             var title = $(cell).text();
-            $(cell).html('<input type="text" placeholder="' + title + '" />');
+            $(cell).html('<input type="text" placeholder="검색" />');
 
             // On every keypress in this input
             $(
@@ -179,13 +179,11 @@
       url: "/api/remicon_info",
       dataType: "json",
     }).done(function (data) {
-      // console.log(data.data);
       for (var i in data.data) {
         companies_namelist.push({
           label: data.data[i].name + -+data.data[i].id,
           value: data.data[i].id,
         });
-        console.log(companies_namelist[i]);
       }
     });
     $(document).on("keydown.autocomplete", "#asearch", function () {

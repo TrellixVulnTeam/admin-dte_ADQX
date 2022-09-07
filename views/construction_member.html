@@ -101,7 +101,7 @@
               $(api.column(colIdx).header()).index()
             );
             var title = $(cell).text();
-            $(cell).html('<input type="text" placeholder="' + title + '" />');
+            $(cell).html('<input type="text" placeholder="검색" />');
 
             // On every keypress in this input
             $(
@@ -169,7 +169,6 @@
       url: "/api/construction_member_info",
       dataType: "json",
     }).done(function (data) {
-      // console.log(data.data);
       for (var i in data.data) {
         availableTags.push({
           label: data.data[i].name + -+data.data[i].id,
@@ -179,7 +178,6 @@
     });
     $(document).on("keydown.autocomplete", "#csearch", function () {
       $(this).autocomplete({ source: availableTags });
-      console.log("확인");
     });
   });
 </script>

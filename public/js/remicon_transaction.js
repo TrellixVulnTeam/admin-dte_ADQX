@@ -1,5 +1,6 @@
 // 건설사견적내역
 function remicon_getApi_Transaction(id) {
+  num_remicon_transaction++;
   var lang_kor = {
     decimal: "",
     emptyTable: "데이터가 없습니다.",
@@ -25,9 +26,8 @@ function remicon_getApi_Transaction(id) {
     },
   };
 
-  console.log("거래내역확인");
   var editor; // use a global for the submit and return data rendering in the examples
-  console.log("키값확인", id);
+
   if (id === null) {
     retrun;
   }
@@ -62,10 +62,12 @@ function remicon_getApi_Transaction(id) {
     });
 
     // 항목별 검색기능
-    $("#remicon_transaction_table thead tr")
-      .clone(true)
-      .appendTo("#remicon_transaction_table thead tr")
-      .addClass("filters");
+    if (num_remicon_transaction === 1) {
+      $("#remicon_transaction_table thead tr")
+        .clone(true)
+        .appendTo("#remicon_transaction_table thead")
+        .addClass("remicon_filters_transactions");
+    }
 
     $("#remicon_transaction_table").DataTable({
       orderCellsTop: true,
@@ -81,16 +83,18 @@ function remicon_getApi_Transaction(id) {
           .eq(0)
           .each(function (colIdx) {
             // Set the header cell to contain the input element
-            var cell = $(".filters th").eq(
+            var cell = $(".remicon_filters_transactions th").eq(
               $(api.column(colIdx).header()).index()
             );
             var title = $(cell).text();
-            $(cell).html('<input type="text" placeholder="' + title + '" />');
+            $(cell).html('<input type="text" placeholder="검색" />');
 
             // On every keypress in this input
             $(
               "input",
-              $(".filters th").eq($(api.column(colIdx).header()).index())
+              $(".remicon_filters_transactions th").eq(
+                $(api.column(colIdx).header()).index()
+              )
             )
               .off("keyup change")
               .on("change", function (e) {
@@ -98,7 +102,6 @@ function remicon_getApi_Transaction(id) {
                 $(this).attr("title", $(this).val());
                 var regexr = "({search})"; //$(this).parents('th').find('select').val();
 
-                var cursorPosition = this.selectionStart;
                 // Search the column for that value
                 api
                   .column(colIdx)
@@ -115,9 +118,6 @@ function remicon_getApi_Transaction(id) {
                 e.stopPropagation();
 
                 $(this).trigger("change");
-                $(this)
-                  .focus()[0]
-                  .setSelectionRange(cursorPosition, cursorPosition);
               });
           });
       },
