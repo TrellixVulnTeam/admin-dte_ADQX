@@ -45,10 +45,6 @@ function remicon_getApi(id) {
           label: "건설사주소",
           name: "spaces.basic_address",
         },
-        {
-          label: "영업사원",
-          name: "users.name",
-        },
 
         {
           label: "견적률",
@@ -57,7 +53,16 @@ function remicon_getApi(id) {
         {
           label: "견적상태",
           name: "estimations.status",
+          type: "select",
+          options: [
+            { label: "요청", value: "REQUESTED" },
+            { label: "응답", value: "RESPONDED" },
+            { label: "등록", value: "REGISTERED" },
+            { label: "적용", value: "APPLIED" },
+            { label: "완료", value: "FINISHED" },
+          ],
         },
+
         {
           label: "일시",
           name: "estimations.created_at",
@@ -144,7 +149,31 @@ function remicon_getApi(id) {
         { data: "spaces.basic_address" },
         { data: "users.name" },
         { data: "estimations.percent" },
-        { data: "estimations.status" },
+        {
+          data: "estimations.status",
+          render: function (data, type, row) {
+            switch (data) {
+              case "REQUESTED":
+                return "요청";
+                break;
+              case "RESPONDED":
+                return "응답";
+                break;
+              case "REGISTERED":
+                return "등록";
+                break;
+              case "APPLIED":
+                return "적용";
+                break;
+              case "FINISHED":
+                return "완료";
+                break;
+              case null:
+                return "";
+                break;
+            }
+          },
+        },
         { data: "estimations.created_at" },
       ],
       select: true,

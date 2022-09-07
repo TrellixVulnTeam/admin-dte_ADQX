@@ -57,6 +57,12 @@ function remicon_getApi_Transaction(id) {
         {
           label: "상태",
           name: "assignments.status",
+          type: "select",
+          options: [
+            { label: "요청", value: "REQUESTED" },
+            { label: "확인", value: "CONFIRMED" },
+            { label: "삭제", value: "REMOVED" },
+          ],
         },
       ],
     });

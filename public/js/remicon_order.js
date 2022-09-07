@@ -35,37 +35,21 @@ function remicon_getApi_order(id) {
       fields: [
         {
           label: "건설사",
-          name: "c.name",
+          name: "companies.name",
         },
         {
           label: "건설현장",
           name: "spaces.name",
         },
         {
-          label: "건설사주소",
-          name: "spaces.basic_address",
-        },
-        {
-          label: "영업사원",
-          name: "users.name",
-        },
-
-        {
-          label: "견적률",
-          name: "estimations.percent",
-        },
-        {
           label: "견적상태",
-          name: "estimations.status",
-        },
-        {
-          label: "일시",
-          name: "estimations.created_at",
-          type: "datetime",
-          def: function () {
-            return new Date();
-          },
-          format: "YYYY-MM-DD",
+          name: "assignments.status",
+          type: "select",
+          options: [
+            { label: "요청", value: "REQUESTED" },
+            { label: "확인", value: "CONFIRMED" },
+            { label: "삭제", value: "REMOVED" },
+          ],
         },
       ],
     });
