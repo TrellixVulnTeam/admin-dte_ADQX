@@ -138,7 +138,22 @@
       deferRender: true, // 2~3초 빨라짐
       language: lang_kor,
       columns: [
-        { data: "posts.type" },
+        {
+          data: "posts.type",
+          render: function (data, type, row) {
+            switch (data) {
+              case "EVENT":
+                return "이벤트";
+                break;
+              case "NOTICE":
+                return "공지";
+                break;
+              case null:
+                return "";
+                break;
+            }
+          },
+        },
         { data: "posts.title" },
         { data: "posts.content" },
         { data: "posts.created_at" },
