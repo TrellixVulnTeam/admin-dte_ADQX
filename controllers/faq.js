@@ -20,12 +20,11 @@ router.all("/api/faq", async function (req, res) {
     new Field("content"),
     new Field("created_at")
       .getFormatter(Format.sqlDateToFormat("YYYY-MM-DD"))
+      .setFormatter(Format.formatToSqlDate("YYYY-MM-DD")),
+    new Field("updated_at")
+      .getFormatter(Format.sqlDateToFormat("YYYY-MM-DD"))
       .setFormatter(Format.formatToSqlDate("YYYY-MM-DD"))
   );
-  // .where((q) => {
-  //   //company_type , 건설사 or 레미콘
-  //   q.where("users.company_type", "=", "REMICON");
-  // });
 
   await editor.process(req.body);
   res.json(editor.data());
