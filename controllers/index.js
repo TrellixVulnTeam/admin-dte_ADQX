@@ -10,4 +10,6 @@ router.use(require("./construction"));
 router.use(require("./construction_member"));
 router.use(require("./construction_transaction_management"));
 
+router.use(require("./faq"));
+
 module.exports = router;
