@@ -1,0 +1,171 @@
+<script type="text/javascript" language="javascript" class="init">
+  //Korean
+  var lang_kor = {
+    decimal: "",
+    emptyTable: "데이터가 없습니다.",
+    info: "_START_ 부터- _END_ 까지 (총 _TOTAL_ 데이터)",
+    infoEmpty: "0개",
+    infoFiltered: "(전체 _MAX_명 중 검색결과)",
+    infoPostFix: "",
+    thousands: ",",
+    lengthMenu: "_MENU_개씩 보기",
+    loadingRecords: "로딩중...",
+    processing: "처리중...",
+    search: "검색 :",
+    zeroRecords: "검색된 데이터가 없습니다.",
+    paginate: {
+      first: "첫 페이지",
+      last: "마지막페이지",
+      next: "다음",
+      previous: "이전",
+    },
+    aria: { sortAscending: ":오름차순 정렬", sortDescending: ":내림차순 정렬" },
+  };
+
+  var editor; // use a global for the submit and return data rendering in the examples
+
+  $(document).ready(function () {
+    //CRUD
+    editor = new $.fn.dataTable.Editor({
+      ajax: "/api/posts",
+      table: "#posts_table",
+      fields: [
+        {
+          label: "유형",
+          name: "posts.type",
+          type: "select",
+          options: [
+            { label: "공지", value: "NOTICE" },
+            { label: "이벤트", value: "EVENT" },
+          ],
+        },
+        {
+          label: "제목",
+          name: "posts.title",
+        },
+
+        {
+          label: "내용",
+          name: "posts.content",
+        },
+
+        {
+          label: "등록일",
+          name: "users.created_at",
+          type: "datetime",
+          def: function () {
+            return new Date();
+          },
+          format: "YYYY-MM-DD",
+        },
+        {
+          label: "수정일",
+          name: "users.updated_at",
+          type: "datetime",
+          def: function () {
+            return new Date();
+          },
+          format: "YYYY-MM-DD",
+        },
+      ],
+    });
+
+    // 항목별 검색기능
+    $("#posts_table thead tr")
+      .clone(true)
+      .addClass("filters")
+      .appendTo("#posts_table thead");
+
+    $("#posts_table").DataTable({
+      orderCellsTop: true,
+      fixedHeader: true,
+      initComplete: function () {
+        var api = this.api();
+
+        // For each column
+        api
+          .columns()
+          .eq(0)
+          .each(function (colIdx) {
+            // Set the header cell to contain the input element
+            var cell = $(".filters th").eq(
+              $(api.column(colIdx).header()).index()
+            );
+            var title = $(cell).text();
+            $(cell).html('<input type="text" placeholder="검색" />');
+
+            // On every keypress in this input
+            $(
+              "input",
+              $(".filters th").eq($(api.column(colIdx).header()).index())
+            )
+              .off("keyup change")
+              .on("change", function (e) {
+                // Get the search value
+                $(this).attr("title", $(this).val());
+                var regexr = "({search})"; //$(this).parents('th').find('select').val();
+
+                var cursorPosition = this.selectionStart;
+                // Search the column for that value
+                api
+                  .column(colIdx)
+                  .search(
+                    this.value != ""
+                      ? regexr.replace("{search}", "(((" + this.value + ")))")
+                      : "",
+                    this.value != "",
+                    this.value == ""
+                  )
+                  .draw();
+              })
+              .on("keyup", function (e) {
+                e.stopPropagation();
+
+                $(this).trigger("change");
+                $(this)
+                  .focus()[0]
+                  .setSelectionRange(cursorPosition, cursorPosition);
+              });
+          });
+      },
+      // 항목별 검색기능 끝.
+      //DATA 바인딩
+      dom: "Bfrtip",
+      ajax: {
+        url: "/api/posts",
+        type: "POST",
+      },
+      deferRender: true, // 2~3초 빨라짐
+      language: lang_kor,
+      columns: [
+        { data: "posts.type" },
+        { data: "posts.title" },
+        { data: "posts.content" },
+        { data: "posts.created_at" },
+        { data: "posts.updated_at" },
+      ],
+      select: true,
+      serverSide: true,
+      buttons: [
+        { extend: "create", editor: editor, text: "등록" },
+        { extend: "edit", editor: editor, text: "수정" },
+        { extend: "remove", editor: editor, text: "삭제" },
+      ],
+    });
+  });
+</script>
+
+<h1>공지 사항</h1>
+<div class="demo-html">
+  <table id="posts_table" class="display" style="width: 100%" cellspacing="0">
+    <thead>
+      <tr>
+        <th>유형</th>
+        <th>제목</th>
+        <th>내용</th>
+        <th>등록일</th>
+        <th>수정일</th>
+      </tr>
+    </thead>
+  </table>
+</div>
