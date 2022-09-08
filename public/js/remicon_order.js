@@ -119,6 +119,7 @@ function remicon_getApi_order(id) {
       dom: "Bfrtip",
       ajax: {
         url: `/api/remicon_order_management/${id}`,
+        type: "POST",
       },
       language: lang_kor,
       columns: [
@@ -163,6 +164,7 @@ function remicon_getApi_order(id) {
           },
         },
       ],
+      serverSide: true,
       select: true,
       buttons: [
         { extend: "create", editor: editor, text: "등록" },

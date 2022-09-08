@@ -140,6 +140,7 @@ function remicon_getApi(id) {
       dom: "Bfrtip",
       ajax: {
         url: `/api/remicon_esimate_management/${id}`,
+        type: "POST",
       },
       language: lang_kor,
       columns: [
@@ -176,6 +177,7 @@ function remicon_getApi(id) {
         },
         { data: "estimations.created_at" },
       ],
+      serverSide: true,
       select: true,
       buttons: [
         { extend: "create", editor: editor, text: "등록" },

@@ -11,9 +11,7 @@ let {
 router.all("/api/posts", async function (req, res) {
   let editor = new Editor(db, "posts").fields(
     // new Field("id").set(false),
-    new Field("posts.type").options(
-      new Options().table("posts").value("type").label("type")
-    ),
+    new Field("posts.type"),
     new Field("posts.title"),
     new Field("posts.content"),
     new Field("posts.created_at")

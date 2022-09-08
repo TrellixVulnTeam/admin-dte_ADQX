@@ -132,7 +132,7 @@ function remicon_getApi_Transaction(id) {
       dom: "Bfrtip",
       ajax: {
         url: `/api/remicon_Transaction_history/${id}`,
-        // type: "get",
+        type: "POST",
       },
       language: lang_kor,
       columns: [
@@ -161,6 +161,7 @@ function remicon_getApi_Transaction(id) {
           },
         },
       ],
+      serverSide: true,
       select: true,
       buttons: [
         { extend: "create", editor: editor, text: "등록" },
