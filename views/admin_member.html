@@ -29,30 +29,28 @@
   $(document).ready(function () {
     //CRUD
     editor = new $.fn.dataTable.Editor({
-      ajax: "/api/faq",
-      table: "#faq_table",
+      ajax: "/api/admin_member",
+      table: "#admin_member_table",
       fields: [
         {
-          label: "카테고리",
+          label: "아이디",
+          name: "admin_signname",
+        },
+        {
+          label: "비밀번호",
+          name: "password",
+        },
+        {
+          label: "타입",
           name: "type",
           type: "select",
           options: [
-            { label: "이용방법", value: "이용방법" },
-            { label: "가입/인증", value: "가입/인증" },
-            { label: "주문/결제", value: "주문/결제" },
-            { label: "기타", value: "기타" },
+            { label: "매니저", value: "Maneger" },
+            { label: "일반", value: "Normal" },
           ],
         },
         {
-          label: "FAQ 제목",
-          name: "title",
-        },
-        {
-          label: "FAQ 내용:",
-          name: "content",
-        },
-        {
-          label: "등록일자",
+          label: "가입일",
           name: "created_at",
           type: "datetime",
           def: function () {
@@ -61,7 +59,7 @@
           format: "YYYY-MM-DD",
         },
         {
-          label: "등록일자",
+          label: "수정일",
           name: "updated_at",
           type: "datetime",
           def: function () {
@@ -72,12 +70,12 @@
       ],
     });
     // 항목별 검색기능
-    $("#faq_table thead tr")
+    $("#admin_member_table thead tr")
       .clone(true)
-      .addClass("faq_filters")
-      .appendTo("#faq_table thead");
+      .addClass("filters")
+      .appendTo("#admin_member_table thead");
 
-    $("#faq_table").DataTable({
+    $("#admin_member_table").DataTable({
       orderCellsTop: true,
       fixedHeader: true,
       initComplete: function () {
@@ -89,7 +87,7 @@
           .eq(0)
           .each(function (colIdx) {
             // Set the header cell to contain the input element
-            var cell = $(".faq_filters th").eq(
+            var cell = $(".filters th").eq(
               $(api.column(colIdx).header()).index()
             );
             var title = $(cell).text();
@@ -98,7 +96,7 @@
             // On every keypress in this input
             $(
               "input",
-              $(".faq_filters th").eq($(api.column(colIdx).header()).index())
+              $(".filters th").eq($(api.column(colIdx).header()).index())
             )
               .off("keyup change")
               .on("change", function (e) {
@@ -106,7 +104,6 @@
                 $(this).attr("title", $(this).val());
                 var regexr = "({search})"; //$(this).parents('th').find('select').val();
 
-                var cursorPosition = this.selectionStart;
                 // Search the column for that value
                 api
                   .column(colIdx)
@@ -123,9 +120,7 @@
                 e.stopPropagation();
 
                 $(this).trigger("change");
-                $(this)
-                  .focus()[0]
-                  .setSelectionRange(cursorPosition, cursorPosition);
+                $(this).focus()[0];
               });
           });
       },
@@ -134,21 +129,35 @@
 
       dom: "Bfrtip", // PBfrtip
       ajax: {
-        url: "/api/faq",
+        url: "/api/admin_member",
         type: "POST",
         // type: "get",
       },
       language: lang_kor,
       columns: [
-        { data: "id" },
-        { data: "type" },
-        { data: "title" },
-        { data: "content" },
+        { data: "admin_signname" },
+        { data: "password" },
+        {
+          data: "type",
+          render: function (data, type, row) {
+            switch (data) {
+              case "Maneger":
+                return "매니저";
+                break;
+              case "Normal":
+                return "일반";
+                break;
+              case null:
+                return "";
+                break;
+            }
+          },
+        },
         { data: "created_at" },
       ],
       serverSide: true,
       select: true,
-      searching: true,
+      // searching: true,
       buttons: [
         { extend: "create", editor: editor, text: "등록" },
         { extend: "edit", editor: editor, text: "수정" },
@@ -158,17 +167,21 @@
   });
 </script>
 
-<h1>FAQ</h1>
+<h1>관리자 회원</h1>
 <div class="demo-html">
-  <table id="faq_table" class="display" style="width: 100%" ellspacing="0">
+  <table
+    id="admin_member_table"
+    class="display"
+    style="width: 100%"
+    ellspacing="0"
+  >
     <thead>
       <tr>
-        <th>등록번호</th>
-        <!-- <th>구분</th> -->
-        <th>카테고리</th>
-        <th>FAQ 제목</th>
-        <th>FAQ 내용</th>
-        <th>등록일자</th>
+        <th>아이디</th>
+        <th>비밀번호</th>
+        <th>타입</th>
+        <th>가입일</th>
+        <th>승인</th>
       </tr>
     </thead>
   </table>
