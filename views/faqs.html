@@ -1,7 +1,4 @@
-// 건설사견적내역
-function getApi_construction_transaction(id) {
-  num_con_transaction++;
-  console.log("거래내역", num_con_transaction);
+<script type="text/javascript" language="javascript" class="init">
   var lang_kor = {
     decimal: "",
     emptyTable: "데이터가 없습니다.",
@@ -27,53 +24,62 @@ function getApi_construction_transaction(id) {
     },
   };
 
-  // window.location.reload();
   var editor; // use a global for the submit and return data rendering in the examples
-  // var id = sessionStorage.getItem("id", id);
 
-  if (id === null) {
-    retrun;
-  }
   $(document).ready(function () {
     //CRUD
-
     editor = new $.fn.dataTable.Editor({
-      ajax: `/api/construction_Transaction_history/${id}`,
-      table: "#construction_transaction_table",
+      ajax: "/api/faq",
+      table: "#faq_table",
       fields: [
         {
-          label: "납품일자",
-          name: "assignments.date",
-        },
-        {
-          label: "납품업체",
-          name: "spaces.name",
-        },
-        {
-          label: "상태",
-          name: "assignments.status",
+          label: "카테고리",
+          name: "type",
           type: "select",
           options: [
-            { label: "요청", value: "REQUESTED" },
-            { label: "확인", value: "CONFIRMED" },
-            { label: "삭제", value: "REMOVE" },
+            { label: "이용방법", value: "이용방법" },
+            { label: "가입/인증", value: "가입/인증" },
+            { label: "주문/결제", value: "주문/결제" },
+            { label: "기타", value: "기타" },
           ],
+        },
+        {
+          label: "FAQ 제목",
+          name: "title",
+        },
+        {
+          label: "FAQ 내용:",
+          name: "content",
+        },
+        {
+          label: "등록일자",
+          name: "created_at",
+          type: "datetime",
+          def: function () {
+            return new Date();
+          },
+          format: "YYYY-MM-DD",
+        },
+        {
+          label: "등록일자",
+          name: "updated_at",
+          type: "datetime",
+          def: function () {
+            return new Date();
+          },
+          format: "YYYY-MM-DD",
         },
       ],
     });
-
     // 항목별 검색기능
-    if (num_con_transaction == 1) {
-      $("#construction_transaction_table thead tr")
-        .clone(true)
-        .appendTo("#construction_transaction_table thead")
-        .addClass("con_filters_transaction");
-    }
-    $("#construction_transaction_table").DataTable({
+    $("#faq_table thead tr")
+      .clone(true)
+      .addClass("faq_filters")
+      .appendTo("#faq_table thead");
+
+    $("#faq_table").DataTable({
       orderCellsTop: true,
       fixedHeader: true,
-      destroy: true,
-      searching: true,
       initComplete: function () {
         var api = this.api();
 
@@ -83,7 +89,7 @@ function getApi_construction_transaction(id) {
           .eq(0)
           .each(function (colIdx) {
             // Set the header cell to contain the input element
-            var cell = $(".con_filters_transaction th").eq(
+            var cell = $(".faq_filters th").eq(
               $(api.column(colIdx).header()).index()
             );
             var title = $(cell).text();
@@ -92,15 +98,15 @@ function getApi_construction_transaction(id) {
             // On every keypress in this input
             $(
               "input",
-              $(".con_filters_transaction th").eq(
-                $(api.column(colIdx).header()).index()
-              )
+              $(".faq_filters th").eq($(api.column(colIdx).header()).index())
             )
               .off("keyup change")
               .on("change", function (e) {
                 // Get the search value
                 $(this).attr("title", $(this).val());
                 var regexr = "({search})"; //$(this).parents('th').find('select').val();
+
+                var cursorPosition = this.selectionStart;
                 // Search the column for that value
                 api
                   .column(colIdx)
@@ -117,54 +123,53 @@ function getApi_construction_transaction(id) {
                 e.stopPropagation();
 
                 $(this).trigger("change");
-                $(this).focus()[0];
+                $(this)
+                  .focus()[0]
+                  .setSelectionRange(cursorPosition, cursorPosition);
               });
           });
       },
-      // 항목별 검색기능 끝. keyid		url:`/api/construction_transaction_table/:${id}`,
-      //DATA 바인딩
-      dom: "Bfrtip",
+      // 항목별 검색기능 끝.
+      ///Binding
+
+      dom: "Bfrtip", // PBfrtip
       ajax: {
-        url: `/api/construction_Transaction_history/${id}`,
+        url: "/api/faq",
+        type: "POST",
         // type: "get",
       },
       language: lang_kor,
-      select: true,
       columns: [
-        // { data: "assignments.id"},
-        { data: "assignments.date" },
-        { data: "spaces.name" },
-        {
-          data: "assignments.status",
-          render: function (data, type, row) {
-            switch (data) {
-              case "REQUESTED":
-                return "요청";
-                break;
-              case "CONFIRMED":
-                return "확인";
-                break;
-              case "REMOVED":
-                return "삭제";
-                break;
-              case null:
-                return "";
-                break;
-            }
-          },
-        },
+        { data: "id" },
+        { data: "type" },
+        { data: "title" },
+        { data: "content" },
+        { data: "created_at" },
       ],
-
+      serverSide: true,
+      select: true,
+      searching: true,
       buttons: [
         { extend: "create", editor: editor, text: "등록" },
         { extend: "edit", editor: editor, text: "수정" },
         { extend: "remove", editor: editor, text: "삭제" },
-        {
-          extend: "collection",
-          text: "내보내기",
-          buttons: ["excel", "csv"],
-        },
       ],
     });
   });
-}
+</script>
+
+<h1>FAQ</h1>
+<div class="demo-html">
+  <table id="faq_table" class="display" style="width: 100%" ellspacing="0">
+    <thead>
+      <tr>
+        <th>등록번호</th>
+        <!-- <th>구분</th> -->
+        <th>카테고리</th>
+        <th>FAQ 제목</th>
+        <th>FAQ 내용</th>
+        <th>등록일자</th>
+      </tr>
+    </thead>
+  </table>
+</div>

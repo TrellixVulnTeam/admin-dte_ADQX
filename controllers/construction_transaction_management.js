@@ -90,6 +90,12 @@ router.all("/api/construction_order_history/:id", async function (req, res) {
       new Field("assignments.type").options(
         new Options().table("assignments").value("type").label("type")
       ),
+      new Field("estimations.slump_1"),
+      new Field("estimations.norminal_strength_1"),
+      new Field("estimations.slump_2"),
+      new Field("estimations.norminal_strength_2"),
+      new Field("estimations.slump_3"),
+      new Field("estimations.norminal_strength_3"),
       new Field("assignments.status"),
       new Field(
         "(select count(space_id)" +

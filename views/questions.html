@@ -1,7 +1,4 @@
-// 건설사견적내역
-function getApi_construction_transaction(id) {
-  num_con_transaction++;
-  console.log("거래내역", num_con_transaction);
+<script type="text/javascript" language="javascript" class="init">
   var lang_kor = {
     decimal: "",
     emptyTable: "데이터가 없습니다.",
@@ -27,53 +24,63 @@ function getApi_construction_transaction(id) {
     },
   };
 
-  // window.location.reload();
   var editor; // use a global for the submit and return data rendering in the examples
-  // var id = sessionStorage.getItem("id", id);
 
-  if (id === null) {
-    retrun;
-  }
   $(document).ready(function () {
     //CRUD
-
     editor = new $.fn.dataTable.Editor({
-      ajax: `/api/construction_Transaction_history/${id}`,
-      table: "#construction_transaction_table",
+      ajax: "/api/questions",
+      table: "#questions_table",
       fields: [
         {
-          label: "납품일자",
-          name: "assignments.date",
+          label: "상담유형",
+          name: "questions.type",
         },
         {
-          label: "납품업체",
-          name: "spaces.name",
+          label: "문의제목",
+          name: "questions.title",
         },
         {
-          label: "상태",
-          name: "assignments.status",
-          type: "select",
-          options: [
-            { label: "요청", value: "REQUESTED" },
-            { label: "확인", value: "CONFIRMED" },
-            { label: "삭제", value: "REMOVE" },
-          ],
+          label: "문의내용",
+          name: "questions.content",
+        },
+        {
+          label: "문의사진",
+          name: "questions.attachments",
+        },
+        {
+          label: "답변",
+          name: "questions.reply",
+        },
+        {
+          label: "문의일자",
+          name: "questions.created_at",
+          type: "datetime",
+          def: function () {
+            return new Date();
+          },
+          format: "YYYY-MM-DD",
+        },
+        {
+          label: "수정일",
+          name: "questions.updated_at",
+          type: "datetime",
+          def: function () {
+            return new Date();
+          },
+          format: "YYYY-MM-DD",
         },
       ],
     });
-
     // 항목별 검색기능
-    if (num_con_transaction == 1) {
-      $("#construction_transaction_table thead tr")
-        .clone(true)
-        .appendTo("#construction_transaction_table thead")
-        .addClass("con_filters_transaction");
-    }
-    $("#construction_transaction_table").DataTable({
+    $("#questions_table thead tr")
+      .clone(true)
+      .addClass("filters")
+      .appendTo("#questions_table thead");
+
+    $("#questions_table").DataTable({
       orderCellsTop: true,
       fixedHeader: true,
-      destroy: true,
-      searching: true,
       initComplete: function () {
         var api = this.api();
 
@@ -83,7 +90,7 @@ function getApi_construction_transaction(id) {
           .eq(0)
           .each(function (colIdx) {
             // Set the header cell to contain the input element
-            var cell = $(".con_filters_transaction th").eq(
+            var cell = $(".filters th").eq(
               $(api.column(colIdx).header()).index()
             );
             var title = $(cell).text();
@@ -92,15 +99,14 @@ function getApi_construction_transaction(id) {
             // On every keypress in this input
             $(
               "input",
-              $(".con_filters_transaction th").eq(
-                $(api.column(colIdx).header()).index()
-              )
+              $(".filters th").eq($(api.column(colIdx).header()).index())
             )
               .off("keyup change")
               .on("change", function (e) {
                 // Get the search value
                 $(this).attr("title", $(this).val());
                 var regexr = "({search})"; //$(this).parents('th').find('select').val();
+
                 // Search the column for that value
                 api
                   .column(colIdx)
@@ -121,31 +127,27 @@ function getApi_construction_transaction(id) {
               });
           });
       },
-      // 항목별 검색기능 끝. keyid		url:`/api/construction_transaction_table/:${id}`,
-      //DATA 바인딩
-      dom: "Bfrtip",
+      // 항목별 검색기능 끝.
+      ///Binding
+
+      dom: "Bfrtip", // PBfrtip
       ajax: {
-        url: `/api/construction_Transaction_history/${id}`,
+        url: "/api/questions",
+        type: "POST",
         // type: "get",
       },
       language: lang_kor,
-      select: true,
       columns: [
-        // { data: "assignments.id"},
-        { data: "assignments.date" },
-        { data: "spaces.name" },
+        { data: "questions.id" },
         {
-          data: "assignments.status",
+          data: "companies.company_type",
           render: function (data, type, row) {
             switch (data) {
-              case "REQUESTED":
-                return "요청";
+              case "REMICON":
+                return "레미콘";
                 break;
-              case "CONFIRMED":
-                return "확인";
-                break;
-              case "REMOVED":
-                return "삭제";
+              case "CONSTRUCTION":
+                return "건설사";
                 break;
               case null:
                 return "";
@@ -153,18 +155,49 @@ function getApi_construction_transaction(id) {
             }
           },
         },
+        { data: "users.name" },
+        { data: "companies.name" },
+        { data: "users.phone" },
+        { data: "questions.type" },
+        { data: "questions.title" },
+        { data: "questions.content" },
+        { data: "questions.attachments" },
+        { data: "questions.created_at" },
       ],
-
+      serverSide: true,
+      select: true,
+      // searching: true,
       buttons: [
         { extend: "create", editor: editor, text: "등록" },
         { extend: "edit", editor: editor, text: "수정" },
         { extend: "remove", editor: editor, text: "삭제" },
-        {
-          extend: "collection",
-          text: "내보내기",
-          buttons: ["excel", "csv"],
-        },
       ],
     });
   });
-}
+</script>
+
+<h1>1:1문의</h1>
+<div class="demo-html">
+  <table
+    id="questions_table"
+    class="display"
+    style="width: 100%"
+    ellspacing="0"
+  >
+    <thead>
+      <tr>
+        <th>등록번호</th>
+        <th>구분</th>
+        <th>이름</th>
+        <th>회사명</th>
+        <th>휴대전화</th>
+        <th>상담유형</th>
+        <th>문의제목</th>
+        <th>문의내용</th>
+        <th>문의사진</th>
+        <th>문의일자</th>
+        <!-- <th>문의상태</th> -->
+      </tr>
+    </thead>
+  </table>
+</div>

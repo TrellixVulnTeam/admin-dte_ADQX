@@ -72,9 +72,6 @@ function getApi_construction_order(id) {
           type: "select",
           value: "요청",
           options: [
-            //   // { label: "REQUESTED", value: "요청" },
-            //   // { label: "확인", value: "CONFIRMED" },
-            //   // { label: "REMOVE", value: "삭제" },
             { label: "요청", value: "REQUESTED" },
             { label: "확인", value: "CONFIRMED" },
             { label: "삭제", value: "REMOVE" },
@@ -164,7 +161,26 @@ function getApi_construction_order(id) {
             );
           },
         },
+        {
+          data: null,
+          render: function (data, type, row) {
+            return (
+              data.estimations.norminal_strength_1 +
+              " - " +
+              data.estimations.slump_1 +
+              " | " +
+              data.estimations.norminal_strength_2 +
+              " - " +
+              data.estimations.slump_2 +
+              " | " +
+              data.estimations.norminal_strength_3 +
+              " - " +
+              data.estimations.slump_3
+            );
+          },
+        },
         { data: "concat(users.name, ' ' ,users.position)" },
+
         { data: "assignments.type" },
         {
           data: "assignments.status",
