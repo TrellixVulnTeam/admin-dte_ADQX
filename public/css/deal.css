@@ -31,8 +31,9 @@ h1 {
 }
 .main {
   margin: 0 auto;
-  main-width: 1380px;
+  /* min-width: 1380px; */
   max-width: 100%;
+  text-align: center;
 }
 .tab {
   overflow: hidden;
@@ -59,10 +60,6 @@ h1 {
   font-size: 17px;
 }
 
-body {
-  margin-top: 20px;
-  background: #eee;
-}
 /* EMAIL */
 .email {
   padding: 20px 10px 15px 10px;
