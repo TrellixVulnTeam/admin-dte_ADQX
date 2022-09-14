@@ -2,31 +2,35 @@
   type="text/javascript"
   src="https://cdn.emailjs.com/sdk/2.3.2/email.min.js"
 ></script>
-</script> 
 
 <script type="text/javascript">
- function getemail(id) {
-  console.log("아이디확인", id);
-  document.getElementById("email").value = id;
- }
+  function getemail(id) {
+    console.log("아이디확인", id);
+    document.getElementById("email").value = id;
+  }
 </script>
 
-</script> 
-<script type="text/javascript" language="javascript">
-
-// function getemail_history(id) {
-//   $.ajax({
-//         url: "https://api.emailjs.com/api/v1.1/history?user_id=IQalOgvvT5CWjFnkW&accessToken=__3SsqQvs2p2CfeEe6j_z&page=1&count=50",
-//         dataType:"json", 
-//         type: "get",
-//         success:function(data){
-//           console.log("호출확인");
-//           console.log(data.rows[0].template_params);
-//         }
-//       });  
-// }
-// </script>
-
+<script type="text/javascript">
+  function sendEmail() {
+    emailjs.init("IQalOgvvT5CWjFnkW"); // api keys
+    let templateParams = {
+      name: document.getElementById("userName").value,
+      phone: document.getElementById("phone").value,
+      email: document.getElementById("email").value,
+      message: document.getElementById("message").value,
+    };
+    console.log(templateParams);
+    //              email 서비스키, 템플릿 아이디 키
+    emailjs.send("service_8w51jl3", "template_agkpi3o", templateParams).then(
+      function (response) {
+        console.log("Success!", response.status, response.text);
+      },
+      function (error) {
+        console.log("Failed...", error);
+      }
+    );
+  }
+</script>
 
 <script type="text/javascript" language="javascript" class="init">
   var lang_kor = {
@@ -145,13 +149,13 @@
             console.log(type);
             if (type == "display") {
               console.log(data);
-                    //  `<label for="tab-2" onclick="getApi(${data});">` + data;
-              data = `<label for="tab-2" onclick="getemail('${data}')";>` + data;
+              //  `<label for="tab-2" onclick="getApi(${data});">` + data;
+              data =
+                `<label for="tab-2" onclick="getemail('${data}')";>` + data;
             }
             return data;
           },
         },
-        {data: "password",}
       ],
       serverSide: true,
       select: true,
@@ -176,15 +180,10 @@
   <div class="content">
     <div class="content-dis">
       <div class="demo-html">
-        <table
-          id="admin_member_table"
-          class="display"
-          style="width: 100%"
-        >
+        <table id="admin_member_table" class="display" style="width: 100%">
           <thead>
             <tr>
               <th>아이디</th>
-              <th>비밀번호</th>
             </tr>
           </thead>
         </table>
@@ -193,45 +192,55 @@
 
     <!--이메일보내기 -->
     <div class="demo-html">
-      <input
-        type="text"
-        className="input"
-        id="userName"
-        placeholder="성함을 입력해주세요"
-      /><br />
-      <input
-        type="text"
-        className="input"
-        id="email"
-        placeholder="받을 메일 주소를 입력해주세요"
-      /><br />
-      <input
-        type="text"
-        className="input"
-        id="phone"
-        placeholder="연락처를 입력해주세요 (생략 가능)"
-      /><br />
-      <textarea
-        id="message"
-        className="input"
-        rows="5"
-        placeholder="내용을 입력해주세요 "
-      ></textarea
-      ><br />
-      <input
-        type="button"
-        id="btn"
-        class="btn white"
-        value="메일보내기"
-        onClick="sendEmail()"
-      /><br />
+      <div class="modal-header bg-blue">
+        <h4 class="modal-title"><i class="fa fa-envelope"></i> 메일 보내기</h4>
+      </div>
+      <form action="#" method="post">
+        <div class="modal-body">
+          <div class="form-group">
+            <input
+              name="to"
+              type="email"
+              class="form-control"
+              placeholder="받는사람"
+            />
+          </div>
+          <div class="form-group">
+            <input
+              name="cc"
+              type="email"
+              class="form-control"
+              placeholder="보내는사람"
+            />
+          </div>
+          <div class="form-group">
+            <input
+              name="subject"
+              type="email"
+              class="form-control"
+              placeholder="제목"
+            />
+          </div>
+          <div class="form-group">
+            <textarea
+              name="message"
+              id="email_message"
+              class="form-control"
+              placeholder="메세지"
+              style="height: 120px"
+            ></textarea>
+          </div>
+          <div class="form-group"><input type="file" name="attachment" /></div>
+        </div>
+        <div class="modal-footer">
+          <button type="submit" class="btn btn-primary pull-right">
+            <i class="fa fa-envelope"></i> Send Message
+          </button>
+        </div>
+      </form>
     </div>
-
     <!--이메일보내기 -->
 
-    <div class="demo-html">
-    </div>
+    <div class="demo-html"></div>
   </div>
 </div>
-
-
