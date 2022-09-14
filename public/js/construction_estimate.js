@@ -187,7 +187,7 @@ function getApi(id) {
 
       buttons: [
         { extend: "create", editor: editor, text: "등록" },
-        { extend: "edit", editor: editor, text: "수정" },
+        { extend: "edit", editor: editor, text: "상세보기 및 수정" },
         { extend: "remove", editor: editor, text: "삭제" },
         {
           extend: "collection",

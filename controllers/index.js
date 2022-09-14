@@ -22,4 +22,7 @@ router.use(require("./questions"));
 // 관리자 회원
 router.use(require("./admin_member"));
 
+//단가표
+router.use(require("./prices_list"));
+
 module.exports = router;
