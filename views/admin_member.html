@@ -1,7 +1,4 @@
-//레미콘사 견적내역
-function remicon_getApi(id) {
-  //Korean
-  num_remicon_estimate++;
+<script type="text/javascript" language="javascript" class="init">
   var lang_kor = {
     decimal: "",
     emptyTable: "데이터가 없습니다.",
@@ -21,7 +18,10 @@ function remicon_getApi(id) {
       next: "다음",
       previous: "이전",
     },
-    aria: { sortAscending: ":오름차순 정렬", sortDescending: ":내림차순 정렬" },
+    aria: {
+      sortAscending: ":오름차순 정렬",
+      sortDescending: ":내림차순 정렬",
+    },
   };
 
   var editor; // use a global for the submit and return data rendering in the examples
@@ -29,43 +29,38 @@ function remicon_getApi(id) {
   $(document).ready(function () {
     //CRUD
     editor = new $.fn.dataTable.Editor({
-      //`/api/remicon_esimate_management/${id}`,
-      ajax: `/api/remicon_esimate_management/${id}`,
-      table: "#remicon_esimate_table",
+      ajax: "/api/admin_member",
+      table: "#admin_member_table",
       fields: [
         {
-          label: "건설사",
-          name: "companies.name",
+          label: "아이디",
+          name: "admin_signname",
         },
         {
-          label: "건설현장",
-          name: "spaces.name",
+          label: "비밀번호",
+          name: "password",
         },
         {
-          label: "건설사주소",
-          name: "spaces.basic_address",
-        },
-
-        {
-          label: "견적률",
-          name: "estimations.percent",
-        },
-        {
-          label: "견적상태",
-          name: "estimations.status",
+          label: "타입",
+          name: "type",
           type: "select",
           options: [
-            { label: "요청", value: "REQUESTED" },
-            { label: "응답", value: "RESPONDED" },
-            { label: "등록", value: "REGISTERED" },
-            { label: "적용", value: "APPLIED" },
-            { label: "완료", value: "FINISHED" },
+            { label: "매니저", value: "Maneger" },
+            { label: "일반", value: "Normal" },
           ],
         },
-
         {
-          label: "일시",
-          name: "estimations.created_at",
+          label: "가입일",
+          name: "created_at",
+          type: "datetime",
+          def: function () {
+            return new Date();
+          },
+          format: "YYYY-MM-DD",
+        },
+        {
+          label: "수정일",
+          name: "updated_at",
           type: "datetime",
           def: function () {
             return new Date();
@@ -74,20 +69,15 @@ function remicon_getApi(id) {
         },
       ],
     });
-
     // 항목별 검색기능
-    if (num_remicon_estimate == 1) {
-      $("#remicon_esimate_table thead tr")
-        .clone(true)
-        .addClass("remicon_filters_estimate")
-        .appendTo("#remicon_esimate_table thead");
-    }
+    $("#admin_member_table thead tr")
+      .clone(true)
+      .addClass("filters")
+      .appendTo("#admin_member_table thead");
 
-    $("#remicon_esimate_table").DataTable({
+    $("#admin_member_table").DataTable({
       orderCellsTop: true,
       fixedHeader: true,
-      destroy: true,
-      searching: true,
       initComplete: function () {
         var api = this.api();
 
@@ -97,25 +87,23 @@ function remicon_getApi(id) {
           .eq(0)
           .each(function (colIdx) {
             // Set the header cell to contain the input element
-            var cell = $(".remicon_filters_estimate th").eq(
+            var cell = $(".filters th").eq(
               $(api.column(colIdx).header()).index()
             );
             var title = $(cell).text();
-
-            $(cell).html('<input type="text" placeholder="검색"/>');
+            $(cell).html('<input type="text" placeholder="검색" />');
 
             // On every keypress in this input
             $(
               "input",
-              $(".remicon_filters_estimate th").eq(
-                $(api.column(colIdx).header()).index()
-              )
+              $(".filters th").eq($(api.column(colIdx).header()).index())
             )
               .off("keyup change")
               .on("change", function (e) {
                 // Get the search value
                 $(this).attr("title", $(this).val());
                 var regexr = "({search})"; //$(this).parents('th').find('select').val();
+
                 // Search the column for that value
                 api
                   .column(colIdx)
@@ -132,42 +120,32 @@ function remicon_getApi(id) {
                 e.stopPropagation();
 
                 $(this).trigger("change");
+                $(this).focus()[0];
               });
           });
       },
       // 항목별 검색기능 끝.
-      //DATA 바인딩
-      dom: "Bfrtip",
+      ///Binding
+
+      dom: "Bfrtip", // PBfrtip
       ajax: {
-        url: `/api/remicon_esimate_management/${id}`,
+        url: "/api/admin_member",
         type: "POST",
+        // type: "get",
       },
       language: lang_kor,
       columns: [
-        // { data: "spaces.id" },
-        { data: "companies.name" },
-        { data: "spaces.name" },
-        { data: "spaces.basic_address" },
-        { data: "users.name" },
-        { data: "estimations.percent" },
+        { data: "admin_signname" },
+        { data: "password" },
         {
-          data: "estimations.status",
+          data: "type",
           render: function (data, type, row) {
             switch (data) {
-              case "REQUESTED":
-                return "요청";
+              case "Maneger":
+                return "매니저";
                 break;
-              case "RESPONDED":
-                return "응답";
-                break;
-              case "REGISTERED":
-                return "등록";
-                break;
-              case "APPLIED":
-                return "적용";
-                break;
-              case "FINISHED":
-                return "완료";
+              case "Normal":
+                return "일반";
                 break;
               case null:
                 return "";
@@ -175,20 +153,36 @@ function remicon_getApi(id) {
             }
           },
         },
-        { data: "estimations.created_at" },
+        { data: "created_at" },
       ],
       serverSide: true,
       select: true,
+      // searching: true,
       buttons: [
         { extend: "create", editor: editor, text: "등록" },
         { extend: "edit", editor: editor, text: "상세보기 및 수정" },
         { extend: "remove", editor: editor, text: "삭제" },
-        {
-          extend: "collection",
-          text: "내보내기",
-          buttons: ["excel", "csv"],
-        },
       ],
     });
   });
-}
+</script>
+
+<h1>관리자 회원</h1>
+<div class="demo-html">
+  <table
+    id="admin_member_table"
+    class="display"
+    style="width: 100%"
+    ellspacing="0"
+  >
+    <thead>
+      <tr>
+        <th>아이디</th>
+        <th>비밀번호</th>
+        <th>타입</th>
+        <th>가입일</th>
+        <th>승인</th>
+      </tr>
+    </thead>
+  </table>
+</div>

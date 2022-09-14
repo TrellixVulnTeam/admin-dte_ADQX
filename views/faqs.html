@@ -33,13 +33,15 @@
       table: "#faq_table",
       fields: [
         {
-          label: "등록번호:",
-          name: "id",
-        },
-
-        {
           label: "카테고리",
           name: "type",
+          type: "select",
+          options: [
+            { label: "이용방법", value: "이용방법" },
+            { label: "가입/인증", value: "가입/인증" },
+            { label: "주문/결제", value: "주문/결제" },
+            { label: "기타", value: "기타" },
+          ],
         },
         {
           label: "FAQ 제목",
@@ -58,12 +60,21 @@
           },
           format: "YYYY-MM-DD",
         },
+        {
+          label: "등록일자",
+          name: "updated_at",
+          type: "datetime",
+          def: function () {
+            return new Date();
+          },
+          format: "YYYY-MM-DD",
+        },
       ],
     });
     // 항목별 검색기능
     $("#faq_table thead tr")
       .clone(true)
-      .addClass("filters")
+      .addClass("faq_filters")
       .appendTo("#faq_table thead");
 
     $("#faq_table").DataTable({
@@ -78,7 +89,7 @@
           .eq(0)
           .each(function (colIdx) {
             // Set the header cell to contain the input element
-            var cell = $(".filters th").eq(
+            var cell = $(".faq_filters th").eq(
               $(api.column(colIdx).header()).index()
             );
             var title = $(cell).text();
@@ -87,7 +98,7 @@
             // On every keypress in this input
             $(
               "input",
-              $(".filters th").eq($(api.column(colIdx).header()).index())
+              $(".faq_filters th").eq($(api.column(colIdx).header()).index())
             )
               .off("keyup change")
               .on("change", function (e) {
@@ -124,6 +135,7 @@
       dom: "Bfrtip", // PBfrtip
       ajax: {
         url: "/api/faq",
+        type: "POST",
         // type: "get",
       },
       language: lang_kor,
@@ -139,7 +151,7 @@
       searching: true,
       buttons: [
         { extend: "create", editor: editor, text: "등록" },
-        { extend: "edit", editor: editor, text: "수정" },
+        { extend: "edit", editor: editor, text: "상세보기 및 수정" },
         { extend: "remove", editor: editor, text: "삭제" },
       ],
     });
