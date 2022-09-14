@@ -21,6 +21,7 @@ router.all("/api/admin_member", async function (req, res) {
     ),
     new Field("password"),
     new Field("type"),
+    new Field("approved"),
     new Field("created_at")
       .getFormatter(Format.sqlDateToFormat("YYYY-MM-DD"))
       .setFormatter(Format.formatToSqlDate("YYYY-MM-DD")),
