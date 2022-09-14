@@ -67,6 +67,10 @@
           },
           format: "YYYY-MM-DD",
         },
+        {
+          label: "승인여부",
+          name: "approved",
+        },
       ],
     });
     // 항목별 검색기능
@@ -135,7 +139,10 @@
       },
       language: lang_kor,
       columns: [
-        { data: "admin_signname" },
+        {
+          data: "admin_signname",
+        },
+        // { data: "admin_signname" },
         { data: "password" },
         {
           data: "type",
@@ -154,6 +161,22 @@
           },
         },
         { data: "created_at" },
+        {
+          data: "approved",
+          render: function (data, type, row) {
+            switch (data) {
+              case 0:
+                return "미승인";
+                break;
+              case 1:
+                return "승인";
+                break;
+              case null:
+                return "";
+                break;
+            }
+          },
+        },
       ],
       serverSide: true,
       select: true,
