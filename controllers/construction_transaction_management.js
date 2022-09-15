@@ -74,6 +74,7 @@ router.all(
 //3. 건설사 주문내역
 router.all("/api/construction_order_history/:id", async function (req, res) {
   console.log("주문내역 수정확인");
+
   let editor = new Editor(db, "assignments")
     .fields(
       new Field("assignments.id"),

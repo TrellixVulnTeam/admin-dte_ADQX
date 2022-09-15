@@ -67,10 +67,6 @@
           },
           format: "YYYY-MM-DD",
         },
-        {
-          label: "승인여부",
-          name: "approved",
-        },
       ],
     });
     // 항목별 검색기능
@@ -161,22 +157,6 @@
           },
         },
         { data: "created_at" },
-        {
-          data: "approved",
-          render: function (data, type, row) {
-            switch (data) {
-              case 0:
-                return "미승인";
-                break;
-              case 1:
-                return "승인";
-                break;
-              case null:
-                return "";
-                break;
-            }
-          },
-        },
       ],
       serverSide: true,
       select: true,
@@ -204,7 +184,6 @@
         <th>비밀번호</th>
         <th>타입</th>
         <th>가입일</th>
-        <th>승인</th>
       </tr>
     </thead>
   </table>
