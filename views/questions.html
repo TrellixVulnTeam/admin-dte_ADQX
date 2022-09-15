@@ -75,7 +75,7 @@
     // 항목별 검색기능
     $("#questions_table thead tr")
       .clone(true)
-      .addClass("filters")
+      .addClass("questions_filters")
       .appendTo("#questions_table thead");
 
     $("#questions_table").DataTable({
@@ -90,7 +90,7 @@
           .eq(0)
           .each(function (colIdx) {
             // Set the header cell to contain the input element
-            var cell = $(".filters th").eq(
+            var cell = $(".questions_filters th").eq(
               $(api.column(colIdx).header()).index()
             );
             var title = $(cell).text();
@@ -99,7 +99,9 @@
             // On every keypress in this input
             $(
               "input",
-              $(".filters th").eq($(api.column(colIdx).header()).index())
+              $(".questions_filters th").eq(
+                $(api.column(colIdx).header()).index()
+              )
             )
               .off("keyup change")
               .on("change", function (e) {
