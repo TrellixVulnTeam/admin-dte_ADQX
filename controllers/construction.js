@@ -12,7 +12,7 @@ let {
 router.all("/api/construction", async function (req, res) {
   let editor = new Editor(db, "companies")
     .fields(
-      new Field("company_type").setValue("CONSTRUCTION"),
+      new Field("company_type"),
       new Field("name"),
       new Field("address"),
       new Field("ceo_name"),

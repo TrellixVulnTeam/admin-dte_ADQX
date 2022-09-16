@@ -133,7 +133,6 @@
       dom: "Bfrtip",
       ajax: {
         url: "/api/posts",
-        type: "POST",
       },
       deferRender: true, // 2~3초 빨라짐
       language: lang_kor,
@@ -160,7 +159,7 @@
         { data: "posts.updated_at" },
       ],
       select: true,
-      serverSide: true,
+
       buttons: [
         { extend: "create", editor: editor, text: "등록" },
         { extend: "edit", editor: editor, text: "상세보기 및 수정" },

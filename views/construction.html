@@ -30,6 +30,7 @@
     //CRUD
     editor = new $.fn.dataTable.Editor({
       ajax: "/api/construction",
+
       table: "#construction",
       fields: [
         {
@@ -67,7 +68,7 @@
     // 항목별 검색기능
     $("#construction thead tr")
       .clone(true)
-      .addClass("filters")
+      .addClass("construction_filters")
       .appendTo("#construction thead");
 
     $("#construction").DataTable({
@@ -82,7 +83,7 @@
           .eq(0)
           .each(function (colIdx) {
             // Set the header cell to contain the input element
-            var cell = $(".filters th").eq(
+            var cell = $(".construction_filters th").eq(
               $(api.column(colIdx).header()).index()
             );
             var title = $(cell).text();
@@ -91,7 +92,9 @@
             // On every keypress in this input
             $(
               "input",
-              $(".filters th").eq($(api.column(colIdx).header()).index())
+              $(".construction_filters th").eq(
+                $(api.column(colIdx).header()).index()
+              )
             )
               .off("keyup change")
               .on("change", function (e) {
@@ -104,9 +107,7 @@
                 api
                   .column(colIdx)
                   .search(
-                    this.value != ""
-                      ? regexr.replace("{search}", "(((" + this.value + ")))")
-                      : "",
+                    this.value != "" ? this.value : "",
                     this.value != "",
                     this.value == ""
                   )
@@ -114,7 +115,6 @@
               })
               .on("keyup", function (e) {
                 e.stopPropagation();
-
                 $(this).trigger("change");
                 $(this)
                   .focus()[0]
@@ -142,6 +142,10 @@
       ],
       select: true,
       serverSide: true,
+      searchable: true,
+      search: {
+        regex: true,
+      },
       buttons: [
         { extend: "create", editor: editor, text: "등록" },
         { extend: "edit", editor: editor, text: "상세보기 및 수정" },

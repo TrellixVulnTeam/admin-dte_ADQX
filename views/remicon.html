@@ -84,14 +84,11 @@
 
 										var cursorPosition = this.selectionStart;
 										// Search the column for that value
-										api
+										api 
 											.column(colIdx)
 											.search(
 												this.value != ""
-													? regexr.replace(
-															"{search}",
-															"(((" + this.value + ")))"
-														)
+													? this.value
 													: "",
 												this.value != "",
 												this.value == ""
@@ -127,7 +124,10 @@
 					],
 					serverSide: true,
 					select: true,
-					
+					searchable: true,
+    				  search: {
+      					  regex: true,
+      				},
 					buttons: [
 						{ extend: "create", editor: editor, text: "등록" },
 						{ extend: "edit", editor: editor, text: "상세보기 및 수정" },
