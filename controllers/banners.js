@@ -15,10 +15,11 @@ let unlink = promisify(fs.unlink); // await version of unlink
 // 배너요청
 router.all("/api/banners", async function (req, res) {
   var time = new Date();
-  console.log("배너요청확인");
+
   let editor = new Editor(db, "banners")
     .fields(
       new Field("id").set(false),
+
       new Field("image").setFormatter(Format.ifEmpty(null)).upload(
         new Upload(__dirname + "/../public/uploads/{id}.{extn}")
           .db("files", "id", {
@@ -43,6 +44,7 @@ router.all("/api/banners", async function (req, res) {
             return true;
           })
       ),
+      new Field("banners.type"),
       new Field("created_at")
         .getFormatter(Format.sqlDateToFormat("YYYY-MM-DD"))
         .setFormatter(Format.formatToSqlDate("YYYY-MM-DD")),
