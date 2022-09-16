@@ -11,24 +11,28 @@
 </script>
 
 <script type="text/javascript">
+  var row = [];
   function sendEmail() {
-    emailjs.init("IQalOgvvT5CWjFnkW"); // api keys
-    let templateParams = {
-      to_email: document.getElementById("to_email").value,
-      cc: document.getElementById("cc").value,
+    const content = {
+      // to_email: document.getElementById("to_email").value,
       subject: document.getElementById("subject").value,
       email_message: document.getElementById("email_message").value,
     };
-    console.log(templateParams);
-    //              email 서비스키, 템플릿 아이디 키
-    emailjs.send("service_8w51jl3", "template_agkpi3o", templateParams).then(
-      function (response) {
-        console.log("Success!", response.status, response.text);
-      },
-      function (error) {
-        console.log("Failed...", error);
-      }
-    );
+    console.log(content);
+    $.ajax({
+      type: "POST",
+      url: "/api/sendmail",
+      traditional: true,
+      data: content,
+      dataType: "json",
+    })
+      .done(function (data, textStatus, xhr) {
+        alert("발송완료");
+        console.log(data);
+      })
+      .fail(function (xhr, textStatus, errorThrown) {
+        alert(errorThrown);
+      });
   }
 </script>
 
@@ -69,10 +73,6 @@
         {
           label: "아이디",
           name: "admin_signname",
-        },
-        {
-          label: "비밀번호",
-          name: "password",
         },
       ],
     });
@@ -148,6 +148,8 @@
           render: function (data, type) {
             console.log(type);
             if (type == "display") {
+              var save = data;
+              console.log(save);
               console.log(data);
               //  `<label for="tab-2" onclick="getApi(${data});">` + data;
               data =
@@ -165,6 +167,16 @@
         { extend: "edit", editor: editor, text: "수정" },
         { extend: "remove", editor: editor, text: "삭제" },
       ],
+    });
+
+    $("#admin_member_table tbody").on("click", "tr", function () {
+      console.log("클릭이벤트");
+
+      row.push($("#admin_member_table").DataTable().row($(this)).data());
+
+      console.log(row.admin_signname);
+      console.log(row);
+      console.log(row.length);
     });
   });
 </script>
@@ -233,7 +245,9 @@
               style="height: 120px"
             ></textarea>
           </div>
-          <div class="form-group"><input type="file" name="attachment" /></div>
+          <!-- <div class="form-group">
+            <input type="file" id="attachment" name="attachment" />
+          </div> -->
         </div>
         <div class="modal-footer">
           <button
