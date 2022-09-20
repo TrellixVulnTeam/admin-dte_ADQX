@@ -21,11 +21,11 @@ router.all("/api/banners", async function (req, res) {
       new Field("id").set(false),
 
       new Field("image").setFormatter(Format.ifEmpty(null)).upload(
-        new Upload(__dirname + "/../public/uploads/{id}.{extn}")
+        new Upload(__dirname + "/../public/uploads/banners_images/{id}.{extn}")
           .db("banners_files", "id", {
             filename: Upload.Db.FileName,
             filesize: Upload.Db.FileSize,
-            web_path: "/uploads/{id}.{extn}",
+            web_path: "/uploads/banners_images/{id}.{extn}",
             system_path: Upload.Db.SystemPath,
           })
           .validator(
