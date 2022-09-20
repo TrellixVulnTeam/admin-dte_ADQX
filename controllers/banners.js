@@ -18,7 +18,7 @@ router.all("/api/banners", async function (req, res) {
 
   let editor = new Editor(db, "banners")
     .fields(
-      new Field("id").set(false),
+      new Field("id"),
 
       new Field("image").setFormatter(Format.ifEmpty(null)).upload(
         new Upload(__dirname + "/../public/uploads/banners_images/{id}.{extn}")

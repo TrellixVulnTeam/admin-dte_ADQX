@@ -28,4 +28,6 @@ router.use(require("./prices_list"));
 //배너
 router.use(require("./banners"));
 
+router.use(require("./sendmail"));
+
 module.exports = router;
