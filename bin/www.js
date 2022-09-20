@@ -2,11 +2,14 @@ let controllers = require("../controllers/index");
 let bodyParser = require("body-parser");
 let express = require("express");
 let bb = require("express-busboy");
+let cookieParser = require("cookie-parser");
 require("source-map-support").install();
 let db = require("../db");
 require("dotenv").config({ path: `${__dirname}/../.env` });
 let app = express();
 app.set("trust proxy", true);
+
+app.use(cookieParser());
 
 // Show error information
 process.on("unhandledRejection", (reason, p) => {
@@ -22,6 +25,9 @@ bb.extend(app, {
 app.use(controllers);
 
 // Static files for the demo. Use nginx or similar for real deploys
+app.set('view engine', 'ejs');
+app.engine('html', require('ejs').renderFile);
+
 app.use(express.static("public"));
 app.use("/views", express.static("views"));
 

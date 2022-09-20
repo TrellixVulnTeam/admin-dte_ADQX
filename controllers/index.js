@@ -25,4 +25,7 @@ router.use(require("./admin_member"));
 //단가표
 router.use(require("./prices_list"));
 
+//로그인
+router.use(require("./login"));
+
 module.exports = router;
