@@ -45,6 +45,15 @@
           noImageText: "No image",
         },
         {
+          label: "유형",
+          name: "banners.type",
+          type: "select",
+          options: [
+            { label: "PC", value: "PC" },
+            { label: "MOBILE", value: "MOBILE" },
+          ],
+        },
+        {
           label: "등록일",
           name: "created_at",
           type: "datetime",
@@ -73,6 +82,7 @@
       },
       language: lang_kor,
       columns: [
+        { data: "banners.type" },
         {
           data: "image",
           render: function (file_id) {
@@ -83,6 +93,7 @@
           defaultContent: "No image",
         },
         { data: "created_at" },
+        { data: "end_date" },
       ],
       serverSide: true,
       select: true,
@@ -101,8 +112,10 @@
   <table id="banners_table" class="display" style="width: 100%" ellspacing="0">
     <thead>
       <tr>
+        <th>유형</th>
         <th>이미지</th>
         <th>등록일</th>
+        <th>만료일</th>
       </tr>
     </thead>
   </table>

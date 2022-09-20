@@ -6,14 +6,16 @@ let dbConfig = {
   connection: {
     user:
       process.env.NODE_ENV === "development"
-        ? "datatables"
+        ? "rslog"
         : "zerotwo@zerotwo-mysql",
-    password: process.env.NODE_ENV === "development" ? "test" : "wpfhxn1234!",
+    password:
+      process.env.NODE_ENV === "development" ? "!rslog@" : "wpfhxn1234!",
     database: "conaz",
     host:
       process.env.NODE_ENV === "development"
-        ? "10.23.100.73"
+        ? "52.78.198.181"
         : "zerotwo-mysql.mysql.database.azure.com",
+    port: "33307",
     filename: "", // Only used for SQLite
     dateStrings: true,
   },

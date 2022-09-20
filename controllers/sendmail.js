@@ -16,7 +16,8 @@ router.all("/api/sendmail", async function (req, res) {
     // send mail with defined transport object req.body.to_email
     let info = await transporter.sendMail({
       from: `<${process.env.NODEMAILER_USER}>`,
-      to: "dbstlr260@naver.com, yunsik.kim@rsinteractive.co.kr",
+      to: req.body.to_email,
+      // to: "dbstlr260@naver.com, yunsik.kim@rsinteractive.co.kr",
       subject: req.body.subject,
       text: req.body.email_message,
       // attachments: [

@@ -4,20 +4,32 @@
 ></script>
 
 <script type="text/javascript">
-  function getemail(id) {
-    console.log("아이디확인", id);
-    document.getElementById("to_email").value = id;
+  function getemail() {
+    console.log("아이디확인", row3);
+    console.log("함수안에서 확인", length);
+    var title = "";
+    title = JSON.stringify(row2);
+
+    if (length > 0) {
+      document.getElementById("to_email").value = title;
+    } else {
+      document.getElementById("to_email").value = "";
+    }
   }
 </script>
 
 <script type="text/javascript">
   var row = [];
+  var row2 = [];
+  var row3 = [];
+  var length;
   function sendEmail() {
     const content = {
-      // to_email: document.getElementById("to_email").value,
+      to_email: document.getElementById("to_email").value,
       subject: document.getElementById("subject").value,
       email_message: document.getElementById("email_message").value,
     };
+    // console.log(row);
     console.log(content);
     $.ajax({
       type: "POST",
@@ -82,7 +94,7 @@
       .addClass("filters")
       .appendTo("#admin_member_table thead");
 
-    $("#admin_member_table").DataTable({
+    var table = $("#admin_member_table").DataTable({
       orderCellsTop: true,
       fixedHeader: true,
       initComplete: function () {
@@ -146,19 +158,30 @@
         {
           data: "admin_signname",
           render: function (data, type) {
-            console.log(type);
             if (type == "display") {
-              var save = data;
-              console.log(save);
-              console.log(data);
+              // console.log(data);
               //  `<label for="tab-2" onclick="getApi(${data});">` + data;
               data =
-                `<label for="tab-2" onclick="getemail('${data}')";>` + data;
+                // `<label for="tab-2" onclick="getemail('${data}')";>` + data;
+                `<label for="tab-2" onclick="getemail()";>` + data;
             }
             return data;
           },
         },
+        {
+          data: null,
+          render: function (data, type, row) {
+            // console.log("sdgsdgsdg", type);
+            if (type == "display") {
+              // console.log("sdgsdgsdg", row);
+              return '<input type="checkbox" class="editor-active" name="ck" id="ck">';
+            }
+            return data;
+          },
+          className: "dt-body-center",
+        },
       ],
+      destroy: true, // 이 부분 체크해 주세요!
       serverSide: true,
       select: true,
       // searching: true,
@@ -169,14 +192,56 @@
       ],
     });
 
-    $("#admin_member_table tbody").on("click", "tr", function () {
-      console.log("클릭이벤트");
-
-      row.push($("#admin_member_table").DataTable().row($(this)).data());
-
-      console.log(row.admin_signname);
+    $("#admin_member_table").on("click", 'input[type="checkbox"]', function () {
+      var chk = false;
+      console.log("asdfasdf", table.row(".selected").data());
+      row.push = $("#admin_member_table").DataTable().row($(this)).data();
       console.log(row);
-      console.log(row.length);
+      length = $('input:checkbox[id="ck"]:checked').length; // 체크박스에 선택되어있는 수
+      console.log("체크박스 이벤트확인");
+      chk = $(this).prop("checked");
+      console.log("상태값 확인", chk);
+      console.log("확인용", row2);
+      row3 = row2.map((x) => {
+        // console.log(x);
+        return x + " " + chk;
+      });
+      console.log("row3", row3);
+      if (chk) {
+        console.log("체크확인");
+        row3 = row2.map((x) => {
+          // console.log(x);
+          return x + " " + chk;
+        });
+      } else if (length === 0) {
+        // 체크된 항목이 0이면 배열 전체 삭제
+        console.log("삭제확인");
+        row3 = [];
+        row2 = [];
+      } else if (!chk) {
+        row3.pop();
+        row2.pop();
+      }
+      console.log("row3 트루펄스 확인", row3);
+    });
+
+    $("#admin_member_table tbody").on("click", "tr", function () {
+      // console.log(table.rows(".admin_member_table").deselect());
+
+      // console.log("선택값 추출1 ", table.rows(".selected").data());
+      // console.log("선택값 추출2 ", table.row(".selected").data());
+      // console.log("선택값 해제추출3 ", table.row(".deselected").data());
+      console.log("셀 이벤트확인");
+      row.push = $("#admin_member_table").DataTable().row($(this)).data();
+
+      for (var key in row) {
+        row2.push(row[key].admin_signname);
+      }
+      row2 = row2.filter((val, idx) => {
+        return row2.indexOf(val) === idx; //값이 처음나오는 배열 인덱스와 현재 인덱스가 같으면 포함
+      });
+
+      console.log("로우2", row2);
     });
   });
 </script>
@@ -196,6 +261,7 @@
           <thead>
             <tr>
               <th>아이디</th>
+              <th>선택</th>
             </tr>
           </thead>
         </table>
