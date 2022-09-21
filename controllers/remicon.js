@@ -14,7 +14,7 @@ let {
 router.all("/api/remicon", async function (req, res) {
   let editor = new Editor(db, "companies")
     .fields(
-      // new Field("id").set(false),
+      new Field("id"),
       new Field("name"),
       new Field("company_type").setValue("remicon"),
       new Field("address"),

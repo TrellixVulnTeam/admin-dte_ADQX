@@ -1,3 +1,9 @@
+<script
+  type="text/javascript"
+  language="javascript"
+  src="/js/remicon_factorylist_table.js"
+></script>
+
 <script type="text/javascript" language="javascript" class="init">
   var lang_kor = {
     decimal: "",
@@ -23,9 +29,9 @@
       sortDescending: ":내림차순 정렬",
     },
   };
-
+  var num_remicon_list=0;
   var editor; // use a global for the submit and return data rendering in the examples
-
+  var signname;
   $(document).ready(function () {
     //CRUD
     editor = new $.fn.dataTable.Editor({
@@ -86,7 +92,7 @@
       .addClass("filters")
       .appendTo("#remicon_table thead");
 
-    $("#remicon_table").DataTable({
+      var table =  $("#remicon_table").DataTable({
       orderCellsTop: true,
       fixedHeader: true,
       initComplete: function () {
@@ -140,24 +146,53 @@
       ///Binding
 
       dom: "Bfrtip", // PBfrtip
-      ajax: {
+      ajax: ({
         url: "/api/remicon_member",
         type: "POST",
-      },
+        // success : function(data) { console.log("ajax확인",data); },
+        // error : function(){ alert("로딩실패!"); }
+      }),
       language: lang_kor,
+      columnDefs: [ 
+      {        
+       // targets: 0, 
+      data: "users.id" ,
+      render: function (data, type) {
+        console.log("aasdf");
+      }
+    
+        // defaultContent :null,
+        // data: null, 
+        // return :false
+      }
+    // defaultContent: "Click to edit"
+],
       columns: [
+        { data: "users.id" },        
         { data: "users.name" },
-        { data: "users.signname" },
-        { data: "users.phone" },
-        { data: "companies.name" },
+        {
+          data:"concat(companies.name,' 외 ',(select count(a.signname)-1 from users a where a.signname=users.signname group by a.signname),' 건 ')",
+        },
         { data: "users.position" },
         { data: "users.tel" },
+        { data: "users.signname",
+        render: function (data, type) {
+            console.log("data1",data)
+            if (type == "display") {
+              data =
+                `<label for="tab-2" onclick="remicon_get_factorylist('${data}')"; >` +
+                data;
+            }
+            // console.log("data",data)
+            return data;
+          },
+      },
+        { data: "users.phone" },
         { data: "users.created_at" },
         { data: "users.updated_at" },
       ],
       serverSide: true,
-      select: true,
-
+      select: true,        
       searchable: true,
       search: {
         regex: true,
@@ -168,8 +203,37 @@
         { extend: "remove", editor: editor, text: "삭제" },
       ],
     });
-  });
+// $("#remicon_table tbody").rows().every( function () {
+// this.child( 'Row details for row: '+this.index() );
+// console.log("화긴");
+// });
+
+    // $("#remicon_table tbody").on("click", "tr", function () {
+    //   console.log("화긴");
+    // });
+
+    // $(document).on("click", "#remicon_table tbody tr", function () {
+    // console.log("이벤확인");
+    //   var str = "";
+   
+    //   // 배열 선언
+    //   // 현재 클릭된 Row(<tr>)
+    //   var tr = $(this);
+    //   var td = tr.children();
+    //   signname = td.eq(5).text();
+    //   console.log(signname);
+    // });
+
+// table.rows().every( function () {
+// this.child( 'Row details for row: '+this.index() );
+// console.log("화긴");
+// });
+});
 </script>
+
+
+
+
 
 <!-- 자동완성 리스트를 불러오기위한 로직 -->
 <script>
@@ -194,20 +258,53 @@
 </script>
 <!-- 자동완성 리스트를 불러오기위한 로직 끝 -->
 
-<span style="font-size: 2rem; font-weight: 600">레미콘사 회원</span>
-<div class="demo-html" style="margin-top: 10px">
-  <table id="remicon_table" class="display" style="width: 100%" ellspacing="0">
-    <thead>
-      <tr>
-        <th>이름</th>
-        <th>이메일</th>
-        <th>휴대전화</th>
-        <th>회사명</th>
-        <th>직위/직급</th>
-        <th>사내 전화번호</th>
-        <th>가입일</th>
-        <th>수정일</th>
-      </tr>
-    </thead>
-  </table>
-</div>
+  <div class="main">
+    <!-- <span style="font-size: 2rem; font-weight: 600">레미콘사 회원</span> -->
+    <input type="radio" id="tab-1" name="show" checked />
+    <input type="radio" id="tab-2" name="show" />
+    <div class="tab">
+      <label for="tab-1">레미콘사 회원내역</label>
+      <label for="tab-2">레미콘사 회원별 공장내역</label>
+    </div>
+    <div class="content">
+      <div class="demo-html" style="margin-top: 10px">
+        <table
+          id="remicon_table"
+          class="display"
+          style="width: 100%"
+          ellspacing="0"
+        >
+          <thead>
+            <tr>
+              <th>고유코드</th>
+              <th>이름</th>
+              <th>회사명</th>
+              <th>직위/직급</th>
+              <th>사내 전화번호</th>
+              <th>이메일</th>
+              <th>휴대전화</th>                 
+              <th>가입일</th>
+              <th>수정일</th>
+            </tr>
+          </thead>
+        </table>
+      </div>
+      <div class="demo-html">
+        <table
+          id="remicon_factorylist_table"
+          class="display"
+          style="width: 100%"
+        >
+          <thead>
+            <tr>
+              <th>레미콘공장</th>
+              <th>레미콘 공장 주소</th>
+              <!-- <th>회원여부</th>
+            <th>권한여부</th> -->
+            </tr>
+          </thead>
+        </table>
+      </div>
+    </div>
+  </div>
+</tr>
