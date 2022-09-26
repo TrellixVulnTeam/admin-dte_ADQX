@@ -22,7 +22,8 @@ router.all("/api/remicon_management_list", async function (req, res) {
           "group by space_id)"
       ),
       new Field("concat(admin_user.name,'',admin_user.position)"),
-      new Field("concat(site_user.name,'',site_user.position)")
+      new Field("concat(site_user.name,'',site_user.position)"),
+      new Field("spaces.basic_address")
     )
 
     .leftJoin(
@@ -47,9 +48,11 @@ router.all("/api/remicon_management_list", async function (req, res) {
 router.all("/api/remicon_esimate_management/:id", async function (req, res) {
   let editor = new Editor(db, "estimations")
     .fields(
-      new Field("estimations.id").set(false),
+      new Field("estimations.id"),
       new Field("companies.name"),
+      new Field("spaces.id"),
       new Field("spaces.name"),
+      new Field("companies.id"),
       new Field("spaces.basic_address"),
       new Field("users.name"),
       new Field("estimations.percent"),

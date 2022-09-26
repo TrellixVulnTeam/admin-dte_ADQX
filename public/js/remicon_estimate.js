@@ -144,10 +144,13 @@ function remicon_getApi(id) {
       },
       language: lang_kor,
       columns: [
-        // { data: "spaces.id" },
+        { data: "estimations.id" },
+        { data: "estimations.created_at" },
+        { data: "companies.id" },
         { data: "companies.name" },
+        { data: "spaces.id" },
         { data: "spaces.name" },
-        { data: "spaces.basic_address" },
+        // { data: "spaces.basic_address" },
         { data: "users.name" },
         { data: "estimations.percent" },
         {
@@ -175,7 +178,6 @@ function remicon_getApi(id) {
             }
           },
         },
-        { data: "estimations.created_at" },
       ],
       serverSide: true,
       select: true,
