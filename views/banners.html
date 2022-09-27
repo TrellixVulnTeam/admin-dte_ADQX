@@ -65,10 +65,13 @@
           format: "YYYY-MM-DD",
         },
         {
-          label: "마감일",
-          name: "end_date",
-          type: "datetime",
-          format: "YYYY-MM-DD",
+          label: "활성상태",
+          name: "banners.active",
+          type: "select",
+          options: [
+            { label: "비활성", value: 0 },
+            { label: "활성", value: 1 },
+          ],
         },
       ],
     });
@@ -97,7 +100,12 @@
           defaultContent: "No image",
         },
         { data: "created_at" },
-        { data: "end_date" },
+        {
+          data: "banners.active",
+          render: function (data) {
+            return data === 0 ? "<p>비활성</p>" : "<p>활성</p>";
+          },
+        },
       ],
       serverSide: true,
       select: true,
@@ -111,16 +119,30 @@
   });
 </script>
 
-<span style="font-size: 2rem; font-weight: 600">팝업관리</span>
-<div class="demo-html" style="margin-top: 10px">
-  <table id="banners_table" class="display" style="width: 100%" ellspacing="0">
-    <thead>
-      <tr>
-        <th>유형</th>
-        <th>이미지</th>
-        <th>등록일</th>
-        <th>만료일</th>
-      </tr>
-    </thead>
-  </table>
+<div class="main">
+  <input type="radio" id="tab-1" name="show" checked />
+  <input type="radio" id="tab-2" name="show" />
+  <div class="tab">
+    <label for="tab-1">메인화면 관리</label>
+    <label for="tab-2">팝업 관리</label>
+  </div>
+  <div class="content">
+    <div class="demo-html" style="margin-top: 10px">
+      <table
+        id="banners_table"
+        class="display"
+        style="width: 100%"
+        ellspacing="0"
+      >
+        <thead>
+          <tr>
+            <th>유형</th>
+            <th>이미지</th>
+            <th>등록일</th>
+            <th>활성상태</th>
+          </tr>
+        </thead>
+      </table>
+    </div>
+  </div>
 </div>
