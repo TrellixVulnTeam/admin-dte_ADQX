@@ -138,31 +138,34 @@ function remicon_getApi_Transaction(id) {
       columns: [
         // { data: "assignments.id"},
         { data: "assignments.date" },
+        { data: "companies.id" },
         { data: "companies.name" },
+        { data: "spaces.id" },
         { data: "spaces.name" },
-        { data: "spaces.basic_address" },
-        {
-          data: "assignments.status",
-          render: function (data, type, row) {
-            switch (data) {
-              case "REQUESTED":
-                return "요청";
-                break;
-              case "CONFIRMED":
-                return "확인";
-                break;
-              case "REMOVED":
-                return "삭제";
-                break;
-              case null:
-                return "";
-                break;
-            }
-          },
-        },
+        { data: "standard" },
+        // {
+        //   data: "assignments.status",
+        //   render: function (data, type, row) {
+        //     switch (data) {
+        //       case "REQUESTED":
+        //         return "요청";
+        //         break;
+        //       case "CONFIRMED":
+        //         return "확인";
+        //         break;
+        //       case "REMOVED":
+        //         return "삭제";
+        //         break;
+        //       case null:
+        //         return "";
+        //         break;
+        //     }
+        //   },
+        // },
       ],
       serverSide: true,
       select: true,
+      destroy: true,
       buttons: [
         { extend: "create", editor: editor, text: "등록" },
         { extend: "edit", editor: editor, text: "상세보기 및 수정" },

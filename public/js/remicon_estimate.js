@@ -46,32 +46,32 @@ function remicon_getApi(id) {
           name: "spaces.basic_address",
         },
 
-        {
-          label: "견적률",
-          name: "estimations.percent",
-        },
-        {
-          label: "견적상태",
-          name: "estimations.status",
-          type: "select",
-          options: [
-            { label: "요청", value: "REQUESTED" },
-            { label: "응답", value: "RESPONDED" },
-            { label: "등록", value: "REGISTERED" },
-            { label: "적용", value: "APPLIED" },
-            { label: "완료", value: "FINISHED" },
-          ],
-        },
+        // {
+        //   label: "견적률",
+        //   name: "estimations.percent",
+        // },
+        // {
+        //   label: "견적상태",
+        //   name: "estimations.status",
+        //   type: "select",
+        //   options: [
+        //     { label: "요청", value: "REQUESTED" },
+        //     { label: "응답", value: "RESPONDED" },
+        //     { label: "등록", value: "REGISTERED" },
+        //     { label: "적용", value: "APPLIED" },
+        //     { label: "완료", value: "FINISHED" },
+        //   ],
+        // },
 
-        {
-          label: "일시",
-          name: "estimations.created_at",
-          type: "datetime",
-          def: function () {
-            return new Date();
-          },
-          format: "YYYY-MM-DD",
-        },
+        // {
+        //   label: "일시",
+        //   name: "estimations.created_at",
+        //   type: "datetime",
+        //   def: function () {
+        //     return new Date();
+        //   },
+        //   format: "YYYY-MM-DD",
+        // },
       ],
     });
 
@@ -181,6 +181,7 @@ function remicon_getApi(id) {
       ],
       serverSide: true,
       select: true,
+      destroy: true,
       buttons: [
         { extend: "create", editor: editor, text: "등록" },
         { extend: "edit", editor: editor, text: "상세보기 및 수정" },
