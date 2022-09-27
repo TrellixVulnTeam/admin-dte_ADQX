@@ -35,22 +35,28 @@
         {
           label: "상담유형",
           name: "questions.type",
+          attr: { disabled: true },
         },
         {
           label: "문의제목",
           name: "questions.title",
+          attr: { disabled: true },
         },
         {
           label: "문의내용",
           name: "questions.content",
+          type: "textarea",
+          attr: { disabled: true },
         },
         {
-          label: "문의사진",
+          label: "문의첨부파일",
           name: "questions.attachments",
+          attr: { disabled: true },
         },
         {
           label: "답변",
           name: "questions.reply",
+          type: "textarea",
         },
         {
           label: "문의일자",
@@ -157,21 +163,23 @@
             }
           },
         },
+        { data: "questions.type" },
         { data: "users.name" },
         { data: "companies.name" },
         { data: "users.phone" },
-        { data: "questions.type" },
+
         { data: "questions.title" },
         { data: "questions.content" },
         { data: "questions.attachments" },
         { data: "questions.created_at" },
+        { data: "questions.reply" },
       ],
       // serverSide: true,
       select: true,
-      // searching: true,
+      searching: true,
       buttons: [
         { extend: "create", editor: editor, text: "등록" },
-        { extend: "edit", editor: editor, text: "상세보기 및 수정" },
+        { extend: "edit", editor: editor, text: "상세보기 및 답변" },
         { extend: "remove", editor: editor, text: "삭제" },
       ],
     });
@@ -190,14 +198,15 @@
       <tr>
         <th>등록번호</th>
         <th>구분</th>
+        <th>상담유형</th>
         <th>이름</th>
         <th>회사명</th>
         <th>휴대전화</th>
-        <th>상담유형</th>
         <th>문의제목</th>
         <th>문의내용</th>
-        <th>문의사진</th>
+        <th>문의첨부파일</th>
         <th>문의일자</th>
+        <th>답변</th>
         <!-- <th>문의상태</th> -->
       </tr>
     </thead>

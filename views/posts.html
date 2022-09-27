@@ -42,11 +42,28 @@
         {
           label: "제목",
           name: "posts.title",
+          type: "textarea",
         },
 
         {
           label: "내용",
           name: "posts.content",
+          type: "textarea",
+        },
+        {
+          label: "사진 등록",
+          name: "posts.image",
+          type: "upload",
+          display: function (file_id) {
+            console.log("file", file_id);
+            return (
+              '<img src="' +
+              editor.file("posts_files", file_id).web_path +
+              '"/>'
+            );
+          },
+          clearText: "Clear",
+          noImageText: "No image",
         },
 
         {
@@ -133,8 +150,9 @@
       dom: "Bfrtip",
       ajax: {
         url: "/api/posts",
+        // type: "POST",
       },
-      deferRender: true, // 2~3초 빨라짐
+
       language: lang_kor,
       columns: [
         {
@@ -155,10 +173,19 @@
         },
         { data: "posts.title" },
         { data: "posts.content" },
+        {
+          data: "posts.image",
+          render: function (file_id) {
+            return file_id
+              ? "<p>" + editor.file("posts_files", file_id).filename + "</p>"
+              : null;
+          },
+        },
         { data: "posts.created_at" },
         { data: "posts.updated_at" },
       ],
       select: true,
+      // serverSide: true,
 
       buttons: [
         { extend: "create", editor: editor, text: "등록" },
@@ -177,6 +204,7 @@
         <th>유형</th>
         <th>제목</th>
         <th>내용</th>
+        <th>이미지이름</th>
         <th>등록일</th>
         <th>수정일</th>
       </tr>

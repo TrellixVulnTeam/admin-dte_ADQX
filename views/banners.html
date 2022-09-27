@@ -38,7 +38,9 @@
           type: "upload",
           display: function (file_id) {
             return (
-              '<img src="' + editor.file("files", file_id).web_path + '"/>'
+              '<img src="' +
+              editor.file("banners_files", file_id).web_path +
+              '"/>'
             );
           },
           clearText: "Clear",
@@ -87,7 +89,9 @@
           data: "image",
           render: function (file_id) {
             return file_id
-              ? '<img src="' + editor.file("files", file_id).web_path + '"/>'
+              ? '<img src="' +
+                  editor.file("banners_files", file_id).web_path +
+                  '"/>'
               : null;
           },
           defaultContent: "No image",
