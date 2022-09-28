@@ -34,7 +34,7 @@
       table: "#construction",
       fields: [
         {
-          label: "건설사",
+          label: "회사명",
           name: "name",
         },
         {
@@ -42,7 +42,7 @@
           name: "address",
         },
         {
-          label: "CEO이름",
+          label: "대표자",
           name: "ceo_name",
         },
         {
@@ -133,6 +133,7 @@
       },
       language: lang_kor,
       columns: [
+        { data: "id" },
         { data: "name" },
         { data: "address" },
         { data: "ceo_name" },
@@ -154,14 +155,18 @@
     });
   });
 </script>
-<span style="font-size: 2rem; font-weight: 600">건설사</span>
+<span style="font-size: 2rem; font-weight: 600"
+  >건설사(컬럼값대기중:대기업여부,법인등록번호,사업자번호
+  상세보기:기업전화번호,기업팩스번호,기업홈페이지url,종업원수)</span
+>
 <div class="demo-html" style="margin-top: 10px">
   <table id="construction" class="display" style="width: 100%">
     <thead>
       <tr>
-        <th>건설사</th>
+        <th>고유번호</th>
+        <th>회사명</th>
         <th>주소</th>
-        <th>CEO이름</th>
+        <th>대표자</th>
         <th>생성일</th>
         <th>수정일</th>
       </tr>

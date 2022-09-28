@@ -16,9 +16,11 @@ h1 {
 #tab-1:checked ~ .tab label:nth-child(1),
 #tab-2:checked ~ .tab label:nth-child(2),
 #tab-3:checked ~ .tab label:nth-child(3),
-#tab-4:checked ~ .tab label:nth-child(4) {
-  background-color: rgba(0, 0, 0, 0.2);
+#tab-4:checked ~ .tab label:nth-child(4),
+#tab-5:checked ~ .tab label:nth-child(5) {
+  background-color: #258fff;
   box-shadow: none;
+  border-radius: 10px;
 }
 .content > div {
   display: none;
@@ -26,7 +28,8 @@ h1 {
 #tab-1:checked ~ .content div:nth-child(1),
 #tab-2:checked ~ .content div:nth-child(2),
 #tab-3:checked ~ .content div:nth-child(3),
-#tab-4:checked ~ .content div:nth-child(4) {
+#tab-4:checked ~ .content div:nth-child(4),
+#tab-5:checked ~ .content div:nth-child(5) {
   display: block;
 }
 .main {

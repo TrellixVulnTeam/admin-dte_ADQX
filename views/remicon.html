@@ -15,32 +15,68 @@
 			editor = new $.fn.dataTable.Editor({
 				ajax: "/api/remicon",
 				table: "#remicon_table",
-				fields: [			
+				fields: [	
+				{
+						label: "고유코드:",
+						name: "companies.id",
+					},		
 					{
-						label: "건설사:",
-						name: "name",
+						label: "회사명:",
+						name: "companies.name",
 					},
 					{
 						label: "주소:",
-						name: "address",
+						name: "companies.address",
 					},
 					{
-						label: "CEO 이름:",
-						name: "ceo_name",		
+						label: "대표자:",
+						name: "companies.ceo_name",		
 					},
 					{
 						label: "생성일:",
-						name: "created_at",
+						name: "companies.created_at",
 						type: "datetime",
 						def: function () { return new Date(); },
     			 	format: "YYYY-MM-DD" 
 					},
 					{
 					  label: "수정일:",
-					  name: "updated_at",
+					  name: "companies.updated_at",
 					  type: "datetime",
 						 def: function () { return new Date(); },
     			  format: "YYYY-MM-DD" 
+					},
+					{
+						label: "전화번호:",
+						name: "factory_infos.tel",		
+					},
+					{
+						label: "팩스번호:",
+						name: "factory_infos.fax",		
+					},
+					{
+						label: "레미콘생산능력:",
+						name: "factory_infos.capa",		
+					},
+					{
+						label: "믹서트럭(대):",
+						name: "factory_infos.truck_count",		
+					},
+					{
+						label: "시멘트사일로(TON):",
+						name: "factory_infos.cement_silo",		
+					},
+					{
+						label: "최초가동일:",
+						name: "factory_infos.start_at",		
+						type: "datetime",
+						format: "YYYY-MM-DD" 
+					},
+					{
+						label: "KS취득일자:",
+						name: "factory_infos.ks_acquired_at",	
+						type: "datetime",	
+						format: "YYYY-MM-DD" 
 					},
 				],
 			})					
@@ -114,12 +150,12 @@
 					},
 					language : lang_kor,
 					columns: [	
-						
-						{ data: "name" },
-						{ data: "address" },
-						{ data: "ceo_name" },
-						{ data: "created_at" },				
-						{ data: "updated_at" },
+						{ data: "companies.id" },
+						{ data: "companies.name" },
+						{ data: "companies.address" },
+						{ data: "companies.ceo_name" },
+						{ data: "companies.created_at" },				
+						{ data: "companies.updated_at" },
 					
 					],
 					serverSide: true,
@@ -140,15 +176,18 @@
 	</script>
 	<span style="font-size: 2rem; font-weight: 600">레미콘사</span>
 	<div class="demo-html" style="margin-top: 10px">
+		<span style="font-size: 1.5rem; font-weight: 400"
+        >레미콘사 컬럼값 대기중 : 생산/설비
+      </span>
 						<table id="remicon_table" class="display" style="width:100%">
 							<thead>
 								<tr>
-									<th>건설사</th>
+									<th>고유코드</th>
+									<th>회사명</th>
 									<th>주소</th>
-									<th>CEO이름</th>
+									<th>대표자</th>
 									<th>생성일</th>
-									<th>수정일</th>
-								
+									<th>수정일</th>								
 								</tr>
 							</thead>					
 						</table>

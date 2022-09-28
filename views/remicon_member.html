@@ -1,3 +1,9 @@
+<script
+  type="text/javascript"
+  language="javascript"
+  src="/js/remicon_factorylist_table.js"
+></script>
+
 <script type="text/javascript" language="javascript" class="init">
   var lang_kor = {
     decimal: "",
@@ -23,9 +29,9 @@
       sortDescending: ":내림차순 정렬",
     },
   };
-
+  var num_remicon_list=0;
   var editor; // use a global for the submit and return data rendering in the examples
-
+  var signname;
   $(document).ready(function () {
     //CRUD
     editor = new $.fn.dataTable.Editor({
@@ -66,7 +72,7 @@
           def: function () {
             return new Date();
           },
-          format: "YYYY-MM-DD",
+          format: "YYYY-MM-DD HH:MM",
         },
         {
           label: "수정일:",
@@ -75,7 +81,7 @@
           def: function () {
             return new Date();
           },
-          format: "YYYY-MM-DD",
+          format: "YYYY-MM-DD HH:MM",
           // 	// HH:mm:ss"
         },
       ],
@@ -86,7 +92,7 @@
       .addClass("filters")
       .appendTo("#remicon_table thead");
 
-    $("#remicon_table").DataTable({
+      var table =  $("#remicon_table").DataTable({
       orderCellsTop: true,
       fixedHeader: true,
       initComplete: function () {
@@ -115,14 +121,19 @@
                 $(this).attr("title", $(this).val());
                 var regexr = "({search})"; //$(this).parents('th').find('select').val();
 
-                var cursorPosition = this.selectionStart;
+                // var cursorPosition = this.selectionStart;
                 // Search the column for that value
                 api
                   .column(colIdx)
                   .search(
-                    this.value != "" ? this.value : "",
+                    this.value != ""
+                      ? regexr.replace("{search}", "(((" + this.value + ")))")
+                      : "",
                     this.value != "",
                     this.value == ""
+                    // this.value != "" ? this.value : "",
+                    // this.value != "",
+                    // this.value == ""
                   )
                   .draw();
               })
@@ -130,9 +141,9 @@
                 e.stopPropagation();
 
                 $(this).trigger("change");
-                $(this)
-                  .focus()[0]
-                  .setSelectionRange(cursorPosition, cursorPosition);
+                // $(this)
+                //   .focus()[0]
+                //   .setSelectionRange(cursorPosition, cursorPosition);
               });
           });
       },
@@ -140,25 +151,37 @@
       ///Binding
 
       dom: "Bfrtip", // PBfrtip
-      ajax: {
+      ajax: ({
         url: "/api/remicon_member",
         type: "POST",
-      },
+      }),
       language: lang_kor,
       columns: [
+        { data: "users.id" },        
         { data: "users.name" },
-        { data: "users.signname" },
-        { data: "users.phone" },
-        { data: "companies.name" },
+        {
+          data:"cnt",         
+          render: function (data, type) {
+            // console.log("data1",data)
+            if (type == "display") {
+              data =               
+                  `<label for="tab-2">` +
+                data;
+            }
+            return data;
+          },      
+        },
         { data: "users.position" },
         { data: "users.tel" },
+        { data: "users.signname",},
+        { data: "users.phone" },
         { data: "users.created_at" },
-        { data: "users.updated_at" },
+        { data: "users.updated_at" }, 
       ],
-      serverSide: true,
+      // serverSide: true,
       select: true,
-
-      searchable: true,
+      destroy: true,  
+      // searchable: true,
       search: {
         regex: true,
       },
@@ -168,8 +191,26 @@
         { extend: "remove", editor: editor, text: "삭제" },
       ],
     });
-  });
+     // 선택한 로우값 가져오기
+     $(document).on(
+      "click",
+      "#remicon_table tbody tr",
+      function () {
+        let str = "";
+        let tr = $(this);
+        let td = tr.children();
+        num_id = td.eq(5).text();
+        console.log("abcd", num_id);
+        remicon_get_factorylist(num_id);
+      }
+    );
+});
+
 </script>
+
+
+
+
 
 <!-- 자동완성 리스트를 불러오기위한 로직 -->
 <script>
@@ -194,20 +235,56 @@
 </script>
 <!-- 자동완성 리스트를 불러오기위한 로직 끝 -->
 
-<span style="font-size: 2rem; font-weight: 600">레미콘사 회원</span>
-<div class="demo-html" style="margin-top: 10px">
-  <table id="remicon_table" class="display" style="width: 100%" ellspacing="0">
-    <thead>
-      <tr>
-        <th>이름</th>
-        <th>이메일</th>
-        <th>휴대전화</th>
-        <th>회사명</th>
-        <th>직위/직급</th>
-        <th>사내 전화번호</th>
-        <th>가입일</th>
-        <th>수정일</th>
-      </tr>
-    </thead>
-  </table>
-</div>
+  <div class="main">
+    <!-- <span style="font-size: 2rem; font-weight: 600">레미콘사 회원</span> -->
+    <input type="radio" id="tab-1" name="show" checked />
+    <input type="radio" id="tab-2" name="show" />
+    <div class="tab">
+      <label for="tab-1">레미콘사 회원내역</label>
+      <label for="tab-2">레미콘사 회원별 공장내역</label>
+    </div>
+    <div class="content">
+      <div class="demo-html" style="margin-top: 10px">
+        <table
+          id="remicon_table"
+          class="display"
+          style="width: 100%"
+          ellspacing="0"
+        >
+          <thead>
+            <tr>
+              <th>고유코드</th>
+              <th>이름</th>
+              <th>회사명</th>
+              <th>직위/직급</th>
+              <th>사내 전화번호</th>
+              <th>이메일</th>
+              <th>휴대전화</th>                 
+              <th>가입일</th>
+              <th>수정일</th>
+            </tr>
+          </thead>
+        </table>
+      </div>
+      <div class="demo-html">
+        <span style="font-size: 1.5rem; font-weight: 400"
+        >레미콘사 회원별공장내역 컬럼값 대기중 : 공장별 정회원/준회원 여부, 공장별 권한(공장관리자 여부),
+      </span>
+        <table
+          id="remicon_factorylist_table"
+          class="display"
+          style="width: 100%"
+        >
+          <thead>
+            <tr>
+              <th>레미콘공장</th>
+              <th>레미콘 공장 주소</th>
+              <!-- <th>회원여부</th>
+            <th>권한여부</th> -->
+            </tr>
+          </thead>
+        </table>
+      </div>
+    </div>
+  </div>
+</tr>

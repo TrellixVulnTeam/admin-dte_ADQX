@@ -1,3 +1,8 @@
+<script
+  type="text/javascript"
+  language="javascript"
+  src="/js/construction_fieldlist_table_list.js"
+></script>
 <script type="text/javascript" language="javascript" class="init">
   //Korean
   var lang_kor = {
@@ -21,7 +26,7 @@
     },
     aria: { sortAscending: ":오름차순 정렬", sortDescending: ":내림차순 정렬" },
   };
-
+  var num_field_list = 0;
   var editor; // use a global for the submit and return data rendering in the examples
 
   $(document).ready(function () {
@@ -142,13 +147,28 @@
       deferRender: true, // 2~3초 빨라짐
       language: lang_kor,
       columns: [
-        { data: "users.name" },
-        { data: "users.signname" },
-        { data: "users.phone" },
-        { data: "companies.name" },
-        { data: "users.position" },
-        { data: "users.tel" },
-        { data: "users.created_at" },
+        { data: "users.id" }, //고유코드
+        { data: "users.name" }, //이름
+        { data: "companies.name" }, //소속회사명
+        {
+          data: "cnt",
+          render: function (data, type) {
+            if (data === null) {
+              data = "";
+            }
+            if (type == "display") {
+              data = `<label for="tab-2">` + data;
+            }
+            // console.log("data",data)
+            return data;
+          },
+        }, //현장명
+        { data: "users.position" }, //직위/직급
+        { data: "users.tel" }, //사내전화번호
+        { data: "users.signname" }, //이메일
+        { data: "users.phone" }, //휴대전화
+        { data: "users.created_at" }, //가입일
+        { data: "users.updated_at" }, //수정일
       ],
       select: true,
       searchable: true,
@@ -160,6 +180,14 @@
         { extend: "edit", editor: editor, text: "상세보기 및 수정" },
         { extend: "remove", editor: editor, text: "삭제" },
       ],
+    });
+    $(document).on("click", "#construction_member tbody tr", function () {
+      let str = "";
+      let tr = $(this);
+      let td = tr.children();
+      num_id = td.eq(0).text();
+      console.log("abcd", num_id);
+      construction_fieldlist_table_list(num_id);
     });
   });
 </script>
@@ -183,25 +211,55 @@
     });
   });
 </script>
+<div class="main">
+  <input type="radio" id="tab-1" name="show" checked />
+  <input type="radio" id="tab-2" name="show" />
 
-<span style="font-size: 2rem; font-weight: 600">건설사 회원</span>
-<div class="demo-html" style="margin-top: 10px">
-  <table
-    id="construction_member"
-    class="display"
-    style="width: 100%"
-    cellspacing="0"
-  >
-    <thead>
-      <tr>
-        <th>이름</th>
-        <th>이메일</th>
-        <th>휴대전화</th>
-        <th>회사명</th>
-        <th>직위/직급</th>
-        <th>사내 전화번호</th>
-        <th>가입일</th>
-      </tr>
-    </thead>
-  </table>
+  <div class="tab">
+    <label for="tab-1">건설사 회원내역</label>
+    <label for="tab-2">건설사 회원별 현장내역</label>
+  </div>
+  <div class="content">
+    <div class="demo-html" style="margin-top: 10px">
+      <table
+        id="construction_member"
+        class="display"
+        style="width: 100%"
+        cellspacing="0"
+      >
+        <thead>
+          <tr>
+            <th>고유코드</th>
+            <th>이름</th>
+            <th>소속회사명</th>
+            <th>현장명</th>
+            <th>직위/직급</th>
+            <th>사내 전화번호</th>
+            <th>이메일</th>
+            <th>휴대전화</th>
+            <th>가입일</th>
+            <th>수정일</th>
+          </tr>
+        </thead>
+      </table>
+    </div>
+    <div class="demo-html">
+      <table
+        id="construction_fieldlist_table"
+        class="display"
+        style="width: 100%"
+      >
+        <thead>
+          <tr>
+            <th>소속현장</th>
+            <th>현장별 주소</th>
+            <th>현장별 권한(구매담당자)</th>
+            <th>현장별 권한(주문담당자)</th>
+            <!-- <th>회원여부</th>
+            <th>권한여부</th> -->
+          </tr>
+        </thead>
+      </table>
+    </div>
+  </div>
 </div>

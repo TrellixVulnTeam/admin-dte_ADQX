@@ -46,32 +46,32 @@ function remicon_getApi(id) {
           name: "spaces.basic_address",
         },
 
-        {
-          label: "견적률",
-          name: "estimations.percent",
-        },
-        {
-          label: "견적상태",
-          name: "estimations.status",
-          type: "select",
-          options: [
-            { label: "요청", value: "REQUESTED" },
-            { label: "응답", value: "RESPONDED" },
-            { label: "등록", value: "REGISTERED" },
-            { label: "적용", value: "APPLIED" },
-            { label: "완료", value: "FINISHED" },
-          ],
-        },
+        // {
+        //   label: "견적률",
+        //   name: "estimations.percent",
+        // },
+        // {
+        //   label: "견적상태",
+        //   name: "estimations.status",
+        //   type: "select",
+        //   options: [
+        //     { label: "요청", value: "REQUESTED" },
+        //     { label: "응답", value: "RESPONDED" },
+        //     { label: "등록", value: "REGISTERED" },
+        //     { label: "적용", value: "APPLIED" },
+        //     { label: "완료", value: "FINISHED" },
+        //   ],
+        // },
 
-        {
-          label: "일시",
-          name: "estimations.created_at",
-          type: "datetime",
-          def: function () {
-            return new Date();
-          },
-          format: "YYYY-MM-DD",
-        },
+        // {
+        //   label: "일시",
+        //   name: "estimations.created_at",
+        //   type: "datetime",
+        //   def: function () {
+        //     return new Date();
+        //   },
+        //   format: "YYYY-MM-DD",
+        // },
       ],
     });
 
@@ -144,10 +144,13 @@ function remicon_getApi(id) {
       },
       language: lang_kor,
       columns: [
-        // { data: "spaces.id" },
+        { data: "estimations.id" },
+        { data: "estimations.created_at" },
+        { data: "companies.id" },
         { data: "companies.name" },
+        { data: "spaces.id" },
         { data: "spaces.name" },
-        { data: "spaces.basic_address" },
+        // { data: "spaces.basic_address" },
         { data: "users.name" },
         { data: "estimations.percent" },
         {
@@ -155,19 +158,19 @@ function remicon_getApi(id) {
           render: function (data, type, row) {
             switch (data) {
               case "REQUESTED":
-                return "요청";
+                return "견적요청접수";
                 break;
               case "RESPONDED":
                 return "응답";
                 break;
               case "REGISTERED":
-                return "등록";
+                return "견적제출";
                 break;
               case "APPLIED":
                 return "적용";
                 break;
               case "FINISHED":
-                return "완료";
+                return "납품사등록완료";
                 break;
               case null:
                 return "";
@@ -175,10 +178,11 @@ function remicon_getApi(id) {
             }
           },
         },
-        { data: "estimations.created_at" },
+        { data: "users.name" },
       ],
       serverSide: true,
       select: true,
+      destroy: true,
       buttons: [
         { extend: "create", editor: editor, text: "등록" },
         { extend: "edit", editor: editor, text: "상세보기 및 수정" },
