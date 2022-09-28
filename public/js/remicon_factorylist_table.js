@@ -123,11 +123,7 @@ function remicon_get_factorylist(id) {
       serverSide: true,
       select: true,
       destroy: true,
-      buttons: [
-        { extend: "create", editor: editor, text: "등록" },
-        { extend: "edit", editor: editor, text: "상세보기 및 수정" },
-        { extend: "remove", editor: editor, text: "삭제" },
-      ],
+      buttons: [],
     });
   });
 }

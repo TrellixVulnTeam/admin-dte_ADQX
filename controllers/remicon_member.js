@@ -20,18 +20,24 @@ router.all("/api/remicon_member", async function (req, res) {
       new Field("users.name"),
       new Field("users.phone"),
       new Field("users.company_type").setValue("REMICON"),
+      new Field("users.company_id"),
       new Field("users.position"),
       new Field("users.tel"),
       new Field("companies.name"),
       new Field("users.created_at")
-        .getFormatter(Format.sqlDateToFormat("YYYY-MM-DD"))
-        .setFormatter(Format.formatToSqlDate("YYYY-MM-DD")),
+        .getFormatter(Format.sqlDateToFormat("YYYY-MM-DD HH:MM"))
+        .setFormatter(Format.formatToSqlDate("YYYY-MM-DD HH:MM")),
       new Field("users.updated_at")
-        .getFormatter(Format.sqlDateToFormat("YYYY-MM-DD"))
-        .setFormatter(Format.formatToSqlDate("YYYY-MM-DD")),
-      new Field("concat(users.name, ' ' ,users.position)"),
+        .getFormatter(Format.sqlDateToFormat("YYYY-MM-DD HH:MM"))
+        .setFormatter(Format.formatToSqlDate("YYYY-MM-DD HH:MM")),
+      // new Field("concat(users.name, ' ' ,users.position)"),
+      // new Field(
+      //   "concat(companies.name,(select count(a.signname)-1 from users a where a.signname=users.signname group by a.signname))",
+      //   "cnt"
+      // )
       new Field(
-        "concat(companies.name,' 외 ',(select count(a.signname)-1 from users a where a.signname=users.signname group by a.signname),' 건 ')"
+        "concat(companies.name,' 외 ',(select count(a.signname)-1 from users a where a.signname=users.signname group by a.signname),' 건 ')",
+        "cnt"
       )
     )
     .leftJoin("companies", "users.company_id", "=", "companies.id")

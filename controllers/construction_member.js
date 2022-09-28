@@ -18,6 +18,10 @@ router.all("/api/construction_member", async function (req, res) {
       new Field("users.id"),
       new Field("users.name"),
       new Field("users.signname"),
+      new Field(
+        "concat((select name from spaces where site_user_id = users.id and type='field' group by site_user_id),' 외 ', (select count(a.site_user_id)-1 from spaces a where a.site_user_id=users.id group by a.site_user_id),'건')",
+        "cnt"
+      ),
       new Field("users.phone"),
       new Field("users.company_type").setValue("CONSTRUCTION"),
       new Field(
