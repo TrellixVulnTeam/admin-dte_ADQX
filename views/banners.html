@@ -183,13 +183,22 @@
           type: "textarea",
         },
         {
-          label: "기간설정",
+          label: "시작일",
+          name: "popup.start_date",
+          type: "datetime",
+          def: function () {
+            return new Date();
+          },
+          format: "YYYY-MM-DD HH:mm",
+        },
+        {
+          label: "종료일",
           name: "popup.end_date",
           type: "datetime",
           def: function () {
             return new Date();
           },
-          format: "YYYY-MM-DD hh:mm:ss",
+          format: "YYYY-MM-DD HH:mm",
         },
         {
           label: "등록일",
@@ -237,11 +246,18 @@
         },
         { data: "popup.contents" },
         {
+          data: "popup.start_date",
+          render: function (data) {
+            return data ? `<p>${data}</p>` : null;
+          },
+          defaultContent: "No image",
+        },
+        {
           data: "popup.end_date",
-          // render: function (data) {
-          //   return data ? `<p>${data}시</p>` : null;
-          // },
-          // defaultContent: "No image",
+          render: function (data) {
+            return data ? `<p>${data}</p>` : null;
+          },
+          defaultContent: "No image",
         },
         { data: "popup.created_at" },
         { data: "popup.updated_at" },
@@ -297,7 +313,8 @@
             <th>번호</th>
             <th>이미지</th>
             <th>내용</th>
-            <th>기간설정</th>
+            <th>시작일</th>
+            <th>종료일</th>
             <th>등록일</th>
             <th>수정일</th>
           </tr>
