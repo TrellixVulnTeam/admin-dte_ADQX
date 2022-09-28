@@ -43,6 +43,7 @@
         {
           label: "문의내용",
           name: "questions.content",
+          type: "textarea",
         },
         {
           label: "문의사진",
@@ -51,6 +52,7 @@
         {
           label: "답변",
           name: "questions.reply",
+          type: "textarea",
         },
         {
           label: "문의일자",
@@ -163,7 +165,7 @@
         { data: "questions.type" },
         { data: "questions.title" },
         { data: "questions.content" },
-        { data: "questions.attachments" },
+        // { data: "questions.attachments" },
         { data: "questions.created_at" },
       ],
       // serverSide: true,
@@ -180,6 +182,9 @@
 
 <span style="font-size: 2rem; font-weight: 600">1:1문의</span>
 <div class="demo-html" style="margin-top: 10px">
+  <span style="font-size: 1.5rem; font-weight: 400"
+    >1:1문의 컬럼값 대기중 : 상태값(문의접수,답변완료(날짜)),
+  </span>
   <table
     id="questions_table"
     class="display"
@@ -196,7 +201,7 @@
         <th>상담유형</th>
         <th>문의제목</th>
         <th>문의내용</th>
-        <th>문의사진</th>
+        <!-- <th>문의사진</th> -->
         <th>문의일자</th>
         <!-- <th>문의상태</th> -->
       </tr>

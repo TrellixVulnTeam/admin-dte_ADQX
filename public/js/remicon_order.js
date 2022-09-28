@@ -48,7 +48,7 @@ function remicon_getApi_order(id) {
         {
           label: "배정일자",
           name: "assignments.date",
-          type: "date",
+          type: "datetime",
         },
         {
           label: "배송일정 시작",

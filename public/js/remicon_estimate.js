@@ -158,19 +158,19 @@ function remicon_getApi(id) {
           render: function (data, type, row) {
             switch (data) {
               case "REQUESTED":
-                return "요청";
+                return "견적요청접수";
                 break;
               case "RESPONDED":
                 return "응답";
                 break;
               case "REGISTERED":
-                return "등록";
+                return "견적제출";
                 break;
               case "APPLIED":
                 return "적용";
                 break;
               case "FINISHED":
-                return "완료";
+                return "납품사등록완료";
                 break;
               case null:
                 return "";
@@ -178,6 +178,7 @@ function remicon_getApi(id) {
             }
           },
         },
+        { data: "users.name" },
       ],
       serverSide: true,
       select: true,
