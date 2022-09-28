@@ -1,4 +1,3 @@
-
 // Row highlighting on edit styles
 //
 // To change the colour of the highlight, simply modify the variable below and
@@ -9,88 +8,105 @@
 // http://next.datatables.net/manual/styling/classes so you can retain the full
 // benefits of the DataTables styling options.
 
-$table-row-highlight: #FFFBCC;
+$table-row-highlight: #fffbcc;
 
 table.dataTable {
-	tbody {
-		margin: 100px;
-		tr.highlight {
-			background-color: $table-row-highlight !important;
-			margin: 100px;
-		}
-        
-		tr.highlight,
-		tr.noHighlight,
-		tr.highlight td,
-		tr.noHighlight td {
-			@include background-transision();
-		}
-	}
+  tbody {
+    margin: 100px;
+    tr.highlight {
+      background-color: $table-row-highlight !important;
+      margin: 100px;
+    }
 
-	&.stripe tbody,
-	&.display tbody {
-		margin: 100px;
-		tr.odd {
-			&.highlight {
-				background-color: shade($table-row-highlight, 2.35%);
-			}
-		}
-	}
+    tr.highlight,
+    tr.noHighlight,
+    tr.highlight td,
+    tr.noHighlight td {
+      @include background-transision();
+    }
+  }
 
-	// Hover classes - add "hover" class to the table to activate
-	&.hover tbody,
-	&.display tbody {
-		tr:hover,
-		tr.odd:hover,
-		tr.even:hover {
-			&.highlight {
-				background-color: shade($table-row-highlight, 3.6%);
-			}
-		}
-	}
+  &.stripe tbody,
+  &.display tbody {
+    margin: 100px;
+    tr.odd {
+      &.highlight {
+        background-color: shade($table-row-highlight, 2.35%);
+      }
+    }
+  }
 
+  // Hover classes - add "hover" class to the table to activate
+  &.hover tbody,
+  &.display tbody {
+    tr:hover,
+    tr.odd:hover,
+    tr.even:hover {
+      &.highlight {
+        background-color: shade($table-row-highlight, 3.6%);
+      }
+    }
+  }
 
-	// Sort column highlighting - add "hover" class to the table to activate
-	&.order-column,
-	&.display {
-		tbody {
-			tr.highlight>.sorting_1,
-			tr.highlight>.sorting_2,
-			tr.highlight>.sorting_3 {
-				background-color: shade($table-row-highlight, 2%);
-			}
-		}
-	}
+  // Sort column highlighting - add "hover" class to the table to activate
+  &.order-column,
+  &.display {
+    tbody {
+      tr.highlight > .sorting_1,
+      tr.highlight > .sorting_2,
+      tr.highlight > .sorting_3 {
+        background-color: shade($table-row-highlight, 2%);
+      }
+    }
+  }
 
-	&.display tbody,
-	&.order-column.stripe tbody {
-		tr.odd {
-			&.highlight {
-				>.sorting_1 { background-color: shade($table-row-highlight, 5.4%);}
-				>.sorting_2 { background-color: shade($table-row-highlight, 4.7%);}
-				>.sorting_3 { background-color: shade($table-row-highlight, 3.9%);}
-			}
-		}
+  &.display tbody,
+  &.order-column.stripe tbody {
+    tr.odd {
+      &.highlight {
+        > .sorting_1 {
+          background-color: shade($table-row-highlight, 5.4%);
+        }
+        > .sorting_2 {
+          background-color: shade($table-row-highlight, 4.7%);
+        }
+        > .sorting_3 {
+          background-color: shade($table-row-highlight, 3.9%);
+        }
+      }
+    }
 
-		tr.even {
-			&.highlight {
-				>.sorting_1 { background-color: shade($table-row-highlight, 2%); }
-				>.sorting_2 { background-color: shade($table-row-highlight, 1.2%); }
-				>.sorting_3 { background-color: shade($table-row-highlight, 0.4%); }
-			}
-		}
-	}
+    tr.even {
+      &.highlight {
+        > .sorting_1 {
+          background-color: shade($table-row-highlight, 2%);
+        }
+        > .sorting_2 {
+          background-color: shade($table-row-highlight, 1.2%);
+        }
+        > .sorting_3 {
+          background-color: shade($table-row-highlight, 0.4%);
+        }
+      }
+    }
+  }
 
-	&.display tbody,
-	&.order-column.hover tbody {
-		tr:hover,
-		tr.odd:hover,
-		tr.even:hover {
-			&.highlight {
-				>.sorting_1 { background-color: shade($table-row-highlight, 8.2%); }
-				>.sorting_2 { background-color: shade($table-row-highlight, 7.5%); }
-				>.sorting_3 { background-color: shade($table-row-highlight, 6.3%); }
-			}
-		}
-	}
+  &.display tbody,
+  &.order-column.hover tbody {
+    tr:hover,
+    tr.odd:hover,
+    tr.even:hover {
+      &.highlight {
+        > .sorting_1 {
+          background-color: shade($table-row-highlight, 8.2%);
+        }
+        > .sorting_2 {
+          background-color: shade($table-row-highlight, 7.5%);
+        }
+        > .sorting_3 {
+          background-color: shade($table-row-highlight, 6.3%);
+        }
+      }
+    }
+  }
 }

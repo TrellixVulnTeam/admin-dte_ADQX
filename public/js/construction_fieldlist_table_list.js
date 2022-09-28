@@ -1,5 +1,5 @@
-function remicon_get_factorylist(id) {
-  num_remicon_list++;
+function construction_fieldlist_table_list(id) {
+  num_field_list++;
   console.log("remicon_get_factorylist확인", id);
   var lang_kor = {
     decimal: "",
@@ -35,27 +35,35 @@ function remicon_get_factorylist(id) {
     //CRUD
 
     editor = new $.fn.dataTable.Editor({
-      ajax: `/api/remicon_factorylist_table/${id}`,
-      table: "#remicon_factorylist_table",
+      ajax: `/api/construction_fieldlist_table/${id}`,
+      table: "#construction_fieldlist_table",
       fields: [
         {
-          label: "레미콘 공장",
-          name: "companies.name",
+          label: "소속현장리스트",
+          name: "spaces.name",
         },
         {
-          label: "레미콘 주소",
-          name: "companies.address",
+          label: "현장별주소",
+          name: "spaces.basic_address",
+        },
+        {
+          label: "현장별 권한(구매담당자)",
+          name: "spaces.admin_user_id",
+        },
+        {
+          label: "현장별 권한(주문담당자)",
+          name: "spaces.site_user_id",
         },
       ],
     });
     // 항목별 검색기능
-    if (num_remicon_list == 1) {
-      $("#remicon_factorylist_table thead tr")
+    if (num_field_list == 1) {
+      $("#construction_fieldlist_table thead tr")
         .clone(true)
-        .appendTo("#remicon_factorylist_table thead")
-        .addClass("fac_filters_factorylist");
+        .appendTo("#construction_fieldlist_table thead")
+        .addClass("con_fieldlist_filters");
     }
-    $("#remicon_factorylist_table").DataTable({
+    $("#construction_fieldlist_table").DataTable({
       orderCellsTop: true,
       fixedHeader: true,
       destroy: true,
@@ -69,7 +77,7 @@ function remicon_get_factorylist(id) {
           .eq(0)
           .each(function (colIdx) {
             // Set the header cell to contain the input element
-            var cell = $(".fac_filters_factorylist th").eq(
+            var cell = $(".con_fieldlist_filters th").eq(
               $(api.column(colIdx).header()).index()
             );
             var title = $(cell).text();
@@ -78,7 +86,7 @@ function remicon_get_factorylist(id) {
             // On every keypress in this input
             $(
               "input",
-              $(".fac_filters_factorylist th").eq(
+              $(".con_fieldlist_filters th").eq(
                 $(api.column(colIdx).header()).index()
               )
             )
@@ -107,18 +115,19 @@ function remicon_get_factorylist(id) {
               });
           });
       },
-      // 항목별 검색기능 끝. keyid		url:`/api/remicon_factorylist_table/:${id}`,
+      // 항목별 검색기능 끝. keyid		url:`/api/construction_fieldlist_table/:${id}`,
       //DATA 바인딩
       dom: "Bfrtip",
       ajax: {
-        url: `/api/remicon_factorylist_table/${id}`,
+        url: `/api/construction_fieldlist_table/${id}`,
         type: "POST",
       },
       language: lang_kor,
       columns: [
-        // { data: "assignments.id"},
-        { data: "companies.name" },
-        { data: "companies.address" },
+        { data: "spaces.name" },
+        { data: "spaces.basic_address" },
+        { data: "users.name" },
+        { data: "users.name" },
       ],
       serverSide: true,
       select: true,

@@ -38,7 +38,9 @@
           type: "upload",
           display: function (file_id) {
             return (
-              '<img src="' + editor.file("files", file_id).web_path + '"/>'
+              '<img src="' +
+              editor.file("banners_files", file_id).web_path +
+              '"/>'
             );
           },
           clearText: "Clear",
@@ -54,6 +56,15 @@
           ],
         },
         {
+          label: "활성상태",
+          name: "banners.active",
+          type: "select",
+          options: [
+            { label: "비활성", value: 0 },
+            { label: "활성", value: 1 },
+          ],
+        },
+        {
           label: "등록일",
           name: "created_at",
           type: "datetime",
@@ -63,9 +74,12 @@
           format: "YYYY-MM-DD",
         },
         {
-          label: "마감일",
-          name: "end_date",
+          label: "수정일",
+          name: "updated_at",
           type: "datetime",
+          def: function () {
+            return new Date();
+          },
           format: "YYYY-MM-DD",
         },
       ],
@@ -82,18 +96,155 @@
       },
       language: lang_kor,
       columns: [
+        { data: "banners.id" },
         { data: "banners.type" },
         {
           data: "image",
           render: function (file_id) {
             return file_id
-              ? '<img src="' + editor.file("files", file_id).web_path + '"/>'
+              ? '<img src="' +
+                  editor.file("banners_files", file_id).web_path +
+                  '"/>'
               : null;
           },
           defaultContent: "No image",
         },
+        {
+          data: "banners.active",
+          render: function (data) {
+            return data === 0 ? "<p>비활성</p>" : "<p>활성</p>";
+          },
+        },
         { data: "created_at" },
-        { data: "end_date" },
+        { data: "updated_at" },
+      ],
+      serverSide: true,
+      select: true,
+      // searching: true,
+      buttons: [
+        { extend: "create", editor: editor, text: "등록" },
+        { extend: "edit", editor: editor, text: "상세보기 및 수정" },
+        { extend: "remove", editor: editor, text: "삭제" },
+      ],
+    });
+  });
+</script>
+<script type="text/javascript" language="javascript" class="init">
+  var lang_kor = {
+    decimal: "",
+    emptyTable: "데이터가 없습니다.",
+    info: "_START_ 부터- _END_ 까지 (총 _TOTAL_ 데이터)",
+    infoEmpty: "0개",
+    infoFiltered: "(전체 _MAX_명 중 검색결과)",
+    infoPostFix: "",
+    thousands: ",",
+    lengthMenu: "_MENU_개씩 보기",
+    loadingRecords: "로딩중...",
+    processing: "처리중...",
+    search: "검색 :",
+    zeroRecords: "검색된 데이터가 없습니다.",
+    paginate: {
+      first: "첫 페이지",
+      last: "마지막페이지",
+      next: "다음",
+      previous: "이전",
+    },
+    aria: {
+      sortAscending: ":오름차순 정렬",
+      sortDescending: ":내림차순 정렬",
+    },
+  };
+
+  var editor; // use a global for the submit and return data rendering in the examples
+
+  $(document).ready(function () {
+    //CRUD
+    editor = new $.fn.dataTable.Editor({
+      ajax: "/api/pop_up",
+      table: "#pop_up_table",
+      fields: [
+        {
+          label: "이미지 등록",
+          name: "popup.image",
+          type: "upload",
+          display: function (file_id) {
+            return (
+              '<img src="' +
+              editor.file("popup_files", file_id).web_path +
+              '"/>'
+            );
+          },
+          clearText: "Clear",
+          noImageText: "No image",
+        },
+        {
+          label: "내용",
+          name: "popup.contents",
+          type: "textarea",
+        },
+        {
+          label: "기간설정",
+          name: "popup.end_date",
+          type: "datetime",
+          def: function () {
+            return new Date();
+          },
+          format: "YYYY-MM-DD hh:mm:ss",
+        },
+        {
+          label: "등록일",
+          name: "popup.created_at",
+          type: "datetime",
+          def: function () {
+            return new Date();
+          },
+          format: "YYYY-MM-DD",
+        },
+        {
+          label: "수정일",
+          name: "popup.updated_at",
+          type: "datetime",
+          def: function () {
+            return new Date();
+          },
+          format: "YYYY-MM-DD",
+        },
+      ],
+    });
+
+    $("#pop_up_table").DataTable({
+      ///Binding
+
+      dom: "Bfrtip", // PBfrtip
+      ajax: {
+        url: "/api/pop_up",
+        type: "POST",
+        // type: "get",
+      },
+      language: lang_kor,
+      columns: [
+        { data: "popup.id" },
+        {
+          data: "popup.image",
+          render: function (file_id) {
+            return file_id
+              ? '<img src="' +
+                  editor.file("popup_files", file_id).web_path +
+                  '"/>'
+              : null;
+          },
+          defaultContent: "No image",
+        },
+        { data: "popup.contents" },
+        {
+          data: "popup.end_date",
+          // render: function (data) {
+          //   return data ? `<p>${data}시</p>` : null;
+          // },
+          // defaultContent: "No image",
+        },
+        { data: "popup.created_at" },
+        { data: "popup.updated_at" },
       ],
       serverSide: true,
       select: true,
@@ -107,16 +258,51 @@
   });
 </script>
 
-<span style="font-size: 2rem; font-weight: 600">팝업관리</span>
-<div class="demo-html" style="margin-top: 10px">
-  <table id="banners_table" class="display" style="width: 100%" ellspacing="0">
-    <thead>
-      <tr>
-        <th>유형</th>
-        <th>이미지</th>
-        <th>등록일</th>
-        <th>만료일</th>
-      </tr>
-    </thead>
-  </table>
+<div class="main">
+  <input type="radio" id="tab-1" name="show" checked />
+  <input type="radio" id="tab-2" name="show" />
+  <div class="tab">
+    <label for="tab-1">메인화면 관리</label>
+    <label for="tab-2">팝업 관리</label>
+  </div>
+  <div class="content">
+    <div class="demo-html" style="margin-top: 10px">
+      <table
+        id="banners_table"
+        class="display"
+        style="width: 100%"
+        ellspacing="0"
+      >
+        <thead>
+          <tr>
+            <th>번호</th>
+            <th>유형</th>
+            <th>이미지</th>
+            <th>활성상태</th>
+            <th>등록일</th>
+            <th>수정일</th>
+          </tr>
+        </thead>
+      </table>
+    </div>
+    <div class="demo-html" style="margin-top: 10px">
+      <table
+        id="pop_up_table"
+        class="display"
+        style="width: 100%"
+        ellspacing="0"
+      >
+        <thead>
+          <tr>
+            <th>번호</th>
+            <th>이미지</th>
+            <th>내용</th>
+            <th>기간설정</th>
+            <th>등록일</th>
+            <th>수정일</th>
+          </tr>
+        </thead>
+      </table>
+    </div>
+  </div>
 </div>

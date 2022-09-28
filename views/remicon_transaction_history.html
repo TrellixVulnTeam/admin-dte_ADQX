@@ -22,6 +22,7 @@
 <script type="text/javascript" language="javascript" class="init">
   //Korean
   var num_id;
+  var spaces_id;
   var lang_kor = {
     decimal: "",
     emptyTable: "데이터가 없습니다.",
@@ -137,21 +138,22 @@
         url: "/api/remicon_management_list",
       },
       language: lang_kor,
+      columnDefs: [{ targets: [4], visible: false }],
       columns: [
         {
-          data: "spaces.id",
+          data: "companies.id",
           render: function (data, type, row) {
             if (type == "display") {
               data =
-                `<label for="tab-2" onclick="remicon_getApi(${data}); remicon_getApi_order(${data}); remicon_getApi_Transaction(${data});">` +
-                data;
+                // `<label for="tab-2" onclick="remicon_getApi(${data}); remicon_getApi_order(${data}); remicon_getApi_Transaction(${data});">`
+                `<label for="tab-2">` + data;
             }
             return data;
           },
         },
-        { data: "spaces.company_id" },
-        { data: "spaces.name" },
-        { data: "spaces.basic_address" },
+        // { data: "spaces.company_id" },
+        { data: "companies.name" },
+        { data: "companies.address" },
         {
           data: "cnt",
           render: function (data, type, row) {
@@ -164,21 +166,7 @@
             return data;
           },
         },
-        // {
-        //   data: "cnt",
-        // },
-        // {
-        //   data:
-        //     "(select count(space_id)" +
-        //     "from space_members where space_id = spaces.id " +
-        //     "group by space_id)",
-        // },
-        // {
-        //   data: "concat(admin_user.name,'',admin_user.position)",
-        // },
-        // {
-        //   data: "concat(site_user.name,'',site_user.position)",
-        // },
+        { data: "spaces.id" },
       ],
       select: true,
       destroy: true,
@@ -192,28 +180,40 @@
           buttons: ["excel", "csv"],
         },
       ],
-      // buttons: [],
+    });
+
+    $("#remicon_management_list_table tbody").on("click", "tr", function () {
+      console.log("이벤확인");
+      var testTable = $("#remicon_management_list_table").dataTable();
+      spaces_id = testTable.fnGetData(this).spaces.id;
+      console.log(spaces_id);
+      num_id = testTable.fnGetData(this).companies.id;
+      console.log(num_id);
+      remicon_getApi(spaces_id);
+      remicon_getApi_order(spaces_id);
+      remicon_getApi_Transaction(spaces_id);
+      remicon_membernum(num_id);
     });
 
     // 선택한 로우값 가져오기
-    $(document).on(
-      "click",
-      "#remicon_management_list_table tbody tr",
-      function () {
-        let str = "";
-        // 배열 선언
-        // 현재 클릭된 Row(<tr>)
-        let tr = $(this);
-        let td = tr.children();
-        num_id = td.eq(0).text();
-        console.log("abcd", num_id);
+    // $(document).on(
+    //   "click",
+    //   "#remicon_management_list_table tbody tr",
+    //   function () {
 
-        remicon_membernum(num_id);
-      }
-    );
+    // let str = "";
+    // // 배열 선언
+    // // 현재 클릭된 Row(<tr>)
+    // let tr = $(this);
+    // let td = tr.children();
+    // num_id = td.eq(4).text();
+    // console.log("abcd", num_id);
+
+    // remicon_membernum(num_id);
+    //   }
+    // );
   });
 </script>
-
 <div class="main">
   <input type="radio" id="tab-1" name="show" checked />
   <input type="radio" id="tab-2" name="show" />
@@ -237,11 +237,12 @@
         >
           <thead>
             <tr>
-              <th>현장코드</th>
+              <!-- <th>현장코드</th> -->
               <th>레미콘사 코드</th>
               <th>레미콘사</th>
               <th>레미콘사 주소</th>
               <th>구성원 수</th>
+              <!-- <th>현장아이디</th> -->
               <!-- <th>번호</th>
               <th>레미콘사</th>
               <th>현장멤버수</th>
@@ -253,6 +254,9 @@
       </div>
     </div>
     <div class="demo-html">
+      <span style="font-size: 1.5rem; font-weight: 400"
+        >견적내역 컬럼값 대기중 : 거리,시간, 레미콘사 담당자,예상물량
+      </span>
       <!-- 견적내역-->
       <table id="remicon_esimate_table" class="display" style="width: 100%">
         <thead>
@@ -267,13 +271,16 @@
             <th>견적단가율</th>
             <th>상태</th>
             <!-- <th>예상물량</th> -->
-            <!-- <th>레미콘사담당자</th> -->
+            <th>레미콘사담당자</th>
           </tr>
         </thead>
       </table>
     </div>
     <!-- 주문내역-->
     <div class="demo-html">
+      <span style="font-size: 1.5rem; font-weight: 400"
+        >주문내역 컬럼값 대기중 : 주문 승인여부
+      </span>
       <table id="remicon_order_table" class="display" style="width: 100%">
         <thead>
           <tr>
@@ -292,7 +299,11 @@
       </table>
     </div>
     <!-- 거래내역-->
+
     <div class="demo-html">
+      <span style="font-size: 1.5rem; font-weight: 400"
+        >거래내역 컬럼값 대기중 : 예정수량, 실제 납품수량, 거래내역 확인여부
+      </span>
       <table id="remicon_transaction_table" class="display" style="width: 100%">
         <thead>
           <tr>
