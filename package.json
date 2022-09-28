@@ -5,6 +5,7 @@
   "dependencies": {
     "@emailjs/browser": "^3.7.0",
     "body-parser": "^1.17.2",
+    "cors": "^2.8.5",
     "cross-env": "^7.0.3",
     "datatables.net-editor-server": "^1.9.6",
     "dotenv": "^16.0.1",
