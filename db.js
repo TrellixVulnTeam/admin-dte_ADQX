@@ -15,9 +15,10 @@ let dbConfig = {
       process.env.NODE_ENV === "development"
         ? "52.78.198.181"
         : "zerotwo-mysql.mysql.database.azure.com",
-    port: "33307",
+
     filename: "", // Only used for SQLite
     dateStrings: true,
+    port: process.env.NODE_ENV === "development" ? 33307 : 3306,
   },
 };
 
