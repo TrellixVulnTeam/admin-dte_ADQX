@@ -20,6 +20,7 @@ router.all("/api/questions", async function (req, res) {
       new Field("questions.title"),
       new Field("questions.content"),
       new Field("questions.reply"),
+      new Field("questions.reply_state"),
       new Field("questions.attachments"),
       new Field("users.name"),
       new Field("users.phone"),
