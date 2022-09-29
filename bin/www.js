@@ -4,6 +4,8 @@ let express = require("express");
 let bb = require("express-busboy");
 require("source-map-support").install();
 let db = require("../db");
+const swaggerUi = require("swagger-ui-express");
+const swaggerFile = require("../swagger-output.json");
 require("dotenv").config({ path: `${__dirname}/../.env` });
 let app = express();
 app.set("trust proxy", true);
@@ -13,6 +15,9 @@ process.on("unhandledRejection", (reason, p) => {
   console.log("Unhandled promise error:  " + p + reason);
   console.log("stack: " + reason.stack);
 });
+
+//Swagger연동
+app.use("/swagger", swaggerUi.serve, swaggerUi.setup(swaggerFile));
 
 // Allow file uploads
 app.use(bodyParser.urlencoded({ extended: true }));

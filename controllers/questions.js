@@ -12,7 +12,6 @@ let {
 
 // 1:1요청
 router.all("/api/questions", async function (req, res) {
-  console.log("1:1 요청확인");
   let editor = new Editor(db, "questions")
     .fields(
       new Field("questions.id"),
