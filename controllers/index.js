@@ -28,6 +28,10 @@ router.use(require("./prices_list"));
 //배너
 router.use(require("./banners"));
 
+//이메일
 router.use(require("./sendmail"));
+
+//건자재업체 리스트
+router.use(require("./material_lists"));
 
 module.exports = router;

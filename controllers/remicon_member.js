@@ -24,12 +24,12 @@ router.all("/api/remicon_member", async function (req, res) {
       new Field("users.position"),
       new Field("users.tel"),
       new Field("companies.name"),
-      new Field("users.created_at")
-        .getFormatter(Format.sqlDateToFormat("YYYY-MM-DD HH:MM"))
-        .setFormatter(Format.formatToSqlDate("YYYY-MM-DD HH:MM")),
-      new Field("users.updated_at")
-        .getFormatter(Format.sqlDateToFormat("YYYY-MM-DD HH:MM"))
-        .setFormatter(Format.formatToSqlDate("YYYY-MM-DD HH:MM")),
+      new Field("users.created_at"),
+      // .getFormatter(Format.sqlDateToFormat("YYYY-MM-DD-hh:MM"))
+      // .setFormatter(Format.formatToSqlDate("YYYY-MM-DD-hh:MM")),
+      new Field("users.updated_at"),
+      // .getFormatter(Format.sqlDateToFormat("YYYY-MM-DD-hh:MM"))
+      // .setFormatter(Format.formatToSqlDate("YYYY-MM-DD-hh:MM")),
       // new Field("concat(users.name, ' ' ,users.position)"),
       // new Field(
       //   "concat(companies.name,(select count(a.signname)-1 from users a where a.signname=users.signname group by a.signname))",
