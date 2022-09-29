@@ -136,8 +136,7 @@
 
       dom: "Bfrtip", // PBfrtip
       ajax: {
-        // url: "/api/material_lists",
-        url: `/api/material_lists/${checkvalue}`,
+        url: "/api/material_lists",
         // type: "POST",
       },
       language: lang_kor,
@@ -164,49 +163,40 @@
       ],
     });
 
-    // $("#material_list_table_filter").prepend(
-    //   '<select id="select"></select>'
-    // );
-    // $("#material_list_table" )
-    //   .children()
-    //     $("#select").append(
-    //       // "<option>" + valueOfElement.innerHTML + "</option>"
-    //       "<option>" + "파일" + "</option>"
-    //     );
+    $("#filterTable_filter.dataTables_filter").append($("#categoryFilter"));
 
-    // $(".dataTables_filter input")
-    //   .unbind()
-    //   .bind("keyup", function () {
-    //     var colIndex = document.querySelector("#select").selectedIndex;
-    //     table.column(colIndex).search(this.value).draw();
-    //   });
+    var categoryIndex = 0;
+      $("#filterTable th").each(function (i) {
+        if ($($(this)).html() == "Category") {
+          categoryIndex = i; return false;
+        }
+      });
 
-    $('input:checkbox').on('change', function () {
-        if($(this).prop('checked')) {
-            $('input[type="checkbox"][name="pos"]').prop('checked',false);
-            $(this).prop('checked',true);
+      $.fn.dataTable.ext.search.push(
+        function (settings, data, dataIndex) {
+          var selectedItem = $('#categoryFilter').val()
+          var category = data[categoryIndex];
+          if (selectedItem === "" || category.includes(selectedItem)) {
+            return true;
           }
-      checkvalue=$('input:checkbox[name="pos"]:checked').val()
-      console.log(checkvalue);
-      console.log(data);
-      // $('#material_list_table').DataTable().ajax.reload();
-      $.ajax({
-        type:"POST",
-        url: `/api/material_lists/${checkvalue}`,
-        });
-        // $('#material_list_table').dataTable().destory(); 
-        // $('#material_list_table').dataTable().fnClearTable(); 
-        // $('#material_list_table').dataTable().fnAddData();
-    //  table.draw();
-    $('#dataList').DataTable().ajax.reload(null, false);
+          return false;
+        }
+      );
 
-  //  table.destory();
-  //  table.draw();
-    });
-
+      $("#categoryFilter").change(function (e) {
+        table.draw();
+      });
+      table.draw();
 });
 
 </script>
+<style>
+  select.form-control{
+    display: inline;
+    width: 200px;
+    margin-left: 25px;
+  }
+</style>
   <div class="main">
     <!-- <span style="font-size: 2rem; font-weight: 600">레미콘사 회원</span> -->
     <input type="radio" id="tab-1" name="show" checked />
@@ -232,12 +222,22 @@
       </div>
 
       <div class="demo-html" style="margin-top: 10px">
-        <div id="position">
+        <!-- <div id="position">
           <input type="checkbox" name="pos" value="file">파일
           <input type="checkbox" name="pos" value="ASPHALT">아스콘
           <input type="checkbox" name="pos" value="remicon">레미콘
           <input type="checkbox" name="pos" value="pumpcar">펌프카
           <input type="checkbox" name="pos" value="golejae">골재
+        </div> -->
+        <div class="category-filter">
+          <select id="categoryFilter" class="form-control">
+            <option value="">전체보기</option>
+            <option value="FILE">파일</option>
+            <option value="ASPHALT">아스콘</option>
+            <option value="remicon">레미콘</option>
+            <option value="PUMPCAR">펌프카</option>
+            <option value="golejae">골재</option>
+          </select>
         </div>
         <table
           id="material_list_table"
@@ -260,3 +260,49 @@
     </div>
   </div>
 </tr>
+
+
+
+<!-- //     $("#material_list_table_filter").prepend(
+//       '<select id="select"></select>'
+//     );
+//     $("#material_list_table" )
+//       .children()
+//         $("#select").append(
+//           // "<option>" + valueOfElement.innerHTML + "</option>"
+//           "<option>" + "PUMPCAR" + "</option>"
+//         );
+//         $('#table-filter').on('change', function(){
+//    table.search(this.value).draw();   
+// });
+    // $(".dataTables_filter input")
+    //   .unbind()
+    //   .bind("keyup", function () {
+    //     var colIndex = document.querySelector("#select").selectedIndex;
+    //     table.column(colIndex).search(this.value).draw();
+    //   });
+
+    $('input:checkbox').on('change', function () {
+        if($(this).prop('checked')) {
+            $('input[type="checkbox"][name="pos"]').prop('checked',false);
+            $(this).prop('checked',true);
+          }
+      checkvalue=$('input:checkbox[name="pos"]:checked').val()
+      console.log(checkvalue);
+      // console.log(data);
+      // $('#material_list_table').DataTable().ajax.reload();
+      $.ajax({
+        type:"POST",
+        url: `/api/material_lists/${checkvalue}`,
+        });
+        // $('#dataList').DataTable().ajax.reload(null, false);
+        // $('#material_list_table').dataTable().destory(); 
+        // $('#material_list_table').dataTable().fnClearTable(); 
+        // $('#material_list_table').dataTable().fnDraw();
+        $("#material_list_table").DataTable().destroy();
+        $("#material_list_table").DataTable().draw();
+        // $('#material_list_table').dataTable().fnAddData();
+    //  table.draw();
+
+  //  table.destory();
+  //  table.draw(); -->
