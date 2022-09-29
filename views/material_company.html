@@ -39,32 +39,47 @@
         // },
         {
           label: "타입:",
-          name: "type",
+          name: "archives.type",
         },
         {
           label: "지역:",
-          name: "region",
+          name: "archives.region",
         },
         {
           label: "회사명:",
-          name: "company_name",
+          name: "archives.company_name",
         },
         {
           label: "주소:",
-          name: "address",
+          name: "archives.address",
         },
         {
           label: "전화번호:",
-          name: "tel",
+          name: "archives.tel",
         },
         {
           label: "생성일:",
-          name: "users.created_at",
+          name: "archives.created_at",
           type: "datetime",
           def: function () {
             return new Date();
           },
           format: "YYYY-MM-DD HH:mm",
+        },
+        {
+          label: "엑셀 등록",
+          name: "archives.image",
+          type: "upload",
+          display: function (file_id) {
+            console.log("file", file_id);
+            return (
+              '<img src="' +
+              editor.file("archives_files", file_id).web_path +
+              '"/>'
+            );
+          },
+          clearText: "Clear",
+          noImageText: "No image",
         },
       ],
     });
@@ -143,12 +158,20 @@
       
       columns: [
         // { data: "id" },  
-        { data: "type" },   
-        { data: "region" },       
-        { data: "company_name" },   
-        { data: "address",},
-        { data: "tel" },
-        { data: "created_at" },
+        { data: "archives.type" },   
+        { data: "archives.region" },       
+        { data: "archives.company_name" },   
+        { data: "archives.address",},
+        { data: "archives.tel" },
+        { data: "archives.created_at" },
+        {
+          data: "archives.image",
+          render: function (file_id) {
+            return file_id
+              ? "<p>" + editor.file("archives_files", file_id).filename + "</p>"
+              : null;
+          },
+        },
       ],
       // destroy: true,
       select: true,
@@ -437,21 +460,14 @@
       </div>
 
       <div class="demo-html" style="margin-top: 10px">
-        <!-- <div id="position">
-          <input type="checkbox" name="pos" value="file">파일
-          <input type="checkbox" name="pos" value="ASPHALT">아스콘
-          <input type="checkbox" name="pos" value="remicon">레미콘
-          <input type="checkbox" name="pos" value="pumpcar">펌프카
-          <input type="checkbox" name="pos" value="golejae">골재
-        </div> -->
         <div class="category-filter">
           <select id="categoryFilter" class="form-control">
             <option value="">전체보기</option>
             <option value="FILE">파일</option>
             <option value="ASPHALT">아스콘</option>
-            <option value="remicon">레미콘</option>
+            <option value="REMICON">레미콘</option>
             <option value="PUMPCAR">펌프카</option>
-            <option value="golejae">골재</option>
+            <option value="AGGREGATE">골재</option>
           </select>
         </div>
         <table
@@ -468,6 +484,7 @@
               <th>주소</th>
               <th>전화번호</th>
               <th>등록일</th>
+              <th>파일이름</th>
             </tr>
           </thead>
         </table>
