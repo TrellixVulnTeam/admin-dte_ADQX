@@ -2,7 +2,6 @@ let db = require("../db");
 let router = require("express").Router();
 let fs = require("fs");
 
-let knex = require("knex");
 let {
   Editor,
   Field,
@@ -22,16 +21,28 @@ router.all("/api/banners", async function (req, res) {
     .fields(
       new Field("banners.id"),
       new Field("banners.image").setFormatter(Format.ifEmpty(null)).upload(
-        new Upload(__dirname + "/../public/uploads/{id}.{extn}").db(
-          "banners_files",
-          "id",
-          {
+        new Upload(__dirname + "/../public/uploads/{id}.{extn}")
+          .db("banners_files", "id", {
             filename: Upload.Db.FileName,
             filesize: Upload.Db.FileSize,
             web_path: "/uploads/{id}.{extn}",
             system_path: Upload.Db.SystemPath,
-          }
-        )
+          })
+          .validator(
+            Validate.fileSize(500000, "Files must be smaller than 500K")
+          )
+          .validator(
+            Validate.fileExtensions(
+              ["png", "jpg", "gif"],
+              "Only image files can be uploaded (png, jpg and gif)"
+            )
+          )
+          .dbClean(async function (data) {
+            for (let i = 0, ien = data.length; i < ien; i++) {
+              await unlink(data[i].system_path);
+            }
+            return true;
+          })
       ),
       new Field("banners.type"),
       new Field("banners.created_at")

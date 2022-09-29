@@ -15,7 +15,6 @@ let unlink = promisify(fs.unlink); // await version of unlink
 
 //공지사항
 router.all("/api/posts", async function (req, res) {
-  console.log("qweqwe", req.files);
   let editor = new Editor(db, "posts")
     .fields(
       new Field("posts.id"),
