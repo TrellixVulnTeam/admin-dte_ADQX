@@ -1,7 +1,7 @@
 // 건설사견적내역
 function getApi_construction_transaction(id) {
   num_con_transaction++;
-  console.log("거래내역", num_con_transaction);
+
   var lang_kor = {
     decimal: "",
     emptyTable: "데이터가 없습니다.",

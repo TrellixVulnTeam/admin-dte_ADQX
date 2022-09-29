@@ -162,7 +162,7 @@
         {
           data:"cnt",         
           render: function (data, type) {
-            // console.log("data1",data)
+
             if (type == "display") {
               data =               
                   `<label for="tab-2">` +
@@ -200,7 +200,7 @@
         let tr = $(this);
         let td = tr.children();
         num_id = td.eq(5).text();
-        console.log("abcd", num_id);
+
         remicon_get_factorylist(num_id);
       }
     );

@@ -2,7 +2,6 @@
 
 function getApi(id) {
   num_con_estimate++;
-  console.log(num_con_estimate);
 
   var lang_kor = {
     decimal: "",
@@ -79,7 +78,6 @@ function getApi(id) {
     // 항목별 검색기능
 
     if (num_con_estimate == 1) {
-      console.log("검색창확인");
       $("#construction_esimate_table thead tr")
         .clone(true)
         .addClass("con_filters_estimate")

@@ -77,7 +77,6 @@ router.get("/api/construction_member_info", async function (req, res) {
 
 //건설사 회원이 속한 현장리스트 조회
 router.all("/api/construction_fieldlist_table/:id", async function (req, res) {
-  console.log("asdgsg", req.params.id);
   let editor = new Editor(db, "spaces")
     .fields(
       new Field("spaces.id"),

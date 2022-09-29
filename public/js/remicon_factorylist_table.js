@@ -1,6 +1,6 @@
 function remicon_get_factorylist(id) {
   num_remicon_list++;
-  console.log("remicon_get_factorylist확인", id);
+
   var lang_kor = {
     decimal: "",
     emptyTable: "데이터가 없습니다.",

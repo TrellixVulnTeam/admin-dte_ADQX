@@ -12,7 +12,6 @@ let {
 
 // 관리자 회원 요청
 router.all("/api/admin_member", async function (req, res) {
-  console.log("관리자회원 요청확인");
   let editor = new Editor(db, "admin").fields(
     new Field("admin_signname").validator(
       Validate.dbUnique(

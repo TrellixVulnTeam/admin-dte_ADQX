@@ -1,6 +1,6 @@
 function construction_fieldlist_table_list(id) {
   num_field_list++;
-  console.log("remicon_get_factorylist확인", id);
+
   var lang_kor = {
     decimal: "",
     emptyTable: "데이터가 없습니다.",

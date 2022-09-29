@@ -77,7 +77,6 @@ router.all("/api/remicon_memberlist/:id", async function (req, res) {
 //2. 레미콘사 견적내역
 
 router.all("/api/remicon_esimate_management/:id", async function (req, res) {
-  console.log(req.params.id);
   let editor = new Editor(db, "estimations")
 
     .fields(

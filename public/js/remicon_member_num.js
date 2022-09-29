@@ -1,8 +1,7 @@
 function remicon_membernum(id) {
   // 구성원 수 리스트를 구하는 함수
   num_remicon_memberlist++;
-  console.log("함수호출확인", num_remicon_memberlist);
-  console.log("함수호출확인", id);
+
   var lang_kor = {
     decimal: "",
     emptyTable: "데이터가 없습니다.",

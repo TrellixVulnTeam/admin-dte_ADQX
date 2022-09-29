@@ -1,7 +1,7 @@
 // 건설사견적내역
 function getApi_construction_order(id) {
   num_con_order++;
-  console.log("주문내역", num_con_order);
+
   var lang_kor = {
     decimal: "",
     emptyTable: "데이터가 없습니다.",
