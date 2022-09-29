@@ -1,0 +1,73 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "관리자",
+    "description": "Description",
+    "version": "1.0.0"
+  },
+  "host": "13.125.245.83:8090",
+  "basePath": "/",
+  "schemes": ["http"],
+  "paths": {
+    "/api/posts": {
+      "get": {
+        "tags": ["공지사항"],
+        "description": "공지사항",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/faq": {
+      "get": {
+        "tags": ["FAQ"],
+        "description": "FAQ",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/banners": {
+      "get": {
+        "tags": ["배너"],
+        "description": "배너",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/pop_up": {
+      "get": {
+        "tags": ["팝업"],
+        "description": "팝업",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/questions": {
+      "get": {
+        "tags": ["1:1문의"],
+        "description": "1:1문의",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    }
+  }
+}
