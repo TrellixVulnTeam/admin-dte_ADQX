@@ -1,11 +1,15 @@
 let router = require("express").Router();
 const cors = require("cors");
-//레미콘
+
+//cors
 router.use(
   cors({
     origin: "*", // 모든 출처 허용 옵션. true 를 써도 된다.
   })
 );
+
+//레미콘
+
 router.use(require("./remicon"));
 router.use(require("./remicon_member"));
 router.use(require("./remicon_transaction_management"));
