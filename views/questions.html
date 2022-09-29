@@ -59,6 +59,15 @@
           type: "textarea",
         },
         {
+          label: "답변상태",
+          name: "questions.reply_state",
+          type: "select",
+          options: [
+            { label: "미답변", value: 0 },
+            { label: "답변", value: 1 },
+          ],
+        },
+        {
           label: "문의일자",
           name: "questions.created_at",
           type: "datetime",
@@ -167,12 +176,17 @@
         { data: "users.name" },
         { data: "companies.name" },
         { data: "users.phone" },
-
         { data: "questions.title" },
         { data: "questions.content" },
         { data: "questions.attachments" },
         { data: "questions.created_at" },
         { data: "questions.reply" },
+        {
+          data: "questions.reply_state",
+          render: function (data) {
+            return data === 0 ? "<p>미답변</p>" : "<p>답변</p>";
+          },
+        },
       ],
       // serverSide: true,
       select: true,
@@ -207,6 +221,7 @@
         <th>문의첨부파일</th>
         <th>문의일자</th>
         <th>답변</th>
+        <th>답변상태</th>
         <!-- <th>문의상태</th> -->
       </tr>
     </thead>
