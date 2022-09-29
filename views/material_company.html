@@ -1,0 +1,308 @@
+<script type="text/javascript" language="javascript" class="init">
+  var lang_kor = {
+    decimal: "",
+    emptyTable: "데이터가 없습니다.",
+    info: "_START_ 부터- _END_ 까지 (총 _TOTAL_ 데이터)",
+    infoEmpty: "0개",
+    infoFiltered: "(전체 _MAX_명 중 검색결과)",
+    infoPostFix: "",
+    thousands: ",",
+    lengthMenu: "_MENU_개씩 보기",
+    loadingRecords: "로딩중...",
+    processing: "처리중...",
+    search: "검색 :",
+    zeroRecords: "검색된 데이터가 없습니다.",
+    paginate: {
+      first: "첫 페이지",
+      last: "마지막페이지",
+      next: "다음",
+      previous: "이전",
+    },
+    aria: {
+      sortAscending: ":오름차순 정렬",
+      sortDescending: ":내림차순 정렬",
+    },
+  };
+  var num_remicon_list=0;
+  var editor; // use a global for the submit and return data rendering in the examples
+  var signname;
+  var checkvalue;
+  $(document).ready(function () {
+    //CRUD
+    editor = new $.fn.dataTable.Editor({
+      ajax: "/api/material_lists",
+      table: "#material_list_table",
+      fields: [
+        // {
+        //   label: "아이디:",
+        //   name: "id",
+        // },
+        {
+          label: "타입:",
+          name: "type",
+        },
+        {
+          label: "지역:",
+          name: "region",
+        },
+        {
+          label: "회사명:",
+          name: "company_name",
+        },
+        {
+          label: "주소:",
+          name: "address",
+        },
+        {
+          label: "전화번호:",
+          name: "tel",
+        },
+        {
+          label: "생성일:",
+          name: "users.created_at",
+          type: "datetime",
+          def: function () {
+            return new Date();
+          },
+          format: "YYYY-MM-DD HH:mm",
+        },
+      ],
+    });
+    // 항목별 검색기능
+
+
+    $("#material_list_table thead tr")
+      .clone(true)
+      .addClass("filters")
+      .appendTo("#material_list_table thead");
+
+      var table =  $("#material_list_table").DataTable({
+      orderCellsTop: true,
+      fixedHeader: true,
+      initComplete: function () {
+        var api = this.api();
+
+        // For each column
+        api
+          .columns()
+          .eq(0)
+          .each(function (colIdx) {
+            // Set the header cell to contain the input element
+            var cell = $(".filters th").eq(
+              $(api.column(colIdx).header()).index()
+            );
+            var title = $(cell).text();
+            $(cell).html('<input type="text" placeholder="검색" />');
+
+            // On every keypress in this input
+            $(
+              "input",
+              $(".filters th").eq($(api.column(colIdx).header()).index())
+            )
+              .off("keyup change")
+              .on("change", function (e) {
+                // Get the search value
+                $(this).attr("title", $(this).val());
+                var regexr = "({search})"; //$(this).parents('th').find('select').val();
+
+                // var cursorPosition = this.selectionStart;
+                // Search the column for that value
+                api
+                  .column(colIdx)
+                  .search(
+                    this.value != ""
+                      ? regexr.replace("{search}", "(((" + this.value + ")))")
+                      : "",
+                    this.value != "",
+                    this.value == ""
+                    // this.value != "" ? this.value : "",
+                    // this.value != "",
+                    // this.value == ""
+                  )
+                  .draw();
+              })
+              .on("keyup", function (e) {
+                e.stopPropagation();
+
+                $(this).trigger("change");
+                // $(this)
+                //   .focus()[0]
+                //   .setSelectionRange(cursorPosition, cursorPosition);
+              });
+          });
+      },
+      // 항목별 검색기능 끝.
+      ///Binding
+
+      dom: "Bfrtip", // PBfrtip
+      ajax: {
+        url: "/api/material_lists",
+        // type: "POST",
+      },
+      language: lang_kor,
+      
+      columns: [
+        // { data: "id" },  
+        { data: "type" },   
+        { data: "region" },       
+        { data: "company_name" },   
+        { data: "address",},
+        { data: "tel" },
+        { data: "created_at" },
+      ],
+      // destroy: true,
+      select: true,
+      searchable: true,
+      search: {
+        regex: true,
+      },
+      buttons: [
+        { extend: "create", editor: editor, text: "등록" },
+        { extend: "edit", editor: editor, text: "상세보기 및 수정" },
+        { extend: "remove", editor: editor, text: "삭제" },
+      ],
+    });
+
+    $("#filterTable_filter.dataTables_filter").append($("#categoryFilter"));
+
+    var categoryIndex = 0;
+      $("#filterTable th").each(function (i) {
+        if ($($(this)).html() == "Category") {
+          categoryIndex = i; return false;
+        }
+      });
+
+      $.fn.dataTable.ext.search.push(
+        function (settings, data, dataIndex) {
+          var selectedItem = $('#categoryFilter').val()
+          var category = data[categoryIndex];
+          if (selectedItem === "" || category.includes(selectedItem)) {
+            return true;
+          }
+          return false;
+        }
+      );
+
+      $("#categoryFilter").change(function (e) {
+        table.draw();
+      });
+      table.draw();
+});
+
+</script>
+<style>
+  select.form-control{
+    display: inline;
+    width: 200px;
+    margin-left: 25px;
+  }
+</style>
+  <div class="main">
+    <!-- <span style="font-size: 2rem; font-weight: 600">레미콘사 회원</span> -->
+    <input type="radio" id="tab-1" name="show" checked />
+    <input type="radio" id="tab-2" name="show" />
+    <div class="tab">
+      <label for="tab-1">건자재 아이템</label>
+      <label for="tab-2">건자재 업체리스트</label>
+    </div>
+    <div class="content">  
+      <div class="demo-html">
+        <table
+          id="material_item"
+          class="display"
+          style="width: 100%"
+        >
+          <thead>
+            <tr>
+              <th>레미콘공장</th>
+              <th>레미콘 공장 주소</th>
+            </tr>
+          </thead>
+        </table>
+      </div>
+
+      <div class="demo-html" style="margin-top: 10px">
+        <!-- <div id="position">
+          <input type="checkbox" name="pos" value="file">파일
+          <input type="checkbox" name="pos" value="ASPHALT">아스콘
+          <input type="checkbox" name="pos" value="remicon">레미콘
+          <input type="checkbox" name="pos" value="pumpcar">펌프카
+          <input type="checkbox" name="pos" value="golejae">골재
+        </div> -->
+        <div class="category-filter">
+          <select id="categoryFilter" class="form-control">
+            <option value="">전체보기</option>
+            <option value="FILE">파일</option>
+            <option value="ASPHALT">아스콘</option>
+            <option value="remicon">레미콘</option>
+            <option value="PUMPCAR">펌프카</option>
+            <option value="golejae">골재</option>
+          </select>
+        </div>
+        <table
+          id="material_list_table"
+          class="display"
+          style="width: 100%"
+          ellspacing="0"
+        >
+          <thead>
+            <tr>
+              <th>타입</th>
+              <th>지역</th>
+              <th>회사명</th>
+              <th>주소</th>
+              <th>전화번호</th>
+              <th>등록일</th>
+            </tr>
+          </thead>
+        </table>
+      </div>
+    </div>
+  </div>
+</tr>
+
+
+
+<!-- //     $("#material_list_table_filter").prepend(
+//       '<select id="select"></select>'
+//     );
+//     $("#material_list_table" )
+//       .children()
+//         $("#select").append(
+//           // "<option>" + valueOfElement.innerHTML + "</option>"
+//           "<option>" + "PUMPCAR" + "</option>"
+//         );
+//         $('#table-filter').on('change', function(){
+//    table.search(this.value).draw();   
+// });
+    // $(".dataTables_filter input")
+    //   .unbind()
+    //   .bind("keyup", function () {
+    //     var colIndex = document.querySelector("#select").selectedIndex;
+    //     table.column(colIndex).search(this.value).draw();
+    //   });
+
+    $('input:checkbox').on('change', function () {
+        if($(this).prop('checked')) {
+            $('input[type="checkbox"][name="pos"]').prop('checked',false);
+            $(this).prop('checked',true);
+          }
+      checkvalue=$('input:checkbox[name="pos"]:checked').val()
+      console.log(checkvalue);
+      // console.log(data);
+      // $('#material_list_table').DataTable().ajax.reload();
+      $.ajax({
+        type:"POST",
+        url: `/api/material_lists/${checkvalue}`,
+        });
+        // $('#dataList').DataTable().ajax.reload(null, false);
+        // $('#material_list_table').dataTable().destory(); 
+        // $('#material_list_table').dataTable().fnClearTable(); 
+        // $('#material_list_table').dataTable().fnDraw();
+        $("#material_list_table").DataTable().destroy();
+        $("#material_list_table").DataTable().draw();
+        // $('#material_list_table').dataTable().fnAddData();
+    //  table.draw();
+
+  //  table.destory();
+  //  table.draw(); -->

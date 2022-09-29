@@ -44,7 +44,6 @@
     },
     aria: { sortAscending: ":오름차순 정렬", sortDescending: ":내림차순 정렬" },
   };
-
   var editor; // use a global for the submit and return data rendering in the examples
   var num_remicon_estimate = 0;
   var num_remicon_transaction = 0;
@@ -182,17 +181,34 @@
       ],
     });
 
+    // $("#myTable > thead > tr")
+    //   .children()
+    //   .each(function (indexInArray, valueOfElement) {
+    //     $("#select").append(
+    //       "<option>" + valueOfElement.innerHTML + "</option>"
+    //     );
+    //   });
+
     $("#remicon_management_list_table tbody").on("click", "tr", function () {
       console.log("이벤확인");
       var testTable = $("#remicon_management_list_table").dataTable();
       spaces_id = testTable.fnGetData(this).spaces.id;
+
       console.log(spaces_id);
+      var companies_name = testTable.fnGetData(this).companies.name;
       num_id = testTable.fnGetData(this).companies.id;
+
+      console.log(companies_name);
       console.log(num_id);
+
       remicon_getApi(spaces_id);
       remicon_getApi_order(spaces_id);
       remicon_getApi_Transaction(spaces_id);
       remicon_membernum(num_id);
+
+      $("#ex1_Result1").html(" 현재 선택한 레미콘 : " + companies_name);
+      $("#ex1_Result2").html(" 현재 선택한 레미콘 : " + companies_name);
+      $("#ex1_Result3").html(" 현재 선택한 레미콘 : " + companies_name);
     });
 
     // 선택한 로우값 가져오기
@@ -227,6 +243,7 @@
     <label for="tab-4">거래내역</label>
     <label for="tab-5">구성원리스트</label>
   </div>
+
   <div class="content">
     <div class="content-dis">
       <div class="demo-html">
@@ -275,6 +292,7 @@
           </tr>
         </thead>
       </table>
+      <div class="col-lg-12" id="ex1_Result1"></div>
     </div>
     <!-- 주문내역-->
     <div class="demo-html">
@@ -297,6 +315,7 @@
           </tr>
         </thead>
       </table>
+      <div class="col-lg-12" id="ex1_Result2"></div>
     </div>
     <!-- 거래내역-->
 
@@ -316,6 +335,7 @@
           </tr>
         </thead>
       </table>
+      <div class="col-lg-12" id="ex1_Result3"></div>
     </div>
     <div class="demo-html">
       <table id="remicon_memberlist_table" class="display" style="width: 100%">

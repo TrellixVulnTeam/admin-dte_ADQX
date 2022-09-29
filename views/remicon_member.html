@@ -72,7 +72,7 @@
           def: function () {
             return new Date();
           },
-          format: "YYYY-MM-DD HH:MM",
+          format: "YYYY-MM-DD HH:mm",
         },
         {
           label: "수정일:",
@@ -81,7 +81,7 @@
           def: function () {
             return new Date();
           },
-          format: "YYYY-MM-DD HH:MM",
+          format: "YYYY-MM-DD HH:mm",
           // 	// HH:mm:ss"
         },
       ],
@@ -180,8 +180,8 @@
       ],
       // serverSide: true,
       select: true,
-      destroy: true,  
-      // searchable: true,
+      // destroy: true,  
+      searchable: true,
       search: {
         regex: true,
       },
