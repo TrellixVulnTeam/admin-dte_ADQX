@@ -213,6 +213,216 @@
 });
 
 </script>
+<script type="text/javascript" language="javascript" class="init">
+  //Korean
+  var lang_kor = {
+    decimal: "",
+    emptyTable: "데이터가 없습니다.",
+    info: "_START_ 부터- _END_ 까지 (총 _TOTAL_ 데이터)",
+    infoEmpty: "0개",
+    infoFiltered: "(전체 _MAX_명 중 검색결과)",
+    infoPostFix: "",
+    thousands: ",",
+    lengthMenu: "_MENU_개씩 보기",
+    loadingRecords: "로딩중...",
+    processing: "처리중...",
+    search: "검색 :",
+    zeroRecords: "검색된 데이터가 없습니다.",
+    paginate: {
+      first: "첫 페이지",
+      last: "마지막페이지",
+      next: "다음",
+      previous: "이전",
+    },
+    aria: { sortAscending: ":오름차순 정렬", sortDescending: ":내림차순 정렬" },
+  };
+
+  var editor; // use a global for the submit and return data rendering in the examples
+
+  $(document).ready(function () {
+    //CRUD
+    editor = new $.fn.dataTable.Editor({
+      ajax: "/api/material_item",
+      table: "#material_item_table",
+      fields: [
+        {
+          label: "유형",
+          name: "material_item.type",
+          type: "select",
+          options: [
+            { label: "아스콘", value: "ASPHALT" },
+            { label: "레미콘", value: "REMICON" },
+            { label: "펌프카", value: "PUMPCAR" },
+            { label: "파일", value: "FILE" },
+            { label: "골제", value: "AGGREGATE" },
+          ],
+        },
+        {
+          label: "제목",
+          name: "material_item.title",
+          type: "textarea",
+        },
+
+        {
+          label: "내용",
+          name: "material_item.contents",
+          type: "textarea",
+        },
+        {
+          label: "사진 등록",
+          name: "material_item.image",
+          type: "upload",
+          display: function (file_id) {
+           
+            return (
+              '<img src="' +
+              editor.file("material_item_files", file_id).web_path +
+              '"/>'
+            );
+          },
+          clearText: "Clear",
+          noImageText: "No image",
+        },
+
+        {
+          label: "등록일",
+          name: "material_item.created_at",
+          type: "datetime",
+          def: function () {
+            return new Date();
+          },
+          format: "YYYY-MM-DD",
+        },
+        {
+          label: "수정일",
+          name: "material_item.updated_at",
+          type: "datetime",
+          def: function () {
+            return new Date();
+          },
+          format: "YYYY-MM-DD",
+        },
+      ],
+    });
+
+    // 항목별 검색기능
+    $("#material_item_table thead tr")
+      .clone(true)
+      .addClass("material_items_filters")
+      .appendTo("#material_item_table thead");
+
+    $("#material_item_table").DataTable({
+      orderCellsTop: true,
+      fixedHeader: true,
+      initComplete: function () {
+        var api = this.api();
+
+        // For each column
+        api
+          .columns()
+          .eq(0)
+          .each(function (colIdx) {
+            // Set the header cell to contain the input element
+            var cell = $(".material_items_filters th").eq(
+              $(api.column(colIdx).header()).index()
+            );
+            var title = $(cell).text();
+            $(cell).html('<input type="text" placeholder="검색" />');
+
+            // On every keypress in this input
+            $(
+              "input",
+              $(".material_items_filters th").eq($(api.column(colIdx).header()).index())
+            )
+              .off("keyup change")
+              .on("change", function (e) {
+                // Get the search value
+                $(this).attr("title", $(this).val());
+                var regexr = "({search})"; //$(this).parents('th').find('select').val();
+
+                var cursorPosition = this.selectionStart;
+                // Search the column for that value
+                api
+                  .column(colIdx)
+                  .search(
+                    this.value != ""
+                      ? regexr.replace("{search}", "(((" + this.value + ")))")
+                      : "",
+                    this.value != "",
+                    this.value == ""
+                  )
+                  .draw();
+              })
+              .on("keyup", function (e) {
+                e.stopPropagation();
+
+                $(this).trigger("change");
+                $(this)
+                  .focus()[0]
+                  .setSelectionRange(cursorPosition, cursorPosition);
+              });
+          });
+      },
+      // 항목별 검색기능 끝.
+      //DATA 바인딩
+      dom: "Bfrtip",
+      ajax: {
+        url: "/api/material_item",
+        // type: "POST",
+      },
+
+      language: lang_kor,
+      columns: [
+
+        {
+          data: "material_item.type",
+          render: function (data, type, row) {
+            switch (data) {
+              case "ASPHALT":
+                return "아스콘";
+                break;
+              case "REMICON":
+                return "레미콘";
+                break;
+              case "PUMPCAR":
+                return "펌프카";
+                break;
+              case "FILE":
+                return "파일";
+                break;
+              case "AGGREGATE":
+                return "골재";
+                break;
+              case null:
+                return "";
+                break;
+            }
+          },
+        },
+        { data: "material_item.title" },
+        { data: "material_item.contents" },
+        {
+          data: "material_item.image",
+          render: function (file_id) {
+            return file_id
+              ? "<p>" + editor.file("material_item_files", file_id).filename + "</p>"
+              : null;
+          },
+        },
+        { data: "material_item.created_at" },
+        { data: "material_item.updated_at" },
+      ],
+      select: true,
+      // serverSide: true,
+
+      buttons: [
+        { extend: "create", editor: editor, text: "등록" },
+        { extend: "edit", editor: editor, text: "상세보기 및 수정" },
+        { extend: "remove", editor: editor, text: "삭제" },
+      ],
+    });
+  });
+</script>
 <style>
   select.form-control{
     display: inline;
@@ -231,14 +441,19 @@
     <div class="content">  
       <div class="demo-html">
         <table
-          id="material_item"
+          id="material_item_table"
           class="display"
           style="width: 100%"
         >
           <thead>
             <tr>
-              <th>레미콘공장</th>
-              <th>레미콘 공장 주소</th>
+             
+              <th>타입</th>
+              <th>제목</th>
+              <th>내용</th>
+              <th>이미지</th>
+              <th>등록일</th>
+              <th>수정일</th>
             </tr>
           </thead>
         </table>

@@ -190,16 +190,11 @@
     //   });
 
     $("#remicon_management_list_table tbody").on("click", "tr", function () {
-      console.log("이벤확인");
       var testTable = $("#remicon_management_list_table").dataTable();
       spaces_id = testTable.fnGetData(this).spaces.id;
 
-      console.log(spaces_id);
       var companies_name = testTable.fnGetData(this).companies.name;
       num_id = testTable.fnGetData(this).companies.id;
-
-      console.log(companies_name);
-      console.log(num_id);
 
       remicon_getApi(spaces_id);
       remicon_getApi_order(spaces_id);

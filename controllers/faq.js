@@ -12,7 +12,6 @@ let {
 
 // faq요청
 router.all("/api/faq", async function (req, res) {
-  console.log("faq요청확인");
   let editor = new Editor(db, "faqs").fields(
     new Field("id"),
     new Field("type"),

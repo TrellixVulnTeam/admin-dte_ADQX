@@ -71,7 +71,6 @@ router.get("/api/remicon_info", async function (req, res) {
 
 // 레미콘사 회원이 속한 공장리스트 조회
 router.all("/api/remicon_factorylist_table/:id", async function (req, res) {
-  console.log("asdgsg", req.params.id);
   let editor = new Editor(db, "users")
     .fields(
       new Field("users.id "),
