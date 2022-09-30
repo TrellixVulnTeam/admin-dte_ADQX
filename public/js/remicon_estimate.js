@@ -27,6 +27,35 @@ function remicon_getApi(id) {
   var editor; // use a global for the submit and return data rendering in the examples
 
   $(document).ready(function () {
+    $.fn.dataTable.ext.search.push(function (settings, data, dataIndex) {
+      let min = Date.parse($("#fromDate").val());
+      let max = Date.parse($("#toDate").val());
+      let targetDate = Date.parse(data[1]);
+      // console.log("견적min", min);
+      // console.log("견적max", max);
+      // console.log("견적targetDate", targetDate);
+      if (
+        (isNaN(min) && isNaN(max)) ||
+        (isNaN(min) && targetDate <= max) ||
+        (min <= targetDate && isNaN(max)) ||
+        (targetDate >= min && targetDate <= max)
+      ) {
+        return true;
+      }
+      return false;
+    });
+
+    // $("#toDate")
+    //   .datepicker({
+    //     format: "yyyy-mm-dd",
+    //     language: "kr",
+    //     autoclose: true,
+    //     todayHighlight: true,
+    //   })
+    //   .on("hide", function (e) {
+    //     e.stopPropagation(); // 모달 팝업도 같이 닫히는걸 막아준다.
+    //   });
+
     //CRUD
     editor = new $.fn.dataTable.Editor({
       //`/api/remicon_esimate_management/${id}`,
@@ -83,7 +112,7 @@ function remicon_getApi(id) {
         .appendTo("#remicon_esimate_table thead");
     }
 
-    $("#remicon_esimate_table").DataTable({
+    var table = $("#remicon_esimate_table").DataTable({
       orderCellsTop: true,
       fixedHeader: true,
       destroy: true,
@@ -180,9 +209,13 @@ function remicon_getApi(id) {
         },
         { data: "users.name" },
       ],
-      serverSide: true,
+      // serverSide: true,
       select: true,
-      destroy: true,
+      searchable: true,
+      search: {
+        regex: true,
+      },
+      // destroy: true,
       buttons: [
         { extend: "create", editor: editor, text: "등록" },
         { extend: "edit", editor: editor, text: "상세보기 및 수정" },
@@ -194,5 +227,24 @@ function remicon_getApi(id) {
         },
       ],
     });
+
+    var current_year = new Date().getFullYear();
+
+    $("#remicon_esimate_table_filter").prepend(
+      '<input type="date" id="toDate" placeholder="yyyy-MM-dd" value=' +
+        current_year +
+        "-12-31>"
+    );
+    $("#remicon_esimate_table_filter").prepend(
+      '<input type="date" id="fromDate" placeholder="yyyy-MM-dd" value=' +
+        current_year +
+        "-01-01>~"
+    );
+
+    $("#toDate, #fromDate")
+      .unbind()
+      .bind("keyup", function () {
+        table.draw();
+      });
   });
 }

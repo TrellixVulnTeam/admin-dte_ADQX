@@ -33,28 +33,6 @@ router.all("/api/remicon_management_list", async function (req, res) {
   await editor.process(req.body);
   res.json(editor.data());
 });
-// router.all("/api/remicon_management_list", async function (req, res) {
-//   let editor = new Editor(db, "spaces")
-//     .fields(
-//       new Field("spaces.id"),
-//       new Field("spaces.name"),
-//       new Field("spaces.company_id"),
-//       new Field(
-//         "(select count(space_id)" +
-//           "from space_members where space_id = spaces.id " +
-//           "group by space_id)",
-//         "cnt"
-//       ),
-//       new Field("spaces.basic_address")
-//     )
-//     .where((q) => {
-//       //company_type , 건설사 or 레미콘
-//       q.where("spaces.type", "=", "FACTORY");
-//     });
-
-//   await editor.process(req.body);
-//   res.json(editor.data());
-// });
 
 // 레미콘 공장 구성원 리스트
 router.all("/api/remicon_memberlist/:id", async function (req, res) {
@@ -88,7 +66,9 @@ router.all("/api/remicon_esimate_management/:id", async function (req, res) {
       new Field("spaces.basic_address"),
       new Field("users.name"),
       new Field("estimations.percent"),
-      new Field("estimations.created_at"),
+      new Field("estimations.created_at")
+        .getFormatter(Format.sqlDateToFormat("YYYY-MM-DD"))
+        .setFormatter(Format.formatToSqlDate("YYYY-MM-DD")),
       new Field("estimations.status")
     )
     .leftJoin("spaces", "estimations.field_space_id", "=", "spaces.id")
@@ -126,11 +106,11 @@ router.all("/api/remicon_order_management/:id", async function (req, res) {
       //   new Options().table("assignments").value("multal").label("multal")
       // ),
       new Field("assignments.start_time")
-        .getFormatter(Format.sqlDateToFormat("YYYY-MM-DD-HH:MM"))
-        .setFormatter(Format.formatToSqlDate("YYYY-MM-DD-HH:MM")),
+        .getFormatter(Format.sqlDateToFormat("YYYY-MM-DD"))
+        .setFormatter(Format.formatToSqlDate("YYYY-MM-DD")),
       new Field("assignments.end_time")
-        .getFormatter(Format.sqlDateToFormat("YYYY-MM-DD-HH:MM"))
-        .setFormatter(Format.formatToSqlDate("YYYY-MM-DD-HH:MM"))
+        .getFormatter(Format.sqlDateToFormat("YYYY-MM-DD"))
+        .setFormatter(Format.formatToSqlDate("YYYY-MM-DD"))
     )
     .leftJoin("estimations", "assignments.estimation_id", "=", "estimations.id")
     .leftJoin("spaces", "estimations.field_space_id", "=", "spaces.id")

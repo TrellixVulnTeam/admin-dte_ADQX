@@ -80,7 +80,7 @@
       .addClass("remicon_filters_info")
       .appendTo("#remicon_management_list_table thead");
 
-    var table = $("#remicon_management_list_table").DataTable({
+    $("#remicon_management_list_table").DataTable({
       orderCellsTop: true,
       fixedHeader: true,
       initComplete: function () {
@@ -111,9 +111,15 @@
                 $(this).attr("title", $(this).val());
                 var regexr = "({search})"; //$(this).parents('th').find('select').val();
 
+                // var cursorPosition = this.selectionStart;
                 // Search the column for that value
                 api
                   .column(colIdx)
+                  // .search(
+                  //   this.value != "" ? this.value : "",
+                  //   this.value != "",
+                  //   this.value == ""
+                  // )
                   .search(
                     this.value != ""
                       ? regexr.replace("{search}", "(((" + this.value + ")))")
@@ -125,8 +131,10 @@
               })
               .on("keyup", function (e) {
                 e.stopPropagation();
-
                 $(this).trigger("change");
+                // $(this)
+                //   .focus()[0]
+                //   .setSelectionRange(cursorPosition, cursorPosition);
               });
           });
       },
@@ -168,6 +176,11 @@
         { data: "spaces.id" },
       ],
       select: true,
+      // serverSide: true,
+      searchable: true,
+      search: {
+        regex: true,
+      },
       destroy: true,
       buttons: [
         { extend: "create", editor: editor, text: "등록" },

@@ -32,6 +32,23 @@ function remicon_getApi_Transaction(id) {
     retrun;
   }
   $(document).ready(function () {
+    // $.fn.dataTable.ext.search.push(function (settings, data, dataIndex) {
+    //   let min = Date.parse($("#transaction_fromDate").val());
+    //   let max = Date.parse($("#transaction_toDate").val());
+    //   let targetDate = Date.parse(data[0]);
+    //   console.log("min", min);
+    //   console.log("max", max);
+    //   console.log("targetDate", targetDate);
+    //   if (
+    //     (isNaN(min) && isNaN(max)) ||
+    //     (isNaN(min) && targetDate <= max) ||
+    //     (min <= targetDate && isNaN(max)) ||
+    //     (targetDate >= min && targetDate <= max)
+    //   ) {
+    //     return true;
+    //   }
+    //   return false;
+    // });
     //CRUD
 
     editor = new $.fn.dataTable.Editor({
@@ -75,7 +92,7 @@ function remicon_getApi_Transaction(id) {
         .addClass("remicon_filters_transactions");
     }
 
-    $("#remicon_transaction_table").DataTable({
+    var table = $("#remicon_transaction_table").DataTable({
       orderCellsTop: true,
       fixedHeader: true,
       destroy: true,
@@ -163,7 +180,7 @@ function remicon_getApi_Transaction(id) {
         //   },
         // },
       ],
-      serverSide: true,
+      // serverSide: true,
       select: true,
       destroy: true,
       buttons: [
@@ -177,5 +194,23 @@ function remicon_getApi_Transaction(id) {
         },
       ],
     });
+    var current_year = new Date().getFullYear();
+
+    // $("#remicon_transaction_table_filter").prepend(
+    //   '<input type="date" id="transaction_toDate" placeholder="yyyy-MM-dd" value=' +
+    //     current_year +
+    //     "-12-31>"
+    // );
+    // $("#remicon_transaction_table_filter").prepend(
+    //   '<input type="date" id="transaction_fromDate" placeholder="yyyy-MM-dd" value=' +
+    //     current_year +
+    //     "-01-01>~"
+    // );
+
+    // $("#transaction_toDate, #transaction_fromDate")
+    //   .unbind()
+    //   .bind("keyup", function () {
+    //     table.draw();
+    //   });
   });
 }

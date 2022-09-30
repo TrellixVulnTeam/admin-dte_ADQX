@@ -27,6 +27,23 @@ function remicon_getApi_order(id) {
   var editor; // use a global for the submit and return data rendering in the examples
 
   $(document).ready(function () {
+    // $.fn.dataTable.ext.search.push(function (settings, data, dataIndex) {
+    //   let min = Date.parse($("#order_fromDate").val());
+    //   let max = Date.parse($("#order_toDate").val());
+    //   let targetDate = Date.parse(data[5]);
+    //   console.log("min", min);
+    //   console.log("max", max);
+    //   console.log("targetDate", targetDate);
+    //   if (
+    //     (isNaN(min) && isNaN(max)) ||
+    //     (isNaN(min) && targetDate <= max) ||
+    //     (min <= targetDate && isNaN(max)) ||
+    //     (targetDate >= min && targetDate <= max)
+    //   ) {
+    //     return true;
+    //   }
+    //   return false;
+    // });
     //CRUD
     editor = new $.fn.dataTable.Editor({
       //`/api/remicon_esimate_management/${id}`,
@@ -136,7 +153,7 @@ function remicon_getApi_order(id) {
         .addClass("remicon_filters_order");
     }
 
-    $("#remicon_order_table").DataTable({
+    var table = $("#remicon_order_table").DataTable({
       orderCellsTop: true,
       fixedHeader: true,
       // destroy: true,
@@ -208,42 +225,13 @@ function remicon_getApi_order(id) {
           render: function (data, type, row) {
             return (
               data.assignments.start_time + " ~ " + data.assignments.end_time
-              //.substring(14)
             );
           },
         },
         { data: "assignments.total" },
         { data: "assignments.remark" },
-
-        // { data: "concat(users.name, ' ' ,users.position)" },
-        // {
-        //   data:
-        //     "(select count(space_id)" +
-        //     "from space_members where space_id = spaces.id " +
-        //     "group by space_id)",
-        // },
-        // { data: "assignments.type" },
-        // {
-        //   data: "assignments.status",
-        //   render: function (data, type, row) {
-        //     switch (data) {
-        //       case "REQUESTED":
-        //         return "요청";
-        //         break;
-        //       case "CONFIRMED":
-        //         return "확인";
-        //         break;
-        //       case "REMOVED":
-        //         return "삭제";
-        //         break;
-        //       case null:
-        //         return "";
-        //         break;
-        //     }
-        //   },
-        // },
       ],
-      serverSide: true,
+      // serverSide: true,
       select: true,
       destroy: true,
       buttons: [
@@ -257,5 +245,23 @@ function remicon_getApi_order(id) {
         },
       ],
     });
+    let current_year = new Date().getFullYear();
+
+    // $("#remicon_order_table_filter").prepend(
+    //   '<input type="date" id="order_toDate" placeholder="yyyy-MM-dd" value=' +
+    //     current_year +
+    //     "-12-31>"
+    // );
+    // $("#remicon_order_table_filter").prepend(
+    //   '<input type="date" id="order_fromDate" placeholder="yyyy-MM-dd" value=' +
+    //     current_year +
+    //     "-01-01>~"
+    // );
+
+    // $("#order_toDate, #order_fromDate")
+    //   .unbind()
+    //   .bind("keyup", function () {
+    //     table.draw();
+    //   });
   });
 }

@@ -38,8 +38,16 @@
         //   name: "id",
         // },
         {
-          label: "타입:",
-          name: "archives.type",
+          label: "타입",
+          name: "material_item.type",
+          type: "select",
+          options: [
+            { label: "아스콘", value: "ASPHALT" },
+            { label: "레미콘", value: "REMICON" },
+            { label: "펌프카", value: "PUMPCAR" },
+            { label: "파일", value: "FILE" },
+            { label: "골재", value: "AGGREGATE" },
+          ],
         },
         {
           label: "지역:",
@@ -73,9 +81,13 @@
           display: function (file_id) {
             console.log("file", file_id);
             return (
-              '<img src="' +
-              editor.file("archives_files", file_id).web_path +
-              '"/>'
+              '<p>"' +
+              editor.file("archives_files", file_id).filename +
+              "</p>"
+      
+              // '<img src="' +
+              // editor.file("archives_files", file_id).filename +
+              // '"/>'
             );
           },
           clearText: "Clear",
@@ -158,7 +170,32 @@
       
       columns: [
         // { data: "id" },  
-        { data: "archives.type" },   
+        {
+          data: "archives.type",
+          render: function (data, type, row) {
+            switch (data) {
+              case "ASPHALT":
+                return "아스콘";
+                break;
+              case "REMICON":
+                return "레미콘";
+                break;
+              case "PUMPCAR":
+                return "펌프카";
+                break;
+              case "FILE":
+                return "파일";
+                break;
+              case "AGGREGATE":
+                return "골재";
+                break;
+              case null:
+                return "";
+                break;
+            }
+          },
+        },
+        // { data: "archives.type" },   
         { data: "archives.region" },       
         { data: "archives.company_name" },   
         { data: "archives.address",},
@@ -167,13 +204,17 @@
         {
           data: "archives.image",
           render: function (file_id) {
+            if(file_id==null){
+              return file_id;
+            }
+            var path_name=editor.file('archives_files', file_id).web_path;
             return file_id
-              ? "<p>" + editor.file("archives_files", file_id).filename + "</p>"
+              ? "<a href=" + path_name + ">" + editor.file("archives_files", file_id).filename + "</a>"
               : null;
           },
         },
       ],
-      // destroy: true,
+      destroy: true,
       select: true,
       searchable: true,
       search: {
@@ -463,11 +504,11 @@
         <div class="category-filter">
           <select id="categoryFilter" class="form-control">
             <option value="">전체보기</option>
-            <option value="FILE">파일</option>
-            <option value="ASPHALT">아스콘</option>
-            <option value="REMICON">레미콘</option>
-            <option value="PUMPCAR">펌프카</option>
-            <option value="AGGREGATE">골재</option>
+            <option value="파일">파일</option>
+            <option value="아스콘">아스콘</option>
+            <option value="레미콘">레미콘</option>
+            <option value="펌프카">펌프카</option>
+            <option value="골재">골재</option>
           </select>
         </div>
         <table
