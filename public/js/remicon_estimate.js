@@ -28,9 +28,9 @@ function remicon_getApi(id) {
 
   $(document).ready(function () {
     $.fn.dataTable.ext.search.push(function (settings, data, dataIndex) {
-      let min = Date.parse($("#fromDate").val());
-      let max = Date.parse($("#toDate").val());
-      let targetDate = Date.parse(data[1]);
+      var min = Date.parse($("#fromDate").val());
+      var max = Date.parse($("#toDate").val());
+      var targetDate = Date.parse(data[1]);
       // console.log("견적min", min);
       // console.log("견적max", max);
       // console.log("견적targetDate", targetDate);
@@ -215,7 +215,7 @@ function remicon_getApi(id) {
       search: {
         regex: true,
       },
-      // destroy: true,
+      destroy: true,
       buttons: [
         { extend: "create", editor: editor, text: "등록" },
         { extend: "edit", editor: editor, text: "상세보기 및 수정" },
