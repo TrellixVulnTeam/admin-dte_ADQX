@@ -28,12 +28,12 @@ function remicon_getApi(id) {
 
   $(document).ready(function () {
     $.fn.dataTable.ext.search.push(function (settings, data, dataIndex) {
-      var min = Date.parse($("#fromDate").val());
-      var max = Date.parse($("#toDate").val());
-      var targetDate = Date.parse(data[1]);
-      // console.log("견적min", min);
-      // console.log("견적max", max);
-      // console.log("견적targetDate", targetDate);
+      let min = Date.parse($("#fromDate").val());
+      let max = Date.parse($("#toDate").val());
+      let targetDate = Date.parse(data[1]);
+      console.log("견적min", min);
+      console.log("견적max", max);
+      console.log("견적targetDate", targetDate);
       if (
         (isNaN(min) && isNaN(max)) ||
         (isNaN(min) && targetDate <= max) ||
@@ -112,11 +112,12 @@ function remicon_getApi(id) {
         .appendTo("#remicon_esimate_table thead");
     }
 
+    // $('#min').datepicker({ onChangeMonthYear: function () { table.draw(); }, changeMonth: true, changeYear: true });
+    // $('#max').datepicker({ onChangeMonthYear: function () { table.draw(); }, changeMonth: true, changeYear: true });
+
     var table = $("#remicon_esimate_table").DataTable({
       orderCellsTop: true,
       fixedHeader: true,
-      destroy: true,
-      searching: true,
       initComplete: function () {
         var api = this.api();
 
@@ -149,9 +150,7 @@ function remicon_getApi(id) {
                 api
                   .column(colIdx)
                   .search(
-                    this.value != ""
-                      ? regexr.replace("{search}", "(((" + this.value + ")))")
-                      : "",
+                    this.value != "" ? this.value : "",
                     this.value != "",
                     this.value == ""
                   )
@@ -169,7 +168,7 @@ function remicon_getApi(id) {
       dom: "Bfrtip",
       ajax: {
         url: `/api/remicon_esimate_management/${id}`,
-        type: "POST",
+        type: "post",
       },
       language: lang_kor,
       columns: [
@@ -209,13 +208,14 @@ function remicon_getApi(id) {
         },
         { data: "users.name" },
       ],
-      // serverSide: true,
       select: true,
+      serverSide: true,
       searchable: true,
       search: {
         regex: true,
       },
       destroy: true,
+      searching: true,
       buttons: [
         { extend: "create", editor: editor, text: "등록" },
         { extend: "edit", editor: editor, text: "상세보기 및 수정" },

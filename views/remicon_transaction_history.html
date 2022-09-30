@@ -115,15 +115,8 @@
                 // Search the column for that value
                 api
                   .column(colIdx)
-                  // .search(
-                  //   this.value != "" ? this.value : "",
-                  //   this.value != "",
-                  //   this.value == ""
-                  // )
                   .search(
-                    this.value != ""
-                      ? regexr.replace("{search}", "(((" + this.value + ")))")
-                      : "",
+                    this.value != "" ? this.value : "",
                     this.value != "",
                     this.value == ""
                   )
@@ -143,6 +136,7 @@
       dom: "Bfrtip",
       ajax: {
         url: "/api/remicon_management_list",
+        type: "post",
       },
       language: lang_kor,
       columnDefs: [{ targets: [4], visible: false }],

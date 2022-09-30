@@ -27,27 +27,28 @@ function remicon_getApi_order(id) {
   var editor; // use a global for the submit and return data rendering in the examples
 
   $(document).ready(function () {
-    // $.fn.dataTable.ext.search.push(function (settings, data, dataIndex) {
-    //   let min = Date.parse($("#order_fromDate").val());
-    //   let max = Date.parse($("#order_toDate").val());
-    //   let targetDate = Date.parse(data[5]);
-    //   console.log("min", min);
-    //   console.log("max", max);
-    //   console.log("targetDate", targetDate);
-    //   if (
-    //     (isNaN(min) && isNaN(max)) ||
-    //     (isNaN(min) && targetDate <= max) ||
-    //     (min <= targetDate && isNaN(max)) ||
-    //     (targetDate >= min && targetDate <= max)
-    //   ) {
-    //     return true;
-    //   }
-    //   return false;
-    // });
+    $.fn.dataTable.ext.search.push(function (settings, data, dataIndex) {
+      let min = Date.parse($("#order_fromDate").val());
+      let max = Date.parse($("#order_toDate").val());
+      let targetDate = Date.parse(data[5]);
+      console.log("min", min);
+      console.log("max", max);
+      console.log("targetDate", targetDate);
+      if (
+        (isNaN(min) && isNaN(max)) ||
+        (isNaN(min) && targetDate <= max) ||
+        (min <= targetDate && isNaN(max)) ||
+        (targetDate >= min && targetDate <= max)
+      ) {
+        return true;
+      }
+      return false;
+    });
     //CRUD
     editor = new $.fn.dataTable.Editor({
       //`/api/remicon_esimate_management/${id}`,
       ajax: `/api/remicon_order_management/${id}`,
+      type: "post",
       table: "#remicon_order_table",
       fields: [
         {
@@ -157,7 +158,7 @@ function remicon_getApi_order(id) {
       orderCellsTop: true,
       fixedHeader: true,
       // destroy: true,
-      searching: true,
+      // searching: true,
       initComplete: function () {
         var api = this.api();
 
@@ -190,9 +191,7 @@ function remicon_getApi_order(id) {
                 api
                   .column(colIdx)
                   .search(
-                    this.value != ""
-                      ? regexr.replace("{search}", "(((" + this.value + ")))")
-                      : "",
+                    this.value != "" ? this.value : "",
                     this.value != "",
                     this.value == ""
                   )
@@ -231,8 +230,12 @@ function remicon_getApi_order(id) {
         { data: "assignments.total" },
         { data: "assignments.remark" },
       ],
-      // serverSide: true,
       select: true,
+      // serverSide: true,
+      searchable: true,
+      search: {
+        regex: true,
+      },
       destroy: true,
       buttons: [
         { extend: "create", editor: editor, text: "등록" },
@@ -247,21 +250,21 @@ function remicon_getApi_order(id) {
     });
     let current_year = new Date().getFullYear();
 
-    // $("#remicon_order_table_filter").prepend(
-    //   '<input type="date" id="order_toDate" placeholder="yyyy-MM-dd" value=' +
-    //     current_year +
-    //     "-12-31>"
-    // );
-    // $("#remicon_order_table_filter").prepend(
-    //   '<input type="date" id="order_fromDate" placeholder="yyyy-MM-dd" value=' +
-    //     current_year +
-    //     "-01-01>~"
-    // );
+    $("#remicon_order_table_filter").prepend(
+      '<input type="date" id="order_toDate" placeholder="yyyy-MM-dd" value=' +
+        current_year +
+        "-12-31>"
+    );
+    $("#remicon_order_table_filter").prepend(
+      '<input type="date" id="order_fromDate" placeholder="yyyy-MM-dd" value=' +
+        current_year +
+        "-01-01>~"
+    );
 
-    // $("#order_toDate, #order_fromDate")
-    //   .unbind()
-    //   .bind("keyup", function () {
-    //     table.draw();
-    //   });
+    $("#order_toDate, #order_fromDate")
+      .unbind()
+      .bind("keyup", function () {
+        table.draw();
+      });
   });
 }
