@@ -27,28 +27,29 @@ function remicon_getApi_order(id) {
   var editor; // use a global for the submit and return data rendering in the examples
 
   $(document).ready(function () {
-    $.fn.dataTable.ext.search.push(function (settings, data, dataIndex) {
-      let min = Date.parse($("#order_fromDate").val());
-      let max = Date.parse($("#order_toDate").val());
-      let targetDate = Date.parse(data[5]);
-      console.log("min", min);
-      console.log("max", max);
-      console.log("targetDate", targetDate);
-      if (
-        (isNaN(min) && isNaN(max)) ||
-        (isNaN(min) && targetDate <= max) ||
-        (min <= targetDate && isNaN(max)) ||
-        (targetDate >= min && targetDate <= max)
-      ) {
-        return true;
-      }
-      return false;
-    });
+    // $.fn.dataTable.ext.search.push(function (settings, data, dataIndex) {
+    //   let min1 = Date.parse($("#order_fromDate").val());
+    //   let max1 = Date.parse($("#order_toDate").val());
+    //   let targetDate1 = Date.parse(data[1]);
+    //   console.log("주문min", min1);
+    //   console.log("주문max", max1);
+    //   console.log("주문targetDate", targetDate1);
+    //   if (
+    //     (isNaN(min1) && isNaN(max1)) ||
+    //     (isNaN(min1) && targetDate1 <= max1) ||
+    //     (min1 <= targetDate1 && isNaN(max1)) ||
+    //     (targetDate1 >= min1 && targetDate1 <= max1)
+    //   ) {
+    //     return true;
+    //   }
+    //   return false;
+    // });
+
     //CRUD
     editor = new $.fn.dataTable.Editor({
       //`/api/remicon_esimate_management/${id}`,
       ajax: `/api/remicon_order_management/${id}`,
-      type: "post",
+      // type: "post",
       table: "#remicon_order_table",
       fields: [
         {
@@ -63,11 +64,7 @@ function remicon_getApi_order(id) {
           label: "건설현장",
           name: "spaces.name",
         },
-        {
-          label: "배정일자",
-          name: "assignments.date",
-          type: "datetime",
-        },
+
         {
           label: "배송일정 시작",
           name: "assignments.start_time",
@@ -76,6 +73,11 @@ function remicon_getApi_order(id) {
         {
           label: "배송일정 끝",
           name: "assignments.end_time",
+          type: "datetime",
+        },
+        {
+          label: "배정일자",
+          name: "assignments.date",
           type: "datetime",
         },
         {
@@ -214,11 +216,12 @@ function remicon_getApi_order(id) {
       language: lang_kor,
       columns: [
         { data: "assignments.id" },
+        { data: "assignments.date" },
         { data: "companies.id" },
         { data: "companies.name" },
         { data: "spaces.id" },
         { data: "spaces.name" },
-        { data: "assignments.date" },
+
         {
           data: null,
           render: function (data, type, row) {
@@ -227,6 +230,7 @@ function remicon_getApi_order(id) {
             );
           },
         },
+
         { data: "assignments.total" },
         { data: "assignments.remark" },
       ],
@@ -248,7 +252,25 @@ function remicon_getApi_order(id) {
         },
       ],
     });
+
     let current_year = new Date().getFullYear();
+
+    // $("#remicon_order_table_filter").prepend(
+    //   '<input type="date" id="toDate" placeholder="yyyy-MM-dd" value=' +
+    //     current_year +
+    //     "-12-31>"
+    // );
+    // $("#remicon_order_table_filter").prepend(
+    //   '<input type="date" id="fromDate" placeholder="yyyy-MM-dd" value=' +
+    //     current_year +
+    //     "-01-01>~"
+    // );
+
+    // $("#toDate, #fromDate")
+    //   .unbind()
+    //   .bind("keyup", function () {
+    //     table.draw();
+    //   });
 
     $("#remicon_order_table_filter").prepend(
       '<input type="date" id="order_toDate" placeholder="yyyy-MM-dd" value=' +

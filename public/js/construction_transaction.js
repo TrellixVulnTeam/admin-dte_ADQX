@@ -133,26 +133,9 @@ function getApi_construction_transaction(id) {
       columns: [
         // { data: "assignments.id"},
         { data: "assignments.date" },
-        { data: "spaces.name" },
-        {
-          data: "assignments.status",
-          render: function (data, type, row) {
-            switch (data) {
-              case "REQUESTED":
-                return "요청";
-                break;
-              case "CONFIRMED":
-                return "확인";
-                break;
-              case "REMOVED":
-                return "삭제";
-                break;
-              case null:
-                return "";
-                break;
-            }
-          },
-        },
+        { data: "companies.id" },
+        { data: "companies.name" },
+        { data: "standard" },
       ],
 
       buttons: [

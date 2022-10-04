@@ -17,15 +17,16 @@ router.all("/api/history_management_list", async function (req, res) {
     .fields(
       new Field("spaces.id"),
       new Field("spaces.name"),
+      new Field("companies.id"),
       new Field("companies.name"),
-      new Field("spaces.basic_address"),
-      new Field("field_infos.start_at")
-        .getFormatter(Format.sqlDateToFormat("YYYY-MM"))
-        .setFormatter(Format.formatToSqlDate("YYYY-MM")),
-      new Field("field_infos.end_at")
-        .getFormatter(Format.sqlDateToFormat("YYYY-MM"))
-        .setFormatter(Format.formatToSqlDate("YYYY-MM")),
-      new Field("field_infos.payment_method"),
+      // new Field("spaces.basic_address"),
+      // new Field("field_infos.start_at")
+      //   .getFormatter(Format.sqlDateToFormat("YYYY-MM"))
+      //   .setFormatter(Format.formatToSqlDate("YYYY-MM")),
+      // new Field("field_infos.end_at")
+      //   .getFormatter(Format.sqlDateToFormat("YYYY-MM"))
+      //   .setFormatter(Format.formatToSqlDate("YYYY-MM")),
+      // new Field("field_infos.payment_method"),
       new Field("admin_user.name"),
       new Field("site_user.name")
     )
@@ -48,20 +49,23 @@ router.all("/api/history_management_list", async function (req, res) {
 //2. 건설사 견적내역
 
 router.all(
-  // "/api/construction_esimate_management",
   "/api/construction_esimate_management/:id",
   async function (req, res) {
     let editor = new Editor(db, "estimations")
       .fields(
-        new Field("estimations.id").set(false),
+        new Field("estimations.id"),
+        new Field("spaces.id"),
         new Field("spaces.name"),
-        new Field("spaces.basic_address"),
+        // new Field("spaces.basic_address"),
         new Field("users.name"),
+        new Field("companies.id"),
+        new Field("companies.name"),
         new Field("estimations.percent"),
         new Field("estimations.created_at"),
         new Field("estimations.status")
       )
       .leftJoin("spaces", "estimations.factory_space_id", "=", "spaces.id")
+      .leftJoin("companies", "spaces.company_id", "=", "companies.id")
       .leftJoin("users", "estimations.sales_user_id", "=", "users.id")
       .where((q) => {
         q.where("estimations.field_space_id", "=", req.params.id);
@@ -78,35 +82,51 @@ router.all("/api/construction_order_history/:id", async function (req, res) {
   let editor = new Editor(db, "assignments")
     .fields(
       new Field("assignments.id"),
+      new Field("companies.id"),
+      new Field("companies.name"),
       new Field("spaces.name"),
       new Field("assignments.start_time"),
-      // .getFormatter(Format.sqlDateToFormat("YYYY-MM-DD-HH:MM"))
-      // .setFormatter(Format.formatToSqlDate("YYYY-MM-DD-HH:MM")),
       new Field("assignments.end_time"),
-      //   .getFormatter(Format.sqlDateToFormat("YYYY-MM"))
-      //   .setFormatter(Format.formatToSqlDate("YYYY-MM")),
-      new Field("concat(users.name, ' ' ,users.position)"),
-      new Field("users.position"),
-      new Field("users.name"),
+      new Field("assignments.date"),
+      new Field("assignments.total"),
+      // new Field("concat(users.name, ' ' ,users.position)"),
+      // new Field("users.position"),
+      // new Field("users.name"),
+      new Field("assignments.remark"),
+      new Field("assignments.multal"),
+      new Field("assignments.mulcha"),
+      new Field("assignments.inducer"),
+      new Field("assignment_specs.value"),
+      new Field("assignment_specs.norminal_strength"),
+      new Field("assignment_specs.slump"),
+      new Field("assignment_specs.quantity"),
       new Field("assignments.type").options(
         new Options().table("assignments").value("type").label("type")
-      ),
-      new Field("estimations.slump_1"),
-      new Field("estimations.norminal_strength_1"),
-      new Field("estimations.slump_2"),
-      new Field("estimations.norminal_strength_2"),
-      new Field("estimations.slump_3"),
-      new Field("estimations.norminal_strength_3"),
-      new Field("assignments.status"),
-      new Field(
-        "(select count(space_id)" +
-          "from space_members where space_id = spaces.id " +
-          "group by space_id)"
       )
+
+      // new Field("estimations.slump_1"),
+      // new Field("estimations.norminal_strength_1"),
+      // new Field("estimations.slump_2"),
+      // new Field("estimations.norminal_strength_2"),
+      // new Field("estimations.slump_3"),
+      // new Field("estimations.norminal_strength_3"),
+      // new Field("assignments.status"),
+      // new Field(
+      //   "(select count(space_id)" +
+      //     "from space_members where space_id = spaces.id " +
+      //     "group by space_id)"
+      // )
     )
     .leftJoin("estimations", "assignments.estimation_id", "=", "estimations.id")
     .leftJoin("spaces", "estimations.factory_space_id", "=", "spaces.id")
     .leftJoin("users", "estimations.sales_user_id", "=", "users.id")
+    .leftJoin("companies", "spaces.company_id", "=", "companies.id")
+    .leftJoin(
+      "assignment_specs",
+      "assignments.id",
+      "=",
+      "assignment_specs.assignment_id"
+    )
     // .leftJoin("space_members", "spaces.id", "=", "space_members.space_id")
     .where((q) => {
       q.where("estimations.field_space_id", "=", req.params.id); // 아이디값 받아야함
@@ -122,11 +142,22 @@ router.all(
     let editor = new Editor(db, "assignments")
       .fields(
         new Field("assignments.id"),
+        new Field("companies.id"),
+        new Field("companies.name"),
+        new Field("spaces.id"),
         new Field("spaces.name"),
+        new Field("spaces.basic_address"),
+        new Field(
+          "concat(assignment_specs.value,'-',assignment_specs.norminal_strength,'-',assignment_specs.slump)",
+          "standard"
+        ),
         new Field("assignments.date")
           .getFormatter(Format.sqlDateToFormat("YYYY-MM-DD-HH:MM"))
-          .setFormatter(Format.formatToSqlDate("YYYY-MM-DD-HH:MM")),
-        new Field("assignments.status")
+          .setFormatter(Format.formatToSqlDate("YYYY-MM-DD-HH:MM"))
+        // new Field("assignments.id"),
+        // new Field("spaces.name"),
+        // new Field("assignments.date"),
+        // new Field("assignments.status")
       )
       .leftJoin(
         "estimations",
@@ -135,6 +166,13 @@ router.all(
         "estimations.id"
       )
       .leftJoin("spaces", "estimations.factory_space_id", "=", "spaces.id")
+      .leftJoin("companies", "spaces.company_id", "=", "companies.id")
+      .leftJoin(
+        "assignment_specs",
+        "assignments.id",
+        "=",
+        "assignment_specs.assignment_id"
+      )
       // .leftJoin("users", "estimations.sales_user_id", "=", "users.id")
       // .leftJoin("space_members", "spaces.id", "=", "space_members.space_id")
       .where((q) => {

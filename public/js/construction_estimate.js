@@ -151,11 +151,12 @@ function getApi(id) {
       select: true,
       language: lang_kor,
       columns: [
-        { data: "spaces.name" },
-        { data: "spaces.basic_address" },
-        { data: "users.name" },
-        { data: "estimations.percent" },
         { data: "estimations.created_at" },
+        { data: "spaces.id" },
+        { data: "spaces.name" },
+        { data: "companies.id" },
+        { data: "companies.name" },
+        { data: "estimations.percent" },
         {
           data: "estimations.status",
           render: function (data, type, row) {
@@ -181,6 +182,7 @@ function getApi(id) {
             }
           },
         },
+        { data: "users.name" },
       ],
 
       buttons: [

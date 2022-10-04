@@ -25,37 +25,10 @@ function remicon_getApi(id) {
   };
 
   var editor; // use a global for the submit and return data rendering in the examples
+  var targetDate;
+  var targetDate2;
 
   $(document).ready(function () {
-    $.fn.dataTable.ext.search.push(function (settings, data, dataIndex) {
-      let min = Date.parse($("#fromDate").val());
-      let max = Date.parse($("#toDate").val());
-      let targetDate = Date.parse(data[1]);
-      console.log("견적min", min);
-      console.log("견적max", max);
-      console.log("견적targetDate", targetDate);
-      if (
-        (isNaN(min) && isNaN(max)) ||
-        (isNaN(min) && targetDate <= max) ||
-        (min <= targetDate && isNaN(max)) ||
-        (targetDate >= min && targetDate <= max)
-      ) {
-        return true;
-      }
-      return false;
-    });
-
-    // $("#toDate")
-    //   .datepicker({
-    //     format: "yyyy-mm-dd",
-    //     language: "kr",
-    //     autoclose: true,
-    //     todayHighlight: true,
-    //   })
-    //   .on("hide", function (e) {
-    //     e.stopPropagation(); // 모달 팝업도 같이 닫히는걸 막아준다.
-    //   });
-
     //CRUD
     editor = new $.fn.dataTable.Editor({
       //`/api/remicon_esimate_management/${id}`,
@@ -114,8 +87,8 @@ function remicon_getApi(id) {
 
     // $('#min').datepicker({ onChangeMonthYear: function () { table.draw(); }, changeMonth: true, changeYear: true });
     // $('#max').datepicker({ onChangeMonthYear: function () { table.draw(); }, changeMonth: true, changeYear: true });
-
-    var table = $("#remicon_esimate_table").DataTable({
+    $("#remicon_esimate_table").DataTable().destroy();
+    var estimate_table = $("#remicon_esimate_table").DataTable({
       orderCellsTop: true,
       fixedHeader: true,
       initComplete: function () {
@@ -167,8 +140,32 @@ function remicon_getApi(id) {
       //DATA 바인딩
       dom: "Bfrtip",
       ajax: {
+        // url: `/api/remicon_esimate_management/${id}/${min}/${max}`,
+        // url: `/api/remicon_esimate_management/${id}/${min}/${max}`,
         url: `/api/remicon_esimate_management/${id}`,
         type: "post",
+        // data: "data",
+
+        data: function (data, row) {
+          // (data.columns[1].search.value = "2022-08-08") ||
+          // (data.columns[1].search.value = "2022-08-09");
+
+          // data.columns[1].search.value = "2022-08-08";
+
+          // for (var i = 0; i < 2; i++) {
+          //   data.columns[1].search.value = "2022-08-08";
+          // }
+          if (targetDate2 === undefined) {
+            data.columns[1].search.value = "";
+            console.log("if");
+          } else if (targetDate2.length == 0) {
+            data.columns[1].search.value = "9999-99-99";
+          }
+          for (key in targetDate2) {
+            console.log("트루", targetDate2[key]);
+            data.columns[1].search.value || targetDate2[key];
+          }
+        },
       },
       language: lang_kor,
       columns: [
@@ -241,10 +238,133 @@ function remicon_getApi(id) {
         "-01-01>~"
     );
 
-    $("#toDate, #fromDate")
-      .unbind()
-      .bind("keyup", function () {
-        table.draw();
+    $("#remicon_esimate_table_filter").prepend(
+      '<button type="button" id="button_date" placeholder="yyyy-MM-dd">조회</button>'
+    );
+
+    $("#button_date").click(function () {
+      console.log("버튼클릭");
+
+      $.ajax({
+        type: "POST",
+        // url: `/api/remicon_esimate_management/${id}/${min}/${max}`,
+        url: `/api/remicon_esimate_management/${id}`,
+        // data: "json",
+        // data: function (data, row) {
+        //   console.log(data);
+        // },
+        success: function (data) {
+          // console.log("data", data);
+          // console.log("data", data.data[0]);
+          // console.log("data2", data.data[0].estimations.created_at);
+          // console.log("성공");
+          targetDate = [];
+          for (let key in data.data) {
+            targetDate.push(data.data[key].estimations.created_at);
+            // console.log("targetDate", targetDate);
+          }
+        },
       });
+      targetDate2 = [];
+
+      var min = $("#fromDate").val();
+      var max = $("#toDate").val();
+      console.log("max", max);
+      console.log("min", min);
+
+      for (let key in targetDate) {
+        // console.log(key);
+        if (targetDate[key] >= min && targetDate[key] <= max) {
+          // estimate_table.column(1).search || targetDate[key].draw();
+          // console.log("트루", targetDate[key]);
+          targetDate2.push(targetDate[key]);
+          console.log("트루1", targetDate2[key]);
+        } else {
+          console.log("펄스");
+          // estimate_table.column(1).search(max).draw();
+        }
+      }
+
+      estimate_table.ajax.reload();
+    });
+
+    // estimate_table.columns(1).every(function () {
+    //   console.log("asdf");
+    //   // estimate_table.column.draw();
+    //   estimate_table.column(1).search("2022-08-08").draw();
+    //   estimate_table.column(1).search("2022-08-09").draw();
+    // });
+
+    // estimate_table.on("draw.dt", () => {
+    //   console.log("asdfsfsfs");
+
+    $("#toDate, #fromDate").on("keyup", function () {
+      // var min = $("#fromDate").val();
+      // var max = $("#toDate").val();
+      // console.log("max", max);
+      // console.log("min", min);
+      // estimate_table.column(1).search || ("2022-08-08", "2022-08-09").draw();
+      // $.ajax({
+      //   type: "POST",
+      //   url: `/api/remicon_esimate_management/${id}`,
+      //   data: "json",
+      //   success: function (data) {
+      //     // console.log("성공");
+      //     targetDate = [];
+      //     for (let key in data.data) {
+      //       targetDate.push(data.data[key].estimations.created_at);
+      //       console.log("targetDate", targetDate);
+      //     }
+      //     estimate_table.draw();
+      //   },
+      // });
+      // for (let key in targetDate) {
+      //   // console.log(key);
+      //   if (targetDate[key] >= min && targetDate[key] <= max) {
+      //     estimate_table.column(1).search || targetDate[key].draw();
+      //     console.log("트루", targetDate[key]);
+      //   } else {
+      //     console.log("펄스");
+      //     estimate_table.column(1).search(max).draw();
+      //   }
+      // }
+    });
+
+    //   $("#toDate, #fromDate").click(function () {
+    //     console.log("확인");
+    //     var fromDate = $("#fromDate").val();
+    //     var toDate = $("#toDate").val();
+    //     console.log(fromDate, toDate);
+
+    //     // $("#bordTable").DataTable().ajax.reload(null, false);
+
+    //     $.ajax({
+    //       type: "POST",
+    //       url: `/api/remicon_esimate_management/${fromDate}`,
+    //     }).done(function (data) {
+    //       console.log("화긴");
+    //       // $("#remicon_esimate_table").DataTable().destroy();
+
+    //       $("#remicon_esimate_table").DataTable().draw();
+    //       // table.draw();
+    //       // table.reload();
+    //       // var refreshedDataFromTheServer = getDataFromServer();
+
+    //       // var myTable = $("#remicon_esimate_table").DataTable();
+    //       // myTable.clear().rows.add(refreshedDataFromTheServer).draw();
+    //     });
+
+    //     //
+    //     // $("#toDate, #fromDate")
+    //     //   .unbind()
+    //     //   .bind("keyup", function () {
+    //     //     table.draw();
+    //     //   });
+    //   });
+    // });
+
+    // var min = $("#fromDate").val();
+    // var max = $("#toDate").val();
+    // console.log("확인용", min, max);
   });
 }

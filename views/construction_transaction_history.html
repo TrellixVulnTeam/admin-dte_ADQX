@@ -157,6 +157,8 @@
       },
       language: lang_kor,
       columns: [
+        { data: "companies.id" },
+        { data: "companies.name" },
         {
           data: "spaces.id",
           render: function (data, type) {
@@ -169,39 +171,37 @@
           },
         },
         { data: "spaces.name" },
-        { data: "companies.name" },
-        { data: "spaces.basic_address" },
-        {
-          data: null,
-          render: function (data, type, row) {
-            return data.field_infos.start_at + " ~ " + data.field_infos.end_at;
-          },
-        },
-        {
-          data: "field_infos.payment_method",
-          render: function (data, type, row) {
-            switch (data) {
-              case "CASH":
-                return "현금";
-                break;
-              case "CARD":
-                return "카드";
-                break;
-              case "NOTE":
-                return "NOTE";
-                break;
-              case "BOND":
-                return "BOND";
-                break;
-              case null:
-                return "";
-                break;
-            }
-          },
-        },
+        // {
+        //   data: null,
+        //   render: function (data, type, row) {
+        //     return data.field_infos.start_at + " ~ " + data.field_infos.end_at;
+        //   },
+        // },
+        // {
+        //   data: "field_infos.payment_method",
+        //   render: function (data, type, row) {
+        //     switch (data) {
+        //       case "CASH":
+        //         return "현금";
+        //         break;
+        //       case "CARD":
+        //         return "카드";
+        //         break;
+        //       case "NOTE":
+        //         return "NOTE";
+        //         break;
+        //       case "BOND":
+        //         return "BOND";
+        //         break;
+        //       case null:
+        //         return "";
+        //         break;
+        //     }
+        //   },
+        // },
         // { data: "field_infos.payment_method" },
         { data: "admin_user.name" },
-        { data: "site_user.name" },
+        // { data: "site_user.name" },
       ],
       // serverSide: true,
       destroy: true, // 이 부분 체크해 주세요!
@@ -255,7 +255,7 @@
   <input type="radio" id="tab-3" name="show" />
   <input type="radio" id="tab-4" name="show" />
   <div class="tab">
-    <label for="tab-1">건설사내역</label>
+    <label for="tab-1">건설사리스트</label>
     <label for="tab-2">견적내역</label>
     <label for="tab-3">주문내역 </label>
     <!-- <label for="tab-3" onclick="getApi_construction_order()">주문내역 </label> -->
@@ -271,20 +271,30 @@
         >
           <thead>
             <tr>
-              <th>번호</th>
+              <th>건설사 코드</th>
+              <th>건설사 상호</th>
+              <th>현장코드</th>
+              <th>현장명</th>
+              <!-- <th>현장 구성원 수</th> -->
+              <th>건설사 견적 담당자</th>
+              <!-- <th>예상물량</th> -->
+              <!-- <th>번호</th>
               <th>건설현장</th>
               <th>건설사</th>
               <th>현장주소</th>
               <th>공사기간</th>
               <th>결제조건</th>
               <th>구매계약담당자</th>
-              <th>주문담당자(현장)</th>
+              <th>주문담당자(현장)</th> -->
             </tr>
           </thead>
         </table>
       </div>
     </div>
     <div class="demo-html">
+      <span style="font-size: 1.5rem; font-weight: 400"
+        >견적내역 컬럼값 대기중 : 거리,시간
+      </span>
       <!-- 견적내역-->
       <table
         id="construction_esimate_table"
@@ -293,36 +303,62 @@
       >
         <thead>
           <tr>
+            <th>건설사 견적요청일</th>
+            <th>건설현장코드</th>
+            <th>현장명</th>
+            <!-- <th>레미콘사 견적제출일</th> -->
+            <th>레미콘사 코드</th>
+            <th>레미콘사 상호</th>
+            <!-- <th>거리/시간</th> -->
+            <th>견적단가율</th>
+            <th>상태</th>
+            <th>레미콘사담당자</th>
+          </tr>
+          <!-- <tr>
             <th>레미콘공장</th>
             <th>레미콘 공장 주소</th>
             <th>영업사원</th>
             <th>단가율</th>
             <th>견적요청 일시</th>
             <th>상태</th>
-          </tr>
+          </tr> -->
         </thead>
       </table>
     </div>
     <!-- 주문내역-->
     <div class="demo-html">
+      <span style="font-size: 1.5rem; font-weight: 400"
+        >주문내역 컬럼값 대기중 : 주문 승인여부
+      </span>
       <table id="construction_order_table" class="display" style="width: 100%">
         <thead>
           <tr>
-            <!-- <th>주문아이디</th> -->
+            <th>레미콘사코드</th>
+            <th>레미콘사 상호</th>
+            <th>배정일자</th>
+            <th>배정시간</th>
+            <th>합계수량</th>
+            <th>특기사항</th>
+            <!-- <th>주문 승인여부</th> -->
+
+            <!-- <th>주문아이디</th>
             <th>레미콘공장</th>
             <th>배송일정</th>
             <th>발주내역</th>
             <th>영업사원</th>
-            <!-- <th>누적주문량</th> -->
+            <th>누적주문량</th>
             <th>발주처</th>
             <th>상태</th>
-            <th>현장멤버</th>
+            <th>현장멤버</th> -->
           </tr>
         </thead>
       </table>
     </div>
     <!-- 거래내역-->
     <div class="demo-html">
+      <span style="font-size: 1.5rem; font-weight: 400"
+        >거래내역 컬럼값 대기중 : 예정수량, 실제 납품수량, 거래내역 확인여부
+      </span>
       <table
         id="construction_transaction_table"
         class="display"
@@ -330,13 +366,21 @@
       >
         <thead>
           <tr>
-            <!-- <th>주문아이디</th> -->
+            <th>납품일자</th>
+            <th>레미콘사코드</th>
+            <th>레미콘사</th>
+            <th>규격</th>
+            <!-- <th>예정수량</th>
+            <th>실제 납풉수량</th>
+            <th>거래내역확인여부</th> -->
+
+            <!-- <th>주문아이디</th> 
             <th>납품일자</th>
             <th>납품업체</th>
-            <!-- <th>규격</th> -->
-            <!-- <th>예정수량</th> -->
-            <!-- <th>실제 납풉수량</th> -->
-            <th>상태</th>
+            <th>규격</th>
+            <th>예정수량</th>
+         <th>실제 납풉수량</th>
+            <th>상태</th> -->
           </tr>
         </thead>
       </table>

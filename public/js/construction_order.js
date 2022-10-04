@@ -46,37 +46,94 @@ function getApi_construction_order(id) {
           name: "assignments.id",
         },
         {
-          label: "레미콘 공장",
+          label: "건설사",
+          name: "companies.name",
+        },
+        {
+          label: "건설현장",
           name: "spaces.name",
         },
-        // {
-        //   label: "영업사원명",
-        //   name: "users.name",
-        // },
-        // {
-        //   label: "영업사원직책",
-        //   name: "users.position",
-        // },
-        // {
-        //   label: "영업사원",
-        //   name: "concat(users.name, ' ' ,users.position)",
-        // },
+
         {
-          label: "발주처",
-          name: "assignments.type",
-          type: "select",
+          label: "배정일정 시작",
+          name: "assignments.start_time",
+          type: "datetime",
+          format: "YYYY-MM-DD hh mm",
         },
         {
-          label: "상태",
-          name: "assignments.status",
-          type: "select",
-          value: "요청",
+          label: "배정일정 끝",
+          name: "assignments.end_time",
+          type: "datetime",
+          format: "YYYY-MM-DD hh mm",
+        },
+        {
+          label: "배정일자",
+          name: "assignments.date",
+          type: "datetime",
+        },
+        {
+          label: "특기사항",
+          name: "assignments.remark",
+        },
+        {
+          label: "합계수량",
+          name: "assignments.total",
+        },
+        {
+          label: "물차",
+          name: "assignments.mulcha",
+          type: "checkbox",
           options: [
-            { label: "요청", value: "REQUESTED" },
-            { label: "확인", value: "CONFIRMED" },
-            { label: "삭제", value: "REMOVE" },
+            { label: "체크", value: "1" },
+            { label: "미체크", value: "0" },
           ],
         },
+        {
+          label: "몰탈",
+          name: "assignments.multal",
+          type: "checkbox",
+          options: [
+            { label: "체크", value: "1" },
+            { label: "미체크", value: "0" },
+          ],
+        },
+        {
+          label: "유도제",
+          name: "assignments.inducer",
+          type: "checkbox",
+          options: [
+            { label: "체크", value: "1" },
+            { label: "미체크", value: "0" },
+          ],
+        },
+        {
+          label: "굵은골재",
+          name: "assignment_specs.value",
+        },
+        {
+          label: "호칭강도",
+          name: "assignment_specs.norminal_strength",
+        },
+        {
+          label: "슬럼프",
+          name: "assignment_specs.slump",
+        },
+        {
+          label: "수량",
+          name: "assignment_specs.quantity",
+        },
+
+        // {
+        //   label: "상태",
+        //   name: "assignments.status",
+        //   type: "select",
+        //   value: "요청",
+        //   options: [
+        //     { label: "요청", value: "REQUESTED" },
+        //     { label: "확인", value: "CONFIRMED" },
+        //     { label: "삭제", value: "REMOVE" },
+        //   ],
+        // },
       ],
     });
 
@@ -149,64 +206,81 @@ function getApi_construction_order(id) {
       },
       language: lang_kor,
       columns: [
-        // { data: "assignments.id"},
-        { data: "spaces.name" },
-        {
-          data: null,
-          render: function (data, type, row) {
-            return (
-              data.assignments.start_time +
-              " ~ " +
-              data.assignments.end_time.substring(14)
-            );
-          },
-        },
-        {
-          data: null,
-          render: function (data, type, row) {
-            return (
-              data.estimations.norminal_strength_1 +
-              " - " +
-              data.estimations.slump_1 +
-              " | " +
-              data.estimations.norminal_strength_2 +
-              " - " +
-              data.estimations.slump_2 +
-              " | " +
-              data.estimations.norminal_strength_3 +
-              " - " +
-              data.estimations.slump_3
-            );
-          },
-        },
-        { data: "concat(users.name, ' ' ,users.position)" },
+        // { data: "assignments.id" },
 
-        { data: "assignments.type" },
+        { data: "companies.id" },
+        { data: "companies.name" },
+        { data: "assignments.date" },
         {
-          data: "assignments.status",
+          data: null,
           render: function (data, type, row) {
-            switch (data) {
-              case "REQUESTED":
-                return "요청";
-                break;
-              case "CONFIRMED":
-                return "확인";
-                break;
-              case "REMOVED":
-                return "삭제";
-                break;
-              case null:
-                return "";
-                break;
-            }
+            return (
+              data.assignments.start_time + " ~ " + data.assignments.end_time
+            );
           },
         },
-        {
-          data:
-            "(select count(space_id)" +
-            "from space_members where space_id = spaces.id " +
-            "group by space_id)",
-        },
+
+        { data: "assignments.total" },
+        { data: "assignments.remark" },
+
+        // { data: "assignments.id"},
+        // { data: "spaces.name" },
+        // {
+        //   data: null,
+        //   render: function (data, type, row) {
+        //     return (
+        //       data.assignments.start_time +
+        //       " ~ " +
+        //       data.assignments.end_time.substring(14)
+        //     );
+        //   },
+        // },
+        // {
+        //   data: null,
+        //   render: function (data, type, row) {
+        //     return (
+        //       data.estimations.norminal_strength_1 +
+        //       " - " +
+        //       data.estimations.slump_1 +
+        //       " | " +
+        //       data.estimations.norminal_strength_2 +
+        //       " - " +
+        //       data.estimations.slump_2 +
+        //       " | " +
+        //       data.estimations.norminal_strength_3 +
+        //       " - " +
+        //       data.estimations.slump_3
+        //     );
+        //   },
+        // },
+        // { data: "concat(users.name, ' ' ,users.position)" },
+
+        // { data: "assignments.type" },
+        // {
+        //   data: "assignments.status",
+        //   render: function (data, type, row) {
+        //     switch (data) {
+        //       case "REQUESTED":
+        //         return "요청";
+        //         break;
+        //       case "CONFIRMED":
+        //         return "확인";
+        //         break;
+        //       case "REMOVED":
+        //         return "삭제";
+        //         break;
+        //       case null:
+        //         return "";
+        //         break;
+        //     }
+        //   },
+        // },
+        // {
+        //   data:
+        //     "(select count(space_id)" +
+        //     "from space_members where space_id = spaces.id " +
+        //     "group by space_id)",
+        // },
       ],
       destroy: true,
       select: true,
