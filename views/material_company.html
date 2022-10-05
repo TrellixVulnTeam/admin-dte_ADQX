@@ -38,6 +38,7 @@
         //   name: "id",
         // },
         {
+
           label: "타입",
           name: "material_item.type",
           type: "select",
@@ -48,6 +49,7 @@
             { label: "파일", value: "FILE" },
             { label: "골재", value: "AGGREGATE" },
           ],
+
         },
         {
           label: "지역:",
@@ -88,6 +90,7 @@
               // '<img src="' +
               // editor.file("archives_files", file_id).filename +
               // '"/>'
+
             );
           },
           clearText: "Clear",
@@ -170,6 +173,7 @@
       
       columns: [
         // { data: "id" },  
+
         {
           data: "archives.type",
           render: function (data, type, row) {
@@ -196,6 +200,7 @@
           },
         },
         // { data: "archives.type" },   
+
         { data: "archives.region" },       
         { data: "archives.company_name" },   
         { data: "archives.address",},
@@ -204,12 +209,14 @@
         {
           data: "archives.image",
           render: function (file_id) {
+
             if(file_id==null){
               return file_id;
             }
             var path_name=editor.file('archives_files', file_id).web_path;
             return file_id
               ? "<a href=" + path_name + ">" + editor.file("archives_files", file_id).filename + "</a>"
+
               : null;
           },
         },
@@ -504,11 +511,13 @@
         <div class="category-filter">
           <select id="categoryFilter" class="form-control">
             <option value="">전체보기</option>
+
             <option value="파일">파일</option>
             <option value="아스콘">아스콘</option>
             <option value="레미콘">레미콘</option>
             <option value="펌프카">펌프카</option>
             <option value="골재">골재</option>
+
           </select>
         </div>
         <table
