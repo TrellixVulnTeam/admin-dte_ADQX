@@ -29,7 +29,11 @@ function getApi_construction_order(id) {
 
   // window.location.reload();
   var editor; // use a global for the submit and return data rendering in the examples
-  // var id = sessionStorage.getItem("id", id);
+  let min;
+  let max;
+  min = $("#con_order_fromDate").val();
+  max = $("#con_order_toDate").val();
+  console.log("min max", min, max);
 
   if (id === null) {
     retrun;
@@ -38,7 +42,7 @@ function getApi_construction_order(id) {
     //CRUD
 
     editor = new $.fn.dataTable.Editor({
-      ajax: `/api/construction_order_history/${id}`,
+      ajax: `/api/construction_order_history/${id}/${min}/${max}`,
       table: "#construction_order_table",
       fields: [
         {
@@ -201,7 +205,7 @@ function getApi_construction_order(id) {
       //DATA 바인딩
       dom: "Bfrtip",
       ajax: {
-        url: `/api/construction_order_history/${id}`,
+        url: `/api/construction_order_history/${id}/${min}/${max}`,
         // type: "get",
       },
       language: lang_kor,
@@ -284,6 +288,7 @@ function getApi_construction_order(id) {
       ],
       destroy: true,
       select: true,
+      serverside: true,
       buttons: [
         { extend: "create", editor: editor, text: "등록" },
         { extend: "edit", editor: editor, text: "상세보기 및 수정" },
@@ -294,6 +299,40 @@ function getApi_construction_order(id) {
           buttons: ["excel", "csv"],
         },
       ],
+    });
+
+    var current_year = new Date().getFullYear();
+
+    $("#construction_order_table_filter").prepend(
+      '<input type="date" id="con_order_toDate" placeholder="yyyy-MM-dd" value=' +
+        current_year +
+        "-12-31>"
+    );
+    $("#construction_order_table_filter").prepend(
+      '<input type="date" id="con_order_fromDate" placeholder="yyyy-MM-dd" value=' +
+        current_year +
+        "-01-01>~"
+    );
+
+    $("#construction_order_table_filter").prepend(
+      '<button type="button" id="con_order_button" placeholder="yyyy-MM-dd">조회</button>'
+    );
+
+    $("#con_order_button").click(function () {
+      console.log("버튼클릭");
+
+      min = $("#con_order_fromDate").val();
+      max = $("#con_order_toDate").val();
+      console.log("max", max);
+      console.log("min", min);
+      getApi_construction_order(id);
+      // $.ajax({
+      //   type: "POST",
+      //   url: `/api/remicon_esimate_management/${id}/${min}/${max}`,
+      //   success: function (data) {
+      //     remicon_getApi(id);
+      //   },
+      // });
     });
   });
 }

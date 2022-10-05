@@ -53,6 +53,7 @@
     //CRUD
     editor = new $.fn.dataTable.Editor({
       ajax: "/api/remicon_management_list",
+      type: "post",
       table: "#remicon_management_list_table",
       fields: [
         {
@@ -273,6 +274,7 @@
       </div>
     </div>
     <div class="demo-html">
+      <div class="col-lg-12" id="ex1_Result1"></div>
       <span style="font-size: 1.5rem; font-weight: 400"
         >견적내역 컬럼값 대기중 : 거리,시간, 예상물량
       </span>
@@ -294,10 +296,11 @@
           </tr>
         </thead>
       </table>
-      <div class="col-lg-12" id="ex1_Result1"></div>
+      <!-- <div class="col-lg-12" id="ex1_Result1"></div> -->
     </div>
     <!-- 주문내역-->
     <div class="demo-html">
+      <div class="col-lg-12" id="ex1_Result2"></div>
       <span style="font-size: 1.5rem; font-weight: 400"
         >주문내역 컬럼값 대기중 : 주문 승인여부
       </span>
@@ -317,11 +320,12 @@
           </tr>
         </thead>
       </table>
-      <div class="col-lg-12" id="ex1_Result2"></div>
+      <!-- <div class="col-lg-12" id="ex1_Result2"></div> -->
     </div>
     <!-- 거래내역-->
 
     <div class="demo-html">
+      <div class="col-lg-12" id="ex1_Result3"></div>
       <span style="font-size: 1.5rem; font-weight: 400"
         >거래내역 컬럼값 대기중 : 예정수량, 실제 납품수량, 거래내역 확인여부
       </span>
@@ -337,7 +341,7 @@
           </tr>
         </thead>
       </table>
-      <div class="col-lg-12" id="ex1_Result3"></div>
+      <!-- <div class="col-lg-12" id="ex1_Result3"></div> -->
     </div>
     <div class="demo-html">
       <table id="remicon_memberlist_table" class="display" style="width: 100%">

@@ -29,7 +29,12 @@ function getApi(id) {
   };
 
   var editor; // use a global for the submit and return data rendering in the examples
-  // var id = sessionStorage.getItem("id", id);
+
+  let min;
+  let max;
+  min = $("#con_esimate_fromDate").val();
+  max = $("#con_esimate_toDate").val();
+  console.log("min max", min, max);
 
   if (id === null) {
     retrun;
@@ -38,40 +43,57 @@ function getApi(id) {
     //CRUD
 
     editor = new $.fn.dataTable.Editor({
-      ajax: `/api/construction_esimate_management_list/${id}`,
+      ajax: `/api/construction_esimate_management/${id}/${min}/${max}`,
       table: "#construction_esimate_table",
       fields: [
         {
-          label: "레미콘 공장",
-          name: "spaces.name",
+          label: "건설사 견적요청일",
+          name: "estimations.created_at",
+          type: "datetime",
         },
         {
-          label: "레미콘 공장 주소",
-          name: "spaces.basic_address",
+          label: "건설현장코드",
+          name: "b.id",
         },
+        {
+          label: "현장명",
+          name: "b.name",
+        },
+        {
+          label: "레미콘사 코드",
+          name: "companies.id",
+        },
+        {
+          label: "레미콘사 상호",
+          name: "companies.name",
+        },
+        // {
+        //   label: "레미콘 공장 주소",
+        //   name: "spaces.basic_address",
+        // },
         // {
         //   label: "영업사원",
         //   name: "users.name",
         // },
         {
-          label: "단가율",
+          label: "견적단가율",
           name: "estimations.percent",
-        },
-        {
-          label: "견적요청 일시",
-          name: "estimations.created_at",
         },
         {
           label: "상태",
           name: "estimations.status",
           type: "select",
           options: [
-            { label: "요청", value: "REQUESTED" },
-            { label: "응답", value: "RESPONDED" },
-            { label: "등록", value: "REGISTERED" },
-            { label: "적용", value: "APPLIED" },
-            { label: "완료", value: "FINISHED" },
+            { label: "견적요청접수", value: "REQUESTED" },
+            // { label: "응답", value: "RESPONDED" },
+            { label: "견적제출", value: "REGISTERED" },
+            // { label: "적용", value: "APPLIED" },
+            { label: "납품사등록완료", value: "FINISHED" },
           ],
+        },
+        {
+          label: "레미콘사담당자",
+          name: "users.name",
         },
       ],
     });
@@ -144,16 +166,19 @@ function getApi(id) {
       //DATA 바인딩
       dom: "Bfrtip",
       ajax: {
-        url: `/api/construction_esimate_management/${id}`,
+        url: `/api/construction_esimate_management/${id}/${min}/${max}`,
         // type: "get",
       },
       destroy: true,
       select: true,
+      serverside: true,
       language: lang_kor,
       columns: [
         { data: "estimations.created_at" },
-        { data: "spaces.id" },
-        { data: "spaces.name" },
+        // { data: "spaces.id" },
+        // { data: "spaces.name" },
+        { data: "b.id" },
+        { data: "b.name" },
         { data: "companies.id" },
         { data: "companies.name" },
         { data: "estimations.percent" },
@@ -162,19 +187,19 @@ function getApi(id) {
           render: function (data, type, row) {
             switch (data) {
               case "REQUESTED":
-                return "요청";
+                return "견적요청접수";
                 break;
               case "RESPONDED":
                 return "응답";
                 break;
               case "REGISTERED":
-                return "등록";
+                return "견적제출";
                 break;
               case "APPLIED":
                 return "적용";
                 break;
               case "FINISHED":
-                return "완료";
+                return "납품사등록완료";
                 break;
               case null:
                 return "";
@@ -195,6 +220,39 @@ function getApi(id) {
           buttons: ["excel", "csv"],
         },
       ],
+    });
+    var current_year = new Date().getFullYear();
+
+    $("#construction_esimate_table_filter").prepend(
+      '<input type="date" id="con_esimate_toDate" placeholder="yyyy-MM-dd" value=' +
+        current_year +
+        "-12-31>"
+    );
+    $("#construction_esimate_table_filter").prepend(
+      '<input type="date" id="con_esimate_fromDate" placeholder="yyyy-MM-dd" value=' +
+        current_year +
+        "-01-01>~"
+    );
+
+    $("#construction_esimate_table_filter").prepend(
+      '<button type="button" id="con_esimate_button_date">조회</button>'
+    );
+
+    $("#con_esimate_button_date").click(function () {
+      console.log("버튼클릭");
+
+      min = $("#con_esimate_fromDate").val();
+      max = $("#con_esimate_toDate").val();
+      console.log("max", max);
+      console.log("min", min);
+      getApi(id);
+      // $.ajax({
+      //   type: "POST",
+      //   url: `/api/remicon_esimate_management/${id}/${min}/${max}`,
+      //   success: function (data) {
+      //     remicon_getApi(id);
+      //   },
+      // });
     });
   });
 }

@@ -27,60 +27,59 @@ function remicon_getApi_Transaction(id) {
   };
 
   var editor; // use a global for the submit and return data rendering in the examples
-
+  let min;
+  let max;
+  min = $("#transaction_fromDate").val();
+  max = $("#transaction_toDate").val();
   if (id === null) {
     retrun;
   }
   $(document).ready(function () {
-    // $.fn.dataTable.ext.search.push(function (settings, data, dataIndex) {
-    //   let min = Date.parse($("#transaction_fromDate").val());
-    //   let max = Date.parse($("#transaction_toDate").val());
-    //   let targetDate = Date.parse(data[0]);
-    //   console.log("min", min);
-    //   console.log("max", max);
-    //   console.log("targetDate", targetDate);
-    //   if (
-    //     (isNaN(min) && isNaN(max)) ||
-    //     (isNaN(min) && targetDate <= max) ||
-    //     (min <= targetDate && isNaN(max)) ||
-    //     (targetDate >= min && targetDate <= max)
-    //   ) {
-    //     return true;
-    //   }
-    //   return false;
-    // });
     //CRUD
 
     editor = new $.fn.dataTable.Editor({
-      ajax: `/api/remicon_Transaction_history/${id}`,
+      ajax: `/api/remicon_Transaction_history/${id}/${min}/${max}`,
       table: "#remicon_transaction_table",
       fields: [
         {
           label: "납품일자",
           name: "assignments.date",
+          type: "datetime",
+        },
+        {
+          label: "건설사코드",
+          name: "companies.id",
         },
         {
           label: "건설사",
           name: "companies.name",
         },
         {
+          label: "건설현장코드",
+          name: "spaces.id",
+        },
+        {
           label: "건설현장",
           name: "spaces.name",
         },
         {
-          label: "건설현장주소",
-          name: "spaces.basic_address",
+          label: "규격",
+          name: "standard",
         },
-        {
-          label: "상태",
-          name: "assignments.status",
-          type: "select",
-          options: [
-            { label: "요청", value: "REQUESTED" },
-            { label: "확인", value: "CONFIRMED" },
-            { label: "삭제", value: "REMOVED" },
-          ],
-        },
+        // {
+        //   label: "건설현장주소",
+        //   name: "spaces.basic_address",
+        // },
+        // {
+        //   label: "상태",
+        //   name: "assignments.status",
+        //   type: "select",
+        //   options: [
+        //     { label: "요청", value: "REQUESTED" },
+        //     { label: "확인", value: "CONFIRMED" },
+        //     { label: "삭제", value: "REMOVED" },
+        //   ],
+        // },
       ],
     });
 
@@ -129,9 +128,7 @@ function remicon_getApi_Transaction(id) {
                 api
                   .column(colIdx)
                   .search(
-                    this.value != ""
-                      ? regexr.replace("{search}", "(((" + this.value + ")))")
-                      : "",
+                    this.value != "" ? this.value : "",
                     this.value != "",
                     this.value == ""
                   )
@@ -148,7 +145,7 @@ function remicon_getApi_Transaction(id) {
       //DATA 바인딩
       dom: "Bfrtip",
       ajax: {
-        url: `/api/remicon_Transaction_history/${id}`,
+        url: `/api/remicon_Transaction_history/${id}/${min}/${max}`,
         type: "POST",
       },
       language: lang_kor,
@@ -180,9 +177,14 @@ function remicon_getApi_Transaction(id) {
         //   },
         // },
       ],
-      // serverSide: true,
       select: true,
+      serverSide: true,
+      searchable: true,
+      search: {
+        regex: true,
+      },
       destroy: true,
+      searching: true,
       buttons: [
         { extend: "create", editor: editor, text: "등록" },
         { extend: "edit", editor: editor, text: "상세보기 및 수정" },
@@ -196,21 +198,37 @@ function remicon_getApi_Transaction(id) {
     });
     var current_year = new Date().getFullYear();
 
-    // $("#remicon_transaction_table_filter").prepend(
-    //   '<input type="date" id="transaction_toDate" placeholder="yyyy-MM-dd" value=' +
-    //     current_year +
-    //     "-12-31>"
-    // );
-    // $("#remicon_transaction_table_filter").prepend(
-    //   '<input type="date" id="transaction_fromDate" placeholder="yyyy-MM-dd" value=' +
-    //     current_year +
-    //     "-01-01>~"
-    // );
+    $("#remicon_transaction_table_filter").prepend(
+      '<input type="date" id="transaction_toDate" placeholder="yyyy-MM-dd" value=' +
+        current_year +
+        "-12-31>"
+    );
+    $("#remicon_transaction_table_filter").prepend(
+      '<input type="date" id="transaction_fromDate" placeholder="yyyy-MM-dd" value=' +
+        current_year +
+        "-01-01>~"
+    );
 
-    // $("#transaction_toDate, #transaction_fromDate")
-    //   .unbind()
-    //   .bind("keyup", function () {
-    //     table.draw();
-    //   });
+    $("#remicon_transaction_table_filter").prepend(
+      '<button type="button" id="button_date_transaction" placeholder="yyyy-MM-dd">조회</button>'
+    );
+
+    $("#button_date_transaction").click(function () {
+      console.log("버튼클릭");
+
+      min = $("#transaction_fromDate").val();
+      max = $("#transaction_toDate").val();
+      console.log("max", max);
+      console.log("min", min);
+      remicon_getApi_Transaction(id);
+
+      // $.ajax({
+      //   type: "POST",
+      //   url: `/api/remicon_esimate_management/${id}/${min}/${max}`,
+      //   success: function (data) {
+      //     remicon_getApi_Transaction(id);
+      //   },
+      // });
+    });
   });
 }

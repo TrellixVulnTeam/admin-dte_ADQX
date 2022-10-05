@@ -36,6 +36,7 @@
     //CRUD
     editor = new $.fn.dataTable.Editor({
       ajax: "/api/remicon_member",
+      type :"post",
       table: "#remicon_table",
       fields: [
         {
@@ -121,19 +122,19 @@
                 $(this).attr("title", $(this).val());
                 var regexr = "({search})"; //$(this).parents('th').find('select').val();
 
-                // var cursorPosition = this.selectionStart;
+                var cursorPosition = this.selectionStart;
                 // Search the column for that value
                 api
                   .column(colIdx)
                   .search(
-                    this.value != ""
-                      ? regexr.replace("{search}", "(((" + this.value + ")))")
-                      : "",
-                    this.value != "",
-                    this.value == ""
-                    // this.value != "" ? this.value : "",
+                    // this.value != ""
+                    //   ? regexr.replace("{search}", "(((" + this.value + ")))")
+                    //   : "",
                     // this.value != "",
                     // this.value == ""
+                    this.value != "" ? this.value : "",
+                    this.value != "",
+                    this.value == ""
                   )
                   .draw();
               })
@@ -141,9 +142,9 @@
                 e.stopPropagation();
 
                 $(this).trigger("change");
-                // $(this)
-                //   .focus()[0]
-                //   .setSelectionRange(cursorPosition, cursorPosition);
+                $(this)
+                  .focus()[0]
+                  .setSelectionRange(cursorPosition, cursorPosition);
               });
           });
       },
@@ -178,9 +179,9 @@
         { data: "users.created_at" },
         { data: "users.updated_at" }, 
       ],
-      // serverSide: true,
-      select: true,
+      serverSide: true,
       // destroy: true,  
+      select: true,
       searchable: true,
       search: {
         regex: true,

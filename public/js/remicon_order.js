@@ -1,4 +1,3 @@
-//레미콘사 견적내역
 function remicon_getApi_order(id) {
   num_remicon_order++;
   //Korean
@@ -25,31 +24,16 @@ function remicon_getApi_order(id) {
   };
 
   var editor; // use a global for the submit and return data rendering in the examples
-
+  let min;
+  let max;
+  min = $("#order_fromDate").val();
+  max = $("#order_toDate").val();
   $(document).ready(function () {
-    // $.fn.dataTable.ext.search.push(function (settings, data, dataIndex) {
-    //   let min1 = Date.parse($("#order_fromDate").val());
-    //   let max1 = Date.parse($("#order_toDate").val());
-    //   let targetDate1 = Date.parse(data[1]);
-    //   console.log("주문min", min1);
-    //   console.log("주문max", max1);
-    //   console.log("주문targetDate", targetDate1);
-    //   if (
-    //     (isNaN(min1) && isNaN(max1)) ||
-    //     (isNaN(min1) && targetDate1 <= max1) ||
-    //     (min1 <= targetDate1 && isNaN(max1)) ||
-    //     (targetDate1 >= min1 && targetDate1 <= max1)
-    //   ) {
-    //     return true;
-    //   }
-    //   return false;
-    // });
-
     //CRUD
     editor = new $.fn.dataTable.Editor({
       //`/api/remicon_esimate_management/${id}`,
-      ajax: `/api/remicon_order_management/${id}`,
-      // type: "post",
+      ajax: `/api/remicon_order_management/${id}/${min}/${max}`,
+      type: "post",
       table: "#remicon_order_table",
       fields: [
         {
@@ -64,7 +48,11 @@ function remicon_getApi_order(id) {
           label: "건설현장",
           name: "spaces.name",
         },
-
+        {
+          label: "배정일자",
+          name: "assignments.date",
+          type: "datetime",
+        },
         {
           label: "배송일정 시작",
           name: "assignments.start_time",
@@ -73,11 +61,6 @@ function remicon_getApi_order(id) {
         {
           label: "배송일정 끝",
           name: "assignments.end_time",
-          type: "datetime",
-        },
-        {
-          label: "배정일자",
-          name: "assignments.date",
           type: "datetime",
         },
         {
@@ -95,6 +78,12 @@ function remicon_getApi_order(id) {
           options: [
             { label: "체크", value: "1" },
             { label: "미체크", value: "0" },
+            // label: "체크",
+            // checked: "true",
+            // value: "1",
+            // checked: "false",
+            // value: "0",
+            // { label: "미체크", value: "0" },
           ],
         },
         {
@@ -156,7 +145,7 @@ function remicon_getApi_order(id) {
         .addClass("remicon_filters_order");
     }
 
-    var table = $("#remicon_order_table").DataTable({
+    var order_table = $("#remicon_order_table").DataTable({
       orderCellsTop: true,
       fixedHeader: true,
       // destroy: true,
@@ -210,18 +199,17 @@ function remicon_getApi_order(id) {
       //DATA 바인딩
       dom: "Bfrtip",
       ajax: {
-        url: `/api/remicon_order_management/${id}`,
+        url: `/api/remicon_order_management/${id}/${min}/${max}`,
         type: "POST",
       },
       language: lang_kor,
       columns: [
         { data: "assignments.id" },
-        { data: "assignments.date" },
         { data: "companies.id" },
         { data: "companies.name" },
         { data: "spaces.id" },
         { data: "spaces.name" },
-
+        { data: "assignments.date" },
         {
           data: null,
           render: function (data, type, row) {
@@ -230,17 +218,17 @@ function remicon_getApi_order(id) {
             );
           },
         },
-
         { data: "assignments.total" },
         { data: "assignments.remark" },
       ],
       select: true,
-      // serverSide: true,
+      serverSide: true,
       searchable: true,
       search: {
         regex: true,
       },
       destroy: true,
+      processing: true,
       buttons: [
         { extend: "create", editor: editor, text: "등록" },
         { extend: "edit", editor: editor, text: "상세보기 및 수정" },
@@ -252,25 +240,7 @@ function remicon_getApi_order(id) {
         },
       ],
     });
-
     let current_year = new Date().getFullYear();
-
-    // $("#remicon_order_table_filter").prepend(
-    //   '<input type="date" id="toDate" placeholder="yyyy-MM-dd" value=' +
-    //     current_year +
-    //     "-12-31>"
-    // );
-    // $("#remicon_order_table_filter").prepend(
-    //   '<input type="date" id="fromDate" placeholder="yyyy-MM-dd" value=' +
-    //     current_year +
-    //     "-01-01>~"
-    // );
-
-    // $("#toDate, #fromDate")
-    //   .unbind()
-    //   .bind("keyup", function () {
-    //     table.draw();
-    //   });
 
     $("#remicon_order_table_filter").prepend(
       '<input type="date" id="order_toDate" placeholder="yyyy-MM-dd" value=' +
@@ -283,10 +253,27 @@ function remicon_getApi_order(id) {
         "-01-01>~"
     );
 
-    $("#order_toDate, #order_fromDate")
-      .unbind()
-      .bind("keyup", function () {
-        table.draw();
-      });
+    $("#remicon_order_table_filter").prepend(
+      '<button type="button" id="button_date_order" placeholder="yyyy-MM-dd">조회</button>'
+    );
+
+    $("#button_date_order").click(function () {
+      console.log("버튼클릭");
+
+      min = $("#order_fromDate").val();
+      max = $("#order_toDate").val();
+      console.log("max", max);
+      console.log("min", min);
+
+      remicon_getApi_order(id);
+
+      // $.ajax({
+      //   type: "POST",
+      //   url: `/api/remicon_order_management/${id}/${min}/${max}`,
+      //   success: function (data) {
+      //     remicon_getApi_order(id);
+      //   },
+      // });
+    });
   });
 }
