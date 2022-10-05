@@ -80,10 +80,8 @@ router.all(
     var current_year = new Date().getFullYear();
     let min;
     let max;
-    console.log("asdf", req.params);
 
     if (req.params.min == "undefined" && req.params.max == "undefined") {
-      console.log("확인");
       min = current_year + "-01-01";
       max = current_year + "-12-31";
     } else {
@@ -133,17 +131,14 @@ router.all(
     var current_year = new Date().getFullYear();
     let min;
     let max;
-    console.log("asdf", req.params);
 
     if (req.params.min == "undefined" && req.params.max == "undefined") {
-      console.log("확인");
       min = current_year + "-01-01";
       max = current_year + "-12-31";
     } else {
       min = req.params.min;
       max = req.params.max;
     }
-    console.log("min max", min, max);
 
     let editor = new Editor(db, "assignments")
       .fields(
@@ -216,18 +211,14 @@ router.all(
     var current_year = new Date().getFullYear();
     let min;
     let max;
-    let a;
-    console.log("asdf", req.params);
 
     if (req.params.min == "undefined" && req.params.max == "undefined") {
-      console.log("확인");
       min = current_year + "-01-01";
       max = current_year + "-12-31";
     } else {
       min = req.params.min;
       max = req.params.max;
     }
-    console.log("min max", min, max);
     let editor = new Editor(db, "assignments")
       .fields(
         new Field("assignments.id"),
