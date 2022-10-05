@@ -216,6 +216,7 @@ router.all(
     var current_year = new Date().getFullYear();
     let min;
     let max;
+    let a;
     console.log("asdf", req.params);
 
     if (req.params.min == "undefined" && req.params.max == "undefined") {
