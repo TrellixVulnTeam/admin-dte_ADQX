@@ -53,6 +53,7 @@
     //CRUD
     editor = new $.fn.dataTable.Editor({
       ajax: "/api/remicon_management_list",
+      type: "post",
       table: "#remicon_management_list_table",
       fields: [
         {
@@ -80,7 +81,7 @@
       .addClass("remicon_filters_info")
       .appendTo("#remicon_management_list_table thead");
 
-    var table = $("#remicon_management_list_table").DataTable({
+    $("#remicon_management_list_table").DataTable({
       orderCellsTop: true,
       fixedHeader: true,
       initComplete: function () {
@@ -111,13 +112,12 @@
                 $(this).attr("title", $(this).val());
                 var regexr = "({search})"; //$(this).parents('th').find('select').val();
 
+                // var cursorPosition = this.selectionStart;
                 // Search the column for that value
                 api
                   .column(colIdx)
                   .search(
-                    this.value != ""
-                      ? regexr.replace("{search}", "(((" + this.value + ")))")
-                      : "",
+                    this.value != "" ? this.value : "",
                     this.value != "",
                     this.value == ""
                   )
@@ -125,8 +125,10 @@
               })
               .on("keyup", function (e) {
                 e.stopPropagation();
-
                 $(this).trigger("change");
+                // $(this)
+                //   .focus()[0]
+                //   .setSelectionRange(cursorPosition, cursorPosition);
               });
           });
       },
@@ -135,6 +137,7 @@
       dom: "Bfrtip",
       ajax: {
         url: "/api/remicon_management_list",
+        type: "post",
       },
       language: lang_kor,
       columnDefs: [{ targets: [4], visible: false }],
@@ -147,7 +150,7 @@
                 // `<label for="tab-2" onclick="remicon_getApi(${data}); remicon_getApi_order(${data}); remicon_getApi_Transaction(${data});">`
                 `<label for="tab-2">` + data;
             }
-            return data;
+            return "<a href='#'>" + data + "</a>";
           },
         },
         // { data: "spaces.company_id" },
@@ -168,6 +171,11 @@
         { data: "spaces.id" },
       ],
       select: true,
+      serverSide: true,
+      searchable: true,
+      search: {
+        regex: true,
+      },
       destroy: true,
       buttons: [
         { extend: "create", editor: editor, text: "등록" },
@@ -249,25 +257,19 @@
         >
           <thead>
             <tr>
-              <!-- <th>현장코드</th> -->
               <th>레미콘사 코드</th>
               <th>레미콘사</th>
               <th>레미콘사 주소</th>
               <th>구성원 수</th>
-              <!-- <th>현장아이디</th> -->
-              <!-- <th>번호</th>
-              <th>레미콘사</th>
-              <th>현장멤버수</th>
-              <th>담당자</th>
-              <th>담당자(현장)</th> -->
             </tr>
           </thead>
         </table>
       </div>
     </div>
     <div class="demo-html">
+      <div class="col-lg-12" id="ex1_Result1"></div>
       <span style="font-size: 1.5rem; font-weight: 400"
-        >견적내역 컬럼값 대기중 : 거리,시간, 레미콘사 담당자,예상물량
+        >견적내역 컬럼값 대기중 : 거리,시간, 예상물량
       </span>
       <!-- 견적내역-->
       <table id="remicon_esimate_table" class="display" style="width: 100%">
@@ -287,10 +289,11 @@
           </tr>
         </thead>
       </table>
-      <div class="col-lg-12" id="ex1_Result1"></div>
+      <!-- <div class="col-lg-12" id="ex1_Result1"></div> -->
     </div>
     <!-- 주문내역-->
     <div class="demo-html">
+      <div class="col-lg-12" id="ex1_Result2"></div>
       <span style="font-size: 1.5rem; font-weight: 400"
         >주문내역 컬럼값 대기중 : 주문 승인여부
       </span>
@@ -298,11 +301,11 @@
         <thead>
           <tr>
             <th>주문아이디</th>
+            <th>배정일자</th>
             <th>건설사코드</th>
             <th>건설사</th>
             <th>건설현장코드</th>
             <th>현장명</th>
-            <th>배정일자</th>
             <th>배송일정</th>
             <th>합계수량</th>
             <th>특기사항</th>
@@ -310,11 +313,12 @@
           </tr>
         </thead>
       </table>
-      <div class="col-lg-12" id="ex1_Result2"></div>
+      <!-- <div class="col-lg-12" id="ex1_Result2"></div> -->
     </div>
     <!-- 거래내역-->
 
     <div class="demo-html">
+      <div class="col-lg-12" id="ex1_Result3"></div>
       <span style="font-size: 1.5rem; font-weight: 400"
         >거래내역 컬럼값 대기중 : 예정수량, 실제 납품수량, 거래내역 확인여부
       </span>
@@ -330,7 +334,7 @@
           </tr>
         </thead>
       </table>
-      <div class="col-lg-12" id="ex1_Result3"></div>
+      <!-- <div class="col-lg-12" id="ex1_Result3"></div> -->
     </div>
     <div class="demo-html">
       <table id="remicon_memberlist_table" class="display" style="width: 100%">

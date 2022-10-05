@@ -1,4 +1,3 @@
-//레미콘사 견적내역
 function remicon_getApi_order(id) {
   num_remicon_order++;
   //Korean
@@ -25,12 +24,16 @@ function remicon_getApi_order(id) {
   };
 
   var editor; // use a global for the submit and return data rendering in the examples
-
+  let min;
+  let max;
+  min = $("#order_fromDate").val();
+  max = $("#order_toDate").val();
   $(document).ready(function () {
     //CRUD
     editor = new $.fn.dataTable.Editor({
       //`/api/remicon_esimate_management/${id}`,
-      ajax: `/api/remicon_order_management/${id}`,
+      ajax: `/api/remicon_order_management/${id}/${min}/${max}`,
+      type: "post",
       table: "#remicon_order_table",
       fields: [
         {
@@ -75,6 +78,12 @@ function remicon_getApi_order(id) {
           options: [
             { label: "체크", value: "1" },
             { label: "미체크", value: "0" },
+            // label: "체크",
+            // checked: "true",
+            // value: "1",
+            // checked: "false",
+            // value: "0",
+            // { label: "미체크", value: "0" },
           ],
         },
         {
@@ -136,11 +145,11 @@ function remicon_getApi_order(id) {
         .addClass("remicon_filters_order");
     }
 
-    $("#remicon_order_table").DataTable({
+    var order_table = $("#remicon_order_table").DataTable({
       orderCellsTop: true,
       fixedHeader: true,
       // destroy: true,
-      searching: true,
+      // searching: true,
       initComplete: function () {
         var api = this.api();
 
@@ -173,9 +182,7 @@ function remicon_getApi_order(id) {
                 api
                   .column(colIdx)
                   .search(
-                    this.value != ""
-                      ? regexr.replace("{search}", "(((" + this.value + ")))")
-                      : "",
+                    this.value != "" ? this.value : "",
                     this.value != "",
                     this.value == ""
                   )
@@ -192,7 +199,7 @@ function remicon_getApi_order(id) {
       //DATA 바인딩
       dom: "Bfrtip",
       ajax: {
-        url: `/api/remicon_order_management/${id}`,
+        url: `/api/remicon_order_management/${id}/${min}/${max}`,
         type: "POST",
       },
       language: lang_kor,
@@ -208,44 +215,20 @@ function remicon_getApi_order(id) {
           render: function (data, type, row) {
             return (
               data.assignments.start_time + " ~ " + data.assignments.end_time
-              //.substring(14)
             );
           },
         },
         { data: "assignments.total" },
         { data: "assignments.remark" },
-
-        // { data: "concat(users.name, ' ' ,users.position)" },
-        // {
-        //   data:
-        //     "(select count(space_id)" +
-        //     "from space_members where space_id = spaces.id " +
-        //     "group by space_id)",
-        // },
-        // { data: "assignments.type" },
-        // {
-        //   data: "assignments.status",
-        //   render: function (data, type, row) {
-        //     switch (data) {
-        //       case "REQUESTED":
-        //         return "요청";
-        //         break;
-        //       case "CONFIRMED":
-        //         return "확인";
-        //         break;
-        //       case "REMOVED":
-        //         return "삭제";
-        //         break;
-        //       case null:
-        //         return "";
-        //         break;
-        //     }
-        //   },
-        // },
       ],
-      serverSide: true,
       select: true,
+      serverSide: true,
+      searchable: true,
+      search: {
+        regex: true,
+      },
       destroy: true,
+      processing: true,
       buttons: [
         { extend: "create", editor: editor, text: "등록" },
         { extend: "edit", editor: editor, text: "상세보기 및 수정" },
@@ -256,6 +239,41 @@ function remicon_getApi_order(id) {
           buttons: ["excel", "csv"],
         },
       ],
+    });
+    let current_year = new Date().getFullYear();
+
+    $("#remicon_order_table_filter").prepend(
+      '<input type="date" id="order_toDate" placeholder="yyyy-MM-dd" value=' +
+        current_year +
+        "-12-31>"
+    );
+    $("#remicon_order_table_filter").prepend(
+      '<input type="date" id="order_fromDate" placeholder="yyyy-MM-dd" value=' +
+        current_year +
+        "-01-01>~"
+    );
+
+    $("#remicon_order_table_filter").prepend(
+      '<button type="button" id="button_date_order" placeholder="yyyy-MM-dd">조회</button>'
+    );
+
+    $("#button_date_order").click(function () {
+      console.log("버튼클릭");
+
+      min = $("#order_fromDate").val();
+      max = $("#order_toDate").val();
+      console.log("max", max);
+      console.log("min", min);
+
+      remicon_getApi_order(id);
+
+      // $.ajax({
+      //   type: "POST",
+      //   url: `/api/remicon_order_management/${id}/${min}/${max}`,
+      //   success: function (data) {
+      //     remicon_getApi_order(id);
+      //   },
+      // });
     });
   });
 }

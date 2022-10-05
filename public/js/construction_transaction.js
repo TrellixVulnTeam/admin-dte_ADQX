@@ -29,7 +29,11 @@ function getApi_construction_transaction(id) {
 
   // window.location.reload();
   var editor; // use a global for the submit and return data rendering in the examples
-  // var id = sessionStorage.getItem("id", id);
+  let min;
+  let max;
+  min = $("#con_transaction_fromDate").val();
+  max = $("#con_transaction_toDate").val();
+  console.log("min max", min, max);
 
   if (id === null) {
     retrun;
@@ -38,27 +42,36 @@ function getApi_construction_transaction(id) {
     //CRUD
 
     editor = new $.fn.dataTable.Editor({
-      ajax: `/api/construction_Transaction_history/${id}`,
+      ajax: `/api/construction_Transaction_history/${id}/${min}/${max}`,
       table: "#construction_transaction_table",
       fields: [
         {
           label: "납품일자",
           name: "assignments.date",
+          type: "datetime",
         },
         {
-          label: "납품업체",
-          name: "spaces.name",
+          label: "레미콘사코드",
+          name: "companies.id",
         },
         {
-          label: "상태",
-          name: "assignments.status",
-          type: "select",
-          options: [
-            { label: "요청", value: "REQUESTED" },
-            { label: "확인", value: "CONFIRMED" },
-            { label: "삭제", value: "REMOVE" },
-          ],
+          label: "레미콘사",
+          name: "companies.name",
         },
+        {
+          label: "규격",
+          name: "standard",
+        },
+        // {
+        //   label: "상태",
+        //   name: "assignments.status",
+        //   type: "select",
+        //   options: [
+        //     { label: "요청", value: "REQUESTED" },
+        //     { label: "확인", value: "CONFIRMED" },
+        //     { label: "삭제", value: "REMOVE" },
+        //   ],
+        // },
       ],
     });
 
@@ -125,34 +138,19 @@ function getApi_construction_transaction(id) {
       //DATA 바인딩
       dom: "Bfrtip",
       ajax: {
-        url: `/api/construction_Transaction_history/${id}`,
+        url: `/api/construction_Transaction_history/${id}/${min}/${max}`,
         // type: "get",
       },
       language: lang_kor,
       select: true,
+      serverside: true,
+      destroy: true,
       columns: [
         // { data: "assignments.id"},
         { data: "assignments.date" },
-        { data: "spaces.name" },
-        {
-          data: "assignments.status",
-          render: function (data, type, row) {
-            switch (data) {
-              case "REQUESTED":
-                return "요청";
-                break;
-              case "CONFIRMED":
-                return "확인";
-                break;
-              case "REMOVED":
-                return "삭제";
-                break;
-              case null:
-                return "";
-                break;
-            }
-          },
-        },
+        { data: "companies.id" },
+        { data: "companies.name" },
+        { data: "standard" },
       ],
 
       buttons: [
@@ -165,6 +163,39 @@ function getApi_construction_transaction(id) {
           buttons: ["excel", "csv"],
         },
       ],
+    });
+    var current_year = new Date().getFullYear();
+
+    $("#construction_transaction_table_filter").prepend(
+      '<input type="date" id="con_transaction_toDate" placeholder="yyyy-MM-dd" value=' +
+        current_year +
+        "-12-31>"
+    );
+    $("#construction_transaction_table_filter").prepend(
+      '<input type="date" id="con_transaction_fromDate" placeholder="yyyy-MM-dd" value=' +
+        current_year +
+        "-01-01>~"
+    );
+
+    $("#construction_transaction_table_filter").prepend(
+      '<button type="button" id="con_transaction_button" placeholder="yyyy-MM-dd">조회</button>'
+    );
+
+    $("#con_transaction_button").click(function () {
+      console.log("버튼클릭");
+
+      min = $("#con_transaction_fromDate").val();
+      max = $("#con_transaction_toDate").val();
+      console.log("max", max);
+      console.log("min", min);
+      getApi_construction_transaction(id);
+      // $.ajax({
+      //   type: "POST",
+      //   url: `/api/remicon_esimate_management/${id}/${min}/${max}`,
+      //   success: function (data) {
+      //     remicon_getApi(id);
+      //   },
+      // });
     });
   });
 }

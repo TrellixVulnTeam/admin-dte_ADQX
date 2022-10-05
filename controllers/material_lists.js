@@ -10,7 +10,6 @@ let {
   Mjoin,
   Upload,
   SearchPaneOptions,
-
   promisify,
 } = require("datatables.net-editor-server");
 
@@ -20,7 +19,6 @@ router.all("/api/material_lists", async function (req, res) {
   // router.all("/api/material_lists/:id", async function (req, res) {
   console.log("req");
   console.log(req.params.id);
-
   let editor = new Editor(db, "archives").fields(
     new Field("archives.id"),
     new Field("archives.type"),
@@ -63,6 +61,7 @@ router.all("/api/material_lists", async function (req, res) {
   //   }
   // });
   await editor.process(req.body, req.files);
+
   res.json(editor.data());
 });
 

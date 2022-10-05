@@ -1,68 +1,90 @@
-//레미콘사 견적내역
 function remicon_getApi(id) {
   //Korean
   num_remicon_estimate++;
   var lang_kor = {
     decimal: "",
-    emptyTable: "데이터가 없습니다.",
-    info: "_START_ 부터- _END_ 까지 (총 _TOTAL_ 데이터)",
+    emptyTable: "데이터가 없습니다.",
+    info: "_START_ 부터- _END_ 까지 (총 _TOTAL_ 데이터)",
     infoEmpty: "0개",
-    infoFiltered: "(전체 _MAX_명 중 검색결과)",
+    infoFiltered: "(전체 _MAX_명 중 검색결과)",
     infoPostFix: "",
     thousands: ",",
     lengthMenu: "_MENU_개씩 보기",
     loadingRecords: "로딩중...",
     processing: "처리중...",
-    search: "검색 :",
-    zeroRecords: "검색된 데이터가 없습니다.",
+    search: "검색 :",
+    zeroRecords: "검색된 데이터가 없습니다.",
     paginate: {
-      first: "첫 페이지",
+      first: "첫 페이지",
       last: "마지막페이지",
       next: "다음",
       previous: "이전",
     },
-    aria: { sortAscending: ":오름차순 정렬", sortDescending: ":내림차순 정렬" },
+    aria: { sortAscending: ":오름차순 정렬", sortDescending: ":내림차순 정렬" },
   };
 
   var editor; // use a global for the submit and return data rendering in the examples
 
+  let min;
+  let max;
+  min = $("#fromDate").val();
+  max = $("#toDate").val();
+  console.log("min max", min, max);
   $(document).ready(function () {
     //CRUD
     editor = new $.fn.dataTable.Editor({
-      //`/api/remicon_esimate_management/${id}`,
-      ajax: `/api/remicon_esimate_management/${id}`,
+      ajax: `/api/remicon_esimate_management/${id}/${min}/${max}`,
       table: "#remicon_esimate_table",
       fields: [
+        {
+          label: "견적코드",
+          name: "estimations.id",
+        },
+        {
+          label: "견적요청접수일자",
+          name: "estimations.created_at",
+          type: "datetime",
+          def: function () {
+            return new Date();
+          },
+          format: "YYYY-MM-DD",
+        },
+        {
+          label: "건설사코드",
+          name: "companies.id",
+        },
         {
           label: "건설사",
           name: "companies.name",
         },
         {
-          label: "건설현장",
+          label: "현장코드",
+          name: "spaces.id",
+        },
+        {
+          label: "현장명",
           name: "spaces.name",
         },
         {
-          label: "건설사주소",
-          name: "spaces.basic_address",
+          label: "견적단가율",
+          name: "estimations.percent",
         },
-
-        // {
-        //   label: "견적률",
-        //   name: "estimations.percent",
-        // },
-        // {
-        //   label: "견적상태",
-        //   name: "estimations.status",
-        //   type: "select",
-        //   options: [
-        //     { label: "요청", value: "REQUESTED" },
-        //     { label: "응답", value: "RESPONDED" },
-        //     { label: "등록", value: "REGISTERED" },
-        //     { label: "적용", value: "APPLIED" },
-        //     { label: "완료", value: "FINISHED" },
-        //   ],
-        // },
-
+        {
+          label: "견적상태",
+          name: "estimations.status",
+          type: "select",
+          options: [
+            { label: "견적요청접수", value: "REQUESTED" },
+            // { label: "응답", value: "RESPONDED" },
+            { label: "견적제출", value: "REGISTERED" },
+            // { label: "적용", value: "APPLIED" },
+            { label: "납품사등록완료", value: "FINISHED" },
+          ],
+        },
+        {
+          label: "레미콘사담당자",
+          name: "users.name",
+        },
         // {
         //   label: "일시",
         //   name: "estimations.created_at",
@@ -82,12 +104,10 @@ function remicon_getApi(id) {
         .addClass("remicon_filters_estimate")
         .appendTo("#remicon_esimate_table thead");
     }
-
-    $("#remicon_esimate_table").DataTable({
+    $("#remicon_esimate_table").DataTable().destroy();
+    var estimate_table = $("#remicon_esimate_table").DataTable({
       orderCellsTop: true,
       fixedHeader: true,
-      destroy: true,
-      searching: true,
       initComplete: function () {
         var api = this.api();
 
@@ -120,9 +140,7 @@ function remicon_getApi(id) {
                 api
                   .column(colIdx)
                   .search(
-                    this.value != ""
-                      ? regexr.replace("{search}", "(((" + this.value + ")))")
-                      : "",
+                    this.value != "" ? this.value : "",
                     this.value != "",
                     this.value == ""
                   )
@@ -139,8 +157,9 @@ function remicon_getApi(id) {
       //DATA 바인딩
       dom: "Bfrtip",
       ajax: {
-        url: `/api/remicon_esimate_management/${id}`,
-        type: "POST",
+        url: `/api/remicon_esimate_management/${id}/${min}/${max}`,
+        // url: `/api/remicon_esimate_management/${id}`,
+        type: "post",
       },
       language: lang_kor,
       columns: [
@@ -180,9 +199,14 @@ function remicon_getApi(id) {
         },
         { data: "users.name" },
       ],
-      serverSide: true,
       select: true,
+      serverSide: true,
+      searchable: true,
+      search: {
+        regex: true,
+      },
       destroy: true,
+      searching: true,
       buttons: [
         { extend: "create", editor: editor, text: "등록" },
         { extend: "edit", editor: editor, text: "상세보기 및 수정" },
@@ -193,6 +217,40 @@ function remicon_getApi(id) {
           buttons: ["excel", "csv"],
         },
       ],
+    });
+
+    var current_year = new Date().getFullYear();
+
+    $("#remicon_esimate_table_filter").prepend(
+      '<input type="date" id="toDate" placeholder="yyyy-MM-dd" value=' +
+        current_year +
+        "-12-31>"
+    );
+    $("#remicon_esimate_table_filter").prepend(
+      '<input type="date" id="fromDate" placeholder="yyyy-MM-dd" value=' +
+        current_year +
+        "-01-01>~"
+    );
+
+    $("#remicon_esimate_table_filter").prepend(
+      '<button type="button" id="button_date" placeholder="yyyy-MM-dd">조회</button>'
+    );
+
+    $("#button_date").click(function () {
+      console.log("버튼클릭");
+
+      min = $("#fromDate").val();
+      max = $("#toDate").val();
+      console.log("max", max);
+      console.log("min", min);
+      remicon_getApi(id);
+      // $.ajax({
+      //   type: "POST",
+      //   url: `/api/remicon_esimate_management/${id}/${min}/${max}`,
+      //   success: function (data) {
+      //     remicon_getApi(id);
+      //   },
+      // });
     });
   });
 }

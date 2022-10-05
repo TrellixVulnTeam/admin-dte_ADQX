@@ -1,4 +1,9 @@
-<script type="text/javascript" language="javascript" class="init">
+function construction_membernum(id) {
+  // 구성원 수 리스트를 구하는 함수
+  console.log("함수확인", id);
+  num_con_memberlist++;
+  console.log("확인", num_con_memberlist);
+
   var lang_kor = {
     decimal: "",
     emptyTable: "데이터가 없습니다.",
@@ -26,62 +31,44 @@
 
   var editor; // use a global for the submit and return data rendering in the examples
 
+  if (id === null) {
+    retrun;
+  }
   $(document).ready(function () {
     //CRUD
+
     editor = new $.fn.dataTable.Editor({
-      ajax: "/api/faq",
-      table: "#faq_table",
+      ajax: `/api/construnction_memberlist/${id}`,
+      table: "#construnction_memberlist_table",
       fields: [
         {
-          label: "카테고리",
-          name: "type",
-          type: "select",
-          options: [
-            { label: "이용방법", value: "이용방법" },
-            { label: "가입/인증", value: "가입/인증" },
-            { label: "주문/결제", value: "주문/결제" },
-            { label: "기타", value: "기타" },
-          ],
+          label: "이름",
+          name: "users.name",
         },
         {
-          label: "FAQ 제목",
-          name: "title",
-          type: "textarea",
+          label: "회사명",
+          name: "companies.name",
         },
         {
-          label: "FAQ 내용:",
-          name: "content",
-          type: "textarea",
-        },
-        {
-          label: "등록일자",
-          name: "created_at",
-          type: "datetime",
-          def: function () {
-            return new Date();
-          },
-          format: "YYYY-MM-DD",
-        },
-        {
-          label: "등록일자",
-          name: "updated_at",
-          type: "datetime",
-          def: function () {
-            return new Date();
-          },
-          format: "YYYY-MM-DD",
+          label: "전화번호",
+          name: "users.phone",
         },
       ],
     });
     // 항목별 검색기능
-    $("#faq_table thead tr")
-      .clone(true)
-      .addClass("faq_filters")
-      .appendTo("#faq_table thead");
 
-    $("#faq_table").DataTable({
+    if (num_con_memberlist == 1) {
+      $("#construnction_memberlist_table thead tr")
+        .clone(true)
+        .addClass("co_filters_memberlist")
+        .appendTo("#construnction_memberlist_table thead");
+    }
+    // $("#construnction_memberlist_table thead *").remove();
+    $("#construnction_memberlist_table").DataTable({
       orderCellsTop: true,
       fixedHeader: true,
+      // destroy: true,
+      // searching: true,
       initComplete: function () {
         var api = this.api();
 
@@ -91,7 +78,7 @@
           .eq(0)
           .each(function (colIdx) {
             // Set the header cell to contain the input element
-            var cell = $(".faq_filters th").eq(
+            var cell = $(".co_filters_memberlist th").eq(
               $(api.column(colIdx).header()).index()
             );
             var title = $(cell).text();
@@ -100,7 +87,9 @@
             // On every keypress in this input
             $(
               "input",
-              $(".faq_filters th").eq($(api.column(colIdx).header()).index())
+              $(".co_filters_memberlist th").eq(
+                $(api.column(colIdx).header()).index()
+              )
             )
               .off("keyup change")
               .on("change", function (e) {
@@ -108,7 +97,8 @@
                 $(this).attr("title", $(this).val());
                 var regexr = "({search})"; //$(this).parents('th').find('select').val();
 
-                var cursorPosition = this.selectionStart;
+                // var cursorPosition = this.selectionStart;
+
                 // Search the column for that value
                 api
                   .column(colIdx)
@@ -125,32 +115,27 @@
                 e.stopPropagation();
 
                 $(this).trigger("change");
-                $(this)
-                  .focus()[0]
-                  .setSelectionRange(cursorPosition, cursorPosition);
+                $(this).focus()[0];
+                // .setSelectionRange(cursorPosition, cursorPosition);
               });
           });
       },
       // 항목별 검색기능 끝.
-      ///Binding
-
-      dom: "Bfrtip", // PBfrtip
+      //DATA 바인딩
+      dom: "Bfrtip",
       ajax: {
-        url: "/api/faq",
-
-        // type: "get",
+        url: `/api/construnction_memberlist/${id}`,
+        // type: "post",
       },
+      destroy: true,
+      select: true,
       language: lang_kor,
       columns: [
-        { data: "id" },
-        { data: "type" },
-        { data: "title" },
-        { data: "content" },
-        { data: "created_at" },
+        { data: "users.name" },
+        { data: "companies.name" },
+        { data: "users.phone" },
       ],
-      serverSide: true,
-      select: true,
-      searching: true,
+
       buttons: [
         { extend: "create", editor: editor, text: "등록" },
         { extend: "edit", editor: editor, text: "상세보기 및 수정" },
@@ -158,20 +143,4 @@
       ],
     });
   });
-</script>
-
-<span style="font-size: 2rem; font-weight: 600">FAQ</span>
-<div class="demo-html" style="margin-top: 10px">
-  <table id="faq_table" class="display" style="width: 100%" ellspacing="0">
-    <thead>
-      <tr>
-        <th>등록번호</th>
-        <!-- <th>구분</th> -->
-        <th>카테고리</th>
-        <th>FAQ 제목</th>
-        <th>FAQ 내용</th>
-        <th>등록일자</th>
-      </tr>
-    </thead>
-  </table>
-</div>
+}
